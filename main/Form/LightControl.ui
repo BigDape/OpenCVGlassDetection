@@ -1,0 +1,1461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LightControl</class>
+ <widget class="QWidget" name="LightControl">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>829</width>
+    <height>689</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>设置</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="RecipeLB">
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string> 工   单</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="RecipeCB"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTabWidget" name="tab3">
+       <property name="currentIndex">
+        <number>3</number>
+       </property>
+       <widget class="QWidget" name="SystemParam">
+        <attribute name="title">
+         <string notr="true">系统参数</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>691</width>
+           <height>261</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="SystemNameLB">
+            <property name="text">
+             <string>  系统名称</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="Camera0NameLE"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="PortLB">
+            <property name="text">
+             <string> 控制器端口</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="Camera1NameLE"/>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="ServerIPLB">
+            <property name="text">
+             <string> 控制器IP</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="CameraNumLB">
+            <property name="text">
+             <string> 相机个数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="CameraNumLE"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="Camera0NameLB">
+            <property name="text">
+             <string> 相机0名称</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="Camera3NameLE"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="Camera2NameLB">
+            <property name="text">
+             <string> 相机2名称</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="Camera1NameLB">
+            <property name="text">
+             <string> 相机1名称</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="PortLE"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="Camera2NameLE"/>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="ServerIPLE"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="SystemNameLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="Camera3NameLB">
+            <property name="text">
+             <string> 相机3名称</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="CustomizeParam">
+        <attribute name="title">
+         <string notr="true">自定义参数</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>709</width>
+           <height>181</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="4" column="0">
+           <widget class="QLabel" name="XYLengthEnableLB">
+            <property name="text">
+             <string> 尺寸测量启用</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="SaveEntireImageCB">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>否</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>是</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="SaveEntireImageLB">
+            <property name="text">
+             <string>  保存整图</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="SaveFlawImageLB">
+            <property name="text">
+             <string> 保存缺检图</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="FlawDefectEnableLB">
+            <property name="text">
+             <string> 缺陷检测启用</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="FlawDefectEnableCB">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>否</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>是</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="SaveOriginImageLB">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>  保存原图</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="SaveFlawImageCB">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>否</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>是</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="SaveOriginImageCB">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>否</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>是</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="XYLengthEnableCB">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>否</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>是</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="SaveCropImageLB">
+            <property name="text">
+             <string> 保存裁剪图像</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="SaveCropImageCB">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>否</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>是</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="FlawDetectionParam">
+        <attribute name="title">
+         <string notr="true">缺陷检测</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>1</x>
+           <y>18</y>
+           <width>709</width>
+           <height>251</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="3" column="0">
+           <widget class="QLabel" name="SilkToRollerDistLB">
+            <property name="text">
+             <string>丝印离辊道距离</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="Camera23PixelDeviationLB">
+            <property name="text">
+             <string>23相机像素偏差</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="DirtyAreaThresholdLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="Camera24PixelDeviationLB">
+            <property name="text">
+             <string>24相机像素偏差</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="BubbleStoneAreaThresholdLB">
+            <property name="text">
+             <string>气结面积阈值</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="Camera12PixelDeviationLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="Camera24PixelDeviationLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="Camera23PixelDeviationLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="ScratchAreaThresholdLB">
+            <property name="text">
+             <string>划痕面积阈值</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="SilkToRollerDistLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="BubbleStoneAreaThresholdLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="ScratchAreaThresholdLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="DirtyAreaThresholdLB">
+            <property name="text">
+             <string>脏污面积阈值</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="Camera12PixelDeviationLB">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>12相机像素偏差</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="XYLengthParam">
+        <attribute name="title">
+         <string notr="true">尺寸测量</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>10</y>
+           <width>715</width>
+           <height>141</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="2" column="0">
+           <widget class="QLabel" name="XCamera1AccuracyLB">
+            <property name="text">
+             <string>X方向相机1像素精度(mm)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="XCamera0AccuracyLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="XCamera0AccuracyLB">
+            <property name="text">
+             <string>X方向相机0像素精度(mm)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="YAccuracyLB">
+            <property name="maximumSize">
+             <size>
+              <width>120</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Y方向像素精度(mm)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="YAccuracyLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="XCamera1AccuracyLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="CameraParam">
+        <attribute name="title">
+         <string notr="true">相机参数</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>709</width>
+           <height>521</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="Camera0GainLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QLineEdit" name="Camera3FrameLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="Camera2GainLB">
+            <property name="text">
+             <string>相机2相机增益</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="Camera0PhotoRowLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="Camera1PhotoRowLB">
+            <property name="text">
+             <string>相机1拍照行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="Camera0ExposureTimeLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="Camera2PhotoRowLB">
+            <property name="text">
+             <string>相机2拍照行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0">
+           <widget class="QLabel" name="Camera3FrameLB">
+            <property name="text">
+             <string>相机3帧次</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="0">
+           <widget class="QLabel" name="Camera3GainLB">
+            <property name="text">
+             <string>相机3相机增益</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="Camera2PhotoRowLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLineEdit" name="Camera2GainLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="0">
+           <widget class="QLabel" name="Camera3ExposureTimeLB">
+            <property name="text">
+             <string>相机3曝光时间</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="Camera0FrameLE">
+            <property name="minimumSize">
+             <size>
+              <width>409</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="Camera0FrameLB">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>相机0帧次</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="1">
+           <widget class="QLineEdit" name="Camera3GainLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="Camera1GainLB">
+            <property name="text">
+             <string>相机1相机增益</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <widget class="QLineEdit" name="Camera3ExposureTimeLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="Camera1FrameLB">
+            <property name="text">
+             <string>相机1帧次</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="0">
+           <widget class="QLabel" name="Camera3PhotoRowLB">
+            <property name="text">
+             <string>相机3拍照行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="Camera0PhotoRowLB">
+            <property name="text">
+             <string>相机0拍照行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="Camera1FrameLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="Camera1PhotoRowLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="Camera2ExposureTimeLB">
+            <property name="text">
+             <string>相机2曝光时间</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="Camera0GainLB">
+            <property name="text">
+             <string>相机0相机增益</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="Camera1ExposureTimeLB">
+            <property name="text">
+             <string>相机1曝光时间</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="Camera0ExposureTimeLB">
+            <property name="text">
+             <string>相机0曝光时间</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QLineEdit" name="Camera3PhotoRowLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="Camera2FrameLB">
+            <property name="text">
+             <string>相机2帧次</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="Camera2FrameLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="Camera2ExposureTimeLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="Camera1ExposureTimeLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="Camera1GainLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="EncoderParam">
+        <attribute name="title">
+         <string>编码器参数</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>701</width>
+           <height>271</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="EncodeRevolutionLE"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="ExpectSinglePixelAccuracyLE"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="EncodeUnitToDistLB">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>  编码器单位刻度对应距离um</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="ExpectSinglePixelAccuracyLB">
+            <property name="text">
+             <string>  期望单个像素精度</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="EncodeRevolutionLB">
+            <property name="text">
+             <string>  编码器转数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="RollerPerimeterUmLB">
+            <property name="text">
+             <string>  辊道周长um</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="EveryRowToEncodeCountLB">
+            <property name="text">
+             <string> 每行对应的编码计数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="RollerPerimeterUmLE"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="EncodeUnitToDistLE"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="RollerMaxSpeedToRowCountLE"/>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="EveryRowToEncodeCountLE"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="RollerMaxSpeedToRowCountLB">
+            <property name="text">
+             <string>  辊道最大速度对应行频</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="EncodePulseFilterUsLE"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="EncodePulseFilterUsLB">
+            <property name="text">
+             <string>  编码脉冲滤波us</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="ControllerParam">
+        <attribute name="title">
+         <string notr="true">控制器系统参数</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>701</width>
+           <height>351</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="PhotoEndDelayRowCountLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="FrameSignalContinueTimeLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="InnerRowFrequencyLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="CamarePhotoRowCountLB">
+            <property name="text">
+             <string>相机拍照行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="ModuleEnableSignalLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="PhotoelectricToCamareDistLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="CamareFrameTrigerDelayRowCountLB">
+            <property name="text">
+             <string>相机帧信号触发延时行行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="FrameSignalContinueTimeLB">
+            <property name="text">
+             <string> 帧信号持续时间</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="CamareFrameTrigerDelayRowCountLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="CamarePhotoRowCountLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="PhotoelectricSignalPulseFilterLB">
+            <property name="text">
+             <string>光电信号脉冲滤波</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="PhotoelectricSignalPulseFilterLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="CamareTrigerPulseContinueTime10nsLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="PhotoModeLB">
+            <property name="text">
+             <string>拍照模式</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="PhotoEndDelayRowCountLB">
+            <property name="text">
+             <string>拍照结束延时行数</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="PixelAccuracyUmLE">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="ModuleEnableSignalLB">
+            <property name="text">
+             <string>模块使能信号</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="PixelAccuracyUmLB">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string> 像素精度um</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="CamareTrigerPulseContinueTime10nsLB">
+            <property name="text">
+             <string> 相机触发脉冲持续时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="PhotoModeLE">
+            <property name="maximumSize">
+             <size>
+              <width>409</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="PhotoelectricToCamareDistLB">
+            <property name="text">
+             <string>光电与相机距离(行)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="InnerRowFrequencyLB">
+            <property name="text">
+             <string>内部行频</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="LighterParam">
+        <attribute name="title">
+         <string notr="true">光源控制器参数</string>
+        </attribute>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>3</y>
+           <width>701</width>
+           <height>471</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="LightField1DelayTimeLE"/>
+          </item>
+          <item row="12" column="0">
+           <widget class="QLabel" name="RowSignalSelectedLB">
+            <property name="text">
+             <string>行信号源选择</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="LightField3DelayTimeLE"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="LightField3GlowTimeLE"/>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLineEdit" name="SignalSwitchLE"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="LightField3GlowTimeLB">
+            <property name="text">
+             <string>光场3发光时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="LightField2GlowTimeLB">
+            <property name="text">
+             <string>光场2发光时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="LightField2DelayTimeLE"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="LightField4GlowTimeLE"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="LightField1DelayTimeLB">
+            <property name="text">
+             <string>光场1延时时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="HorizontalDarkfieldSelectRegisterLB">
+            <property name="text">
+             <string>横向暗场选择寄存器</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="LightField1GlowTimeLB">
+            <property name="text">
+             <string>光场1发光时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="LightField3DelayTimeLB">
+            <property name="text">
+             <string>光场3延时时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="LightField4DelayTimeLB">
+            <property name="text">
+             <string>光场4延时时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QComboBox" name="CamareAndLightFieldControlCB">
+            <item>
+             <property name="text">
+              <string>调试模式3FFF</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>运行模式7FFF</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="SelectedLightFieldNumberLB">
+            <property name="text">
+             <string>选择光场的数量</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="CamareAndLightFieldControlLB">
+            <property name="text">
+             <string>相机与光场控制</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="LightField4DelayTimeLE"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="LightField4GlowTimeLB">
+            <property name="text">
+             <string>光场4发光时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="LightField2DelayTimeLB">
+            <property name="text">
+             <string>光场2延时时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="SignalSwitchLB">
+            <property name="text">
+             <string>信号切换</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="SelectedLightFieldNumberLE"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="LightField1GlowTimeLE"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="LightField2GlowTimeLE"/>
+          </item>
+          <item row="12" column="1">
+           <widget class="QLineEdit" name="RowSignalSelectedLE"/>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="HorizontalDarkfieldSelectRegisterLE"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="AllSet">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string> 下发</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="AllGet">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>获取</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="AllSave">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>保存</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="CreateRecipe">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>新建工单</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="TestConnectBT">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string> 测试连接</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="Trigger">
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>触发</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="icons/exit.png">D:/GlassCV1015/hikvision/main/icons/exit.png</file>
+    <file alias="icons/setup.png">D:/GlassCV1015/hikvision/main/icons/setup.png</file>
+    <file alias="icons/start_icon.png">D:/GlassCV1015/hikvision/main/icons/start_icon.png</file>
+    <file alias="icons/Stop.png">D:/GlassCV1015/hikvision/main/icons/Stop.png</file>
+    <file alias="icons/analysis.png">D:/GlassCV1015/hikvision/main/icons/analysis.png</file>
+    <file alias="icons/switch.png">D:/GlassCV1015/hikvision/main/icons/switch.png</file>
+    <file alias="icons/glass.png">D:/GlassCV1015/hikvision/main/icons/glass.png</file>
+    <file alias="icons/hs.png">D:/GlassCV1015/hikvision/main/icons/hs.png</file>
+  </qresource>
+</RCC>
+

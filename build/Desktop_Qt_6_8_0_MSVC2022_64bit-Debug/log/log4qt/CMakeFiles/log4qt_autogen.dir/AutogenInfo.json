@@ -1,0 +1,666 @@
+{
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt/log4qt_autogen",
+	"CMAKE_BINARY_DIR" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/GlassCV1015/hikvision/log/log4qt",
+	"CMAKE_EXECUTABLE" : "C:/Program Files/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : [ "D:/GlassCV1015/hikvision/log/log4qt/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "D:/GlassCV1015/hikvision",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt/log4qt_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "log4qt_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/appender.h",
+			"MU",
+			"EWIEGA46WW/moc_appender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/appenderskeleton.h",
+			"MU",
+			"EWIEGA46WW/moc_appenderskeleton.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/asyncappender.h",
+			"MU",
+			"EWIEGA46WW/moc_asyncappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/basicconfigurator.h",
+			"MU",
+			"EWIEGA46WW/moc_basicconfigurator.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binaryfileappender.h",
+			"MU",
+			"EWIEGA46WW/moc_binaryfileappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarylayout.h",
+			"MU",
+			"EWIEGA46WW/moc_binarylayout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarylogger.h",
+			"MU",
+			"EWIEGA46WW/moc_binarylogger.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binaryloggingevent.h",
+			"MU",
+			"EWIEGA46WW/moc_binaryloggingevent.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarylogstream.h",
+			"MU",
+			"EWIEGA46WW/moc_binarylogstream.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarytotextlayout.h",
+			"MU",
+			"EWIEGA46WW/moc_binarytotextlayout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarywriterappender.h",
+			"MU",
+			"EWIEGA46WW/moc_binarywriterappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/colorconsoleappender.h",
+			"MU",
+			"EWIEGA46WW/moc_colorconsoleappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/consoleappender.h",
+			"MU",
+			"EWIEGA46WW/moc_consoleappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/dailyfileappender.h",
+			"MU",
+			"EWIEGA46WW/moc_dailyfileappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/dailyrollingfileappender.h",
+			"MU",
+			"EWIEGA46WW/moc_dailyrollingfileappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/fileappender.h",
+			"MU",
+			"EWIEGA46WW/moc_fileappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/appenderattachable.h",
+			"MU",
+			"P2JUI5LXV7/moc_appenderattachable.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/binaryclasslogger.h",
+			"MU",
+			"P2JUI5LXV7/moc_binaryclasslogger.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/classlogger.h",
+			"MU",
+			"P2JUI5LXV7/moc_classlogger.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/configuratorhelper.h",
+			"MU",
+			"P2JUI5LXV7/moc_configuratorhelper.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/datetime.h",
+			"MU",
+			"P2JUI5LXV7/moc_datetime.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/dispatcher.h",
+			"MU",
+			"P2JUI5LXV7/moc_dispatcher.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/factory.h",
+			"MU",
+			"P2JUI5LXV7/moc_factory.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/initialisationhelper.h",
+			"MU",
+			"P2JUI5LXV7/moc_initialisationhelper.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/logerror.h",
+			"MU",
+			"P2JUI5LXV7/moc_logerror.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/optionconverter.h",
+			"MU",
+			"P2JUI5LXV7/moc_optionconverter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/patternformatter.h",
+			"MU",
+			"P2JUI5LXV7/moc_patternformatter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/properties.h",
+			"MU",
+			"P2JUI5LXV7/moc_properties.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/hierarchy.h",
+			"MU",
+			"EWIEGA46WW/moc_hierarchy.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/layout.h",
+			"MU",
+			"EWIEGA46WW/moc_layout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/level.h",
+			"MU",
+			"EWIEGA46WW/moc_level.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/log4qt.h",
+			"MU",
+			"EWIEGA46WW/moc_log4qt.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/log4qtdefs.h",
+			"MU",
+			"EWIEGA46WW/moc_log4qtdefs.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/log4qtshared.h",
+			"MU",
+			"EWIEGA46WW/moc_log4qtshared.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/log4qtsharedptr.h",
+			"MU",
+			"EWIEGA46WW/moc_log4qtsharedptr.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/logger.h",
+			"MU",
+			"EWIEGA46WW/moc_logger.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/loggerrepository.h",
+			"MU",
+			"EWIEGA46WW/moc_loggerrepository.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/loggingevent.h",
+			"MU",
+			"EWIEGA46WW/moc_loggingevent.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/logmanager.h",
+			"MU",
+			"EWIEGA46WW/moc_logmanager.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/logstream.h",
+			"MU",
+			"EWIEGA46WW/moc_logstream.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/mainthreadappender.h",
+			"MU",
+			"EWIEGA46WW/moc_mainthreadappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/mdc.h",
+			"MU",
+			"EWIEGA46WW/moc_mdc.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/ndc.h",
+			"MU",
+			"EWIEGA46WW/moc_ndc.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/patternlayout.h",
+			"MU",
+			"EWIEGA46WW/moc_patternlayout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/propertyconfigurator.h",
+			"MU",
+			"EWIEGA46WW/moc_propertyconfigurator.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/qmllogger.h",
+			"MU",
+			"EWIEGA46WW/moc_qmllogger.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/rollingbinaryfileappender.h",
+			"MU",
+			"EWIEGA46WW/moc_rollingbinaryfileappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/rollingfileappender.h",
+			"MU",
+			"EWIEGA46WW/moc_rollingfileappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/signalappender.h",
+			"MU",
+			"EWIEGA46WW/moc_signalappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/simplelayout.h",
+			"MU",
+			"EWIEGA46WW/moc_simplelayout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/simpletimelayout.h",
+			"MU",
+			"EWIEGA46WW/moc_simpletimelayout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/spi/filter.h",
+			"MU",
+			"2O54PKCAQV/moc_filter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/systemlogappender.h",
+			"MU",
+			"EWIEGA46WW/moc_systemlogappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/ttcclayout.h",
+			"MU",
+			"EWIEGA46WW/moc_ttcclayout.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/binaryeventfilter.h",
+			"MU",
+			"YT5B3C6VYA/moc_binaryeventfilter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/debugappender.h",
+			"MU",
+			"YT5B3C6VYA/moc_debugappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/denyallfilter.h",
+			"MU",
+			"YT5B3C6VYA/moc_denyallfilter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/levelmatchfilter.h",
+			"MU",
+			"YT5B3C6VYA/moc_levelmatchfilter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/levelrangefilter.h",
+			"MU",
+			"YT5B3C6VYA/moc_levelrangefilter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/listappender.h",
+			"MU",
+			"YT5B3C6VYA/moc_listappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/nullappender.h",
+			"MU",
+			"YT5B3C6VYA/moc_nullappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/stringmatchfilter.h",
+			"MU",
+			"YT5B3C6VYA/moc_stringmatchfilter.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/wdcappender.h",
+			"MU",
+			"EWIEGA46WW/moc_wdcappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/writerappender.h",
+			"MU",
+			"EWIEGA46WW/moc_writerappender.cpp",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/xmllayout.h",
+			"MU",
+			"EWIEGA46WW/moc_xmllayout.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt/log4qt_autogen/include",
+	"MOC_COMPILATION_FILE" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt/log4qt_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"LOG4QT_STATIC",
+		"QT_CORE_LIB",
+		"UNICODE",
+		"WIN32",
+		"WIN64",
+		"_ENABLE_EXTENDED_ALIGNED_STORAGE",
+		"_UNICODE",
+		"_WIN64"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"C:/Qt/6.8.0/msvc2022_64/include/QtCore",
+		"C:/Qt/6.8.0/msvc2022_64/include",
+		"C:/Qt/6.8.0/msvc2022_64/mkspecs/win32-msvc"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT",
+		"Q_ENUM_NS"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt/CMakeFiles/log4qt_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "C:/Qt/6.8.0/msvc2022_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "C:/Qt/6.8.0/msvc2022_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 8,
+	"SETTINGS_FILE" : "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/log4qt/CMakeFiles/log4qt_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "D:/GlassCV1015/hikvision/log/log4qt/appender.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/appenderskeleton.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/asyncappender.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/basicconfigurator.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binaryfileappender.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/binarylayout.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/binarylogger.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binaryloggingevent.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/binarylogstream.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarytotextlayout.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/binarywriterappender.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/colorconsoleappender.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/consoleappender.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/dailyfileappender.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/dailyrollingfileappender.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/fileappender.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/appenderattachable.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/binaryclasslogger.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/classlogger.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/configuratorhelper.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/datetime.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/dispatcher.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/helpers/factory.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/initialisationhelper.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/logerror.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/optionconverter.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/patternformatter.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/helpers/properties.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/hierarchy.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/layout.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/level.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/logger.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/loggerrepository.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/loggingevent.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/logmanager.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/logstream.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/mainthreadappender.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/mdc.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/ndc.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/patternlayout.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/propertyconfigurator.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/qmllogger.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/rollingbinaryfileappender.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/rollingfileappender.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/signalappender.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/simplelayout.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/simpletimelayout.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/spi/filter.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/systemlogappender.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/ttcclayout.cpp", "MU", null ],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/binaryeventfilter.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/debugappender.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/denyallfilter.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/levelmatchfilter.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/levelrangefilter.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/listappender.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/nullappender.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/GlassCV1015/hikvision/log/log4qt/varia/stringmatchfilter.cpp",
+			"MU",
+			null
+		],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/wdcappender.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/writerappender.cpp", "MU", null ],
+		[ "D:/GlassCV1015/hikvision/log/log4qt/xmllayout.cpp", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}
