@@ -11,8 +11,6 @@ MainForm::MainForm(QWidget* parent)
     , ui(new Ui::MainForm)
 {
     ui->setupUi(this);
-
-
 }
 
 MainForm::~MainForm()

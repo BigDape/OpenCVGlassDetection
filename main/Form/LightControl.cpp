@@ -62,6 +62,7 @@ LightControl::LightControl( QWidget* parent)
     LightControl::initLoadRecipe();// 加载工单
     LightControl::initSocket();
     LightControl::initConnect();
+    LightControl::SendDataToSignal();
     // 实时获取帧信号确定玻璃是否结束
     m_timer = new QTimer();
     connect(m_timer, &QTimer::timeout, this, &LightControl::getFrameSignal);
@@ -109,14 +110,6 @@ void LightControl::initWidget()
     ui->ServerIPLE->setValidator(lineIP);
     ui->PortLE->setValidator(linePort);
     //自定义参数
-    //缺陷检测
-    ui->Camera12PixelDeviationLE->setValidator(lineInt);
-    ui->Camera23PixelDeviationLE->setValidator(lineInt);
-    ui->Camera24PixelDeviationLE->setValidator(lineInt);
-    ui->SilkToRollerDistLE->setValidator(lineInt);
-    ui->ScratchAreaThresholdLE->setValidator(lineInt);
-    ui->BubbleStoneAreaThresholdLE->setValidator(lineInt);
-    ui->DirtyAreaThresholdLE->setValidator(lineInt);
     //尺寸测量
     ui->YAccuracyLE->setValidator(lineDouble);
     ui->XCamera0AccuracyLE->setValidator(lineDouble);
@@ -139,38 +132,32 @@ void LightControl::initWidget()
     ui->Camera3ExposureTimeLE->setValidator(lineInt);
     ui->Camera3GainLE->setValidator(lineInt);
     //编码器参数
-    ui->EncodeUnitToDistLE->setValidator(lineInt);
     ui->EncodePulseFilterUsLE->setValidator(lineInt);
-    ui->EncodeRevolutionLE->setValidator(lineInt);
-    ui->RollerPerimeterUmLE->setValidator(lineInt);
-    ui->ExpectSinglePixelAccuracyLE->setValidator(lineInt);
-    ui->RollerMaxSpeedToRowCountLE->setValidator(lineInt);
-    ui->EveryRowToEncodeCountLE->setValidator(lineInt);
-    //控制器参数
-    ui->PixelAccuracyUmLE->setValidator(lineInt);
-    ui->PhotoelectricSignalPulseFilterLE->setValidator(lineInt);
-    ui->CamareTrigerPulseContinueTime10nsLE->setValidator(lineInt);
-    ui->PhotoelectricToCamareDistLE->setValidator(lineInt);
-    ui->CamareFrameTrigerDelayRowCountLE->setValidator(lineInt);
-    ui->FrameSignalContinueTimeLE->setValidator(lineInt);
-    ui->ModuleEnableSignalLE->setValidator(lineInt);
-    ui->CamarePhotoRowCountLE->setValidator(lineInt);
-    ui->InnerRowFrequencyLE->setValidator(lineInt);
-    ui->PhotoModeLE->setValidator(lineInt);
-    ui->PhotoEndDelayRowCountLE->setValidator(lineInt);
+    ui->PhotoelectricSensorFilteringLE->setValidator(lineInt);
+    ui->WheelEncoderPhotoPulseLE->setValidator(lineInt);
+    ui->EncoderModeLE->setValidator(lineInt);
+    ui->SolenoidValve1DownDelayLE->setValidator(lineInt);
+    ui->SolenoidValve1UpDelayLE->setValidator(lineInt);
+    ui->SolenoidValve2DownDelayLE->setValidator(lineInt);
+    ui->SolenoidValve2UpDelayLE->setValidator(lineInt);
+    ui->WheelAEncoderLE->setValidator(lineInt);
+    ui->WheelBEncoderLE->setValidator(lineInt);
+    ui->ErrorPhotoCountLE->setValidator(lineInt);
     //光源控制器参数
-    ui->LightField1DelayTimeLE->setValidator(lineInt);
     ui->LightField1GlowTimeLE->setValidator(lineInt);
-    ui->LightField2DelayTimeLE->setValidator(lineInt);
     ui->LightField2GlowTimeLE->setValidator(lineInt);
-    ui->LightField3DelayTimeLE->setValidator(lineInt);
     ui->LightField3GlowTimeLE->setValidator(lineInt);
-    ui->LightField4DelayTimeLE->setValidator(lineInt);
     ui->LightField4GlowTimeLE->setValidator(lineInt);
+    ui->LightSignalSynchronizationDelayRegisterLE->setValidator(lineInt);
+    ui->PhotoModeLE->setValidator(lineInt);
+    ui->LightCameraEnableLE->setValidator(lineInt);
+    ui->WorkModeLE->setValidator(lineInt);
+    ui->LightSourcePulseEndPointRegisterLE->setValidator(lineInt);
+    ui->SyncPulsePeriodRegisterLE->setValidator(lineInt);
+    ui->CameraFrameSignalTriggerDelayLE->setValidator(lineInt);
+    ui->TimelapseAfterPhotoShootEndLE->setValidator(lineInt);
     ui->SelectedLightFieldNumberLE->setValidator(lineInt);
-    ui->HorizontalDarkfieldSelectRegisterLE->setValidator(lineInt);
-    ui->SignalSwitchLE->setValidator(lineInt);
-    ui->RowSignalSelectedLE->setValidator(lineInt);
+    ui->FrameSignalOutputLE->setValidator(lineInt);
 }
 
 void LightControl::initLoadRecipe()
@@ -215,6 +202,13 @@ void LightControl::initConnect()
     connect(ui->RecipeCB, SIGNAL(currentIndexChanged(int)), this, SLOT(slotChangeRecipe(int))); // 切换工单
 }
 
+void LightControl::SendDataToSignal()
+{
+    if (SocketObjectPtr != nullptr) {
+        SocketObjectPtr->SetAllRegs(m_signalctrl);
+    }
+}
+
 // 读取json工单到表单中
 void LightControl::readRecipeToTable(std::string filePath)
 {
@@ -228,21 +222,6 @@ void LightControl::readRecipeToTable(std::string filePath)
     ui->Camera3NameLE->setText(m_signalctrl.Camare3Name);
     ui->ServerIPLE->setText(m_signalctrl.ServerIP);
     ui->PortLE->setText(QString::number(m_signalctrl.ServerPort));
-    //自定义参数
-    ui->SaveOriginImageCB->setCurrentIndex(m_signalctrl.SaveOriginImage);
-    ui->SaveEntireImageCB->setCurrentIndex(m_signalctrl.SaveEntireImage);
-    ui->SaveFlawImageCB->setCurrentIndex(m_signalctrl.SaveFlawImage);
-    ui->SaveCropImageCB->setCurrentIndex(m_signalctrl.SaveCropImage);
-    ui->XYLengthEnableCB->setCurrentIndex(m_signalctrl.XYLengthEnable);
-    ui->FlawDefectEnableCB->setCurrentIndex(m_signalctrl.FlawDefectEnable);
-    //缺陷检测
-    ui->Camera12PixelDeviationLE->setText(QString::number(m_signalctrl.Camera12PixelDeviation));
-    ui->Camera23PixelDeviationLE->setText(QString::number(m_signalctrl.Camera23PixelDeviation));
-    ui->Camera24PixelDeviationLE->setText(QString::number(m_signalctrl.Camera24PixelDeviation));
-    ui->SilkToRollerDistLE->setText(QString::number(m_signalctrl.SilkToRollerDist));
-    ui->ScratchAreaThresholdLE->setText(QString::number(m_signalctrl.ScratchAreaThreshold));
-    ui->BubbleStoneAreaThresholdLE->setText(QString::number(m_signalctrl.BubbleStoneAreaThreshold));
-    ui->DirtyAreaThresholdLE->setText(QString::number(m_signalctrl.DirtyAreaThreshold));
     //尺寸测量
     ui->YAccuracyLE->setText(QString::number(m_signalctrl.YAccuracy));
     ui->XCamera0AccuracyLE->setText(QString::number(m_signalctrl.XCamera0Accuracy));
@@ -265,39 +244,32 @@ void LightControl::readRecipeToTable(std::string filePath)
     ui->Camera3ExposureTimeLE->setText(QString::number(m_signalctrl.Camera3ExposureTime));
     ui->Camera3GainLE->setText(QString::number(m_signalctrl.Camera3Gain));
     //编码器参数
-    ui->EncodeUnitToDistLE->setText(QString::number(m_signalctrl.temp0));
-    ui->EncodePulseFilterUsLE->setText(QString::number(m_signalctrl.temp1));
-    ui->EncodeRevolutionLE->setText(QString::number(m_signalctrl.temp9));
-    ui->RollerPerimeterUmLE->setText(QString::number(m_signalctrl.temp10));
-    ui->ExpectSinglePixelAccuracyLE->setText(QString::number(m_signalctrl.temp11));
-    ui->RollerMaxSpeedToRowCountLE->setText(QString::number(m_signalctrl.temp12));
-    ui->EveryRowToEncodeCountLE->setText(QString::number(m_signalctrl.temp13));
-    //控制器参数
-    ui->PixelAccuracyUmLE->setText(QString::number(m_signalctrl.temp14));
-    ui->PhotoelectricSignalPulseFilterLE->setText(QString::number(m_signalctrl.temp15));
-    ui->CamareTrigerPulseContinueTime10nsLE->setText(QString::number(m_signalctrl.temp16));
-    ui->PhotoelectricToCamareDistLE->setText(QString::number(m_signalctrl.temp17));
-    ui->CamareFrameTrigerDelayRowCountLE->setText( QString::number(m_signalctrl.temp18));
-    ui->FrameSignalContinueTimeLE->setText(QString::number(m_signalctrl.temp19));
-    ui->ModuleEnableSignalLE->setText(QString::number(m_signalctrl.temp20));
-    ui->CamarePhotoRowCountLE->setText(QString::number(m_signalctrl.temp21));
-    ui->InnerRowFrequencyLE->setText(QString::number(m_signalctrl.temp22));
-    ui->PhotoModeLE->setText(QString::number(m_signalctrl.tempAutoPhoto));
-    ui->PhotoEndDelayRowCountLE->setText(QString::number(m_signalctrl.tempPhotoEndDelayLine));
+    ui->EncodePulseFilterUsLE->setText(QString::number(m_signalctrl.EncodePulseFilterUs));
+    ui->PhotoelectricSensorFilteringLE->setText(QString::number(m_signalctrl.PhotoelectricSensorFiltering));
+    ui->WheelEncoderPhotoPulseLE->setText(QString::number(m_signalctrl.WheelEncoderPhotoPulse));
+    ui->EncoderModeLE->setText(QString::number(m_signalctrl.EncoderMode));
+    ui->SolenoidValve1DownDelayLE->setText(QString::number(m_signalctrl.SolenoidValve1DownDelay));
+    ui->SolenoidValve1UpDelayLE->setText(QString::number(m_signalctrl.SolenoidValve1UpDelay));
+    ui->SolenoidValve2DownDelayLE->setText(QString::number(m_signalctrl.SolenoidValve2DownDelay));
+    ui->SolenoidValve2UpDelayLE->setText(QString::number(m_signalctrl.SolenoidValve2UpDelay));
+    ui->WheelAEncoderLE->setText(QString::number(m_signalctrl.WheelAEncoder));
+    ui->WheelBEncoderLE->setText(QString::number(m_signalctrl.WheelBEncoder));
+    ui->ErrorPhotoCountLE->setText(QString::number(m_signalctrl.ErrorPhotoCount));
     //光源控制器参数
-    ui->LightField1DelayTimeLE->setText(QString::number(m_signalctrl.temp23));
-    ui->LightField1GlowTimeLE->setText(QString::number(m_signalctrl.temp24));
-    ui->LightField2DelayTimeLE->setText(QString::number(m_signalctrl.temp25));
-    ui->LightField2GlowTimeLE->setText(QString::number(m_signalctrl.temp26));
-    ui->LightField3DelayTimeLE->setText(QString::number(m_signalctrl.temp27));
-    ui->LightField3GlowTimeLE->setText(QString::number(m_signalctrl.temp28));
-    ui->LightField4DelayTimeLE->setText(QString::number(m_signalctrl.temp29));
-    ui->LightField4GlowTimeLE->setText(QString::number(m_signalctrl.temp30));
-    ui->SelectedLightFieldNumberLE->setText(QString::number(m_signalctrl.temp55));
-    ui->HorizontalDarkfieldSelectRegisterLE->setText(QString::number(m_signalctrl.temp56));
-    ui->CamareAndLightFieldControlCB->setCurrentIndex(m_signalctrl.temp35);
-    ui->SignalSwitchLE->setText(QString::number(m_signalctrl.temp36));
-    ui->RowSignalSelectedLE->setText(QString::number(m_signalctrl.temp37));
+    ui->LightField1GlowTimeLE->setText(QString::number(m_signalctrl.LightField1GlowTime));
+    ui->LightField2GlowTimeLE->setText(QString::number(m_signalctrl.LightField2GlowTime));
+    ui->LightField3GlowTimeLE->setText(QString::number(m_signalctrl.LightField3GlowTime));
+    ui->LightField4GlowTimeLE->setText(QString::number(m_signalctrl.LightField4GlowTime));
+    ui->LightSignalSynchronizationDelayRegisterLE->setText(QString::number(m_signalctrl.LightSignalSynchronizationDelayRegister));
+    ui->PhotoModeLE->setText(QString::number(m_signalctrl.PhotoMode));
+    ui->LightCameraEnableLE->setText(QString::number(m_signalctrl.LightCameraEnable));
+    ui->WorkModeLE->setText(QString::number(m_signalctrl.WorkMode));
+    ui->LightSourcePulseEndPointRegisterLE->setText(QString::number(m_signalctrl.LightSourcePulseEndPointRegister));
+    ui->SyncPulsePeriodRegisterLE->setText(QString::number(m_signalctrl.SyncPulsePeriodRegister));
+    ui->CameraFrameSignalTriggerDelayLE->setText(QString::number(m_signalctrl.CameraFrameSignalTriggerDelay));
+    ui->TimelapseAfterPhotoShootEndLE->setText(QString::number(m_signalctrl.TimelapseAfterPhotoShootEnd));
+    ui->SelectedLightFieldNumberLE->setText(QString::number(m_signalctrl.SelectedLightFieldNumber));
+    ui->FrameSignalOutputLE->setText(QString::number(m_signalctrl.FrameSignalOutput));
 
     //
     // 初始化全局变量
@@ -310,19 +282,6 @@ void LightControl::readRecipeToTable(std::string filePath)
     PARAM.Camera3Name = m_signalctrl.Camare3Name;
     PARAM.serverIp = m_signalctrl.ServerIP;
     PARAM.serverPort = m_signalctrl.ServerPort;
-    PARAM.isSaveOriginImage = m_signalctrl.SaveOriginImage;
-    PARAM.isSaveEntireImage = m_signalctrl.SaveEntireImage;
-    PARAM.isSaveFlawImage = m_signalctrl.SaveFlawImage;
-    PARAM.isSaveCropImage = m_signalctrl.SaveCropImage;
-    PARAM.XYLengthEnable = m_signalctrl.XYLengthEnable;
-    PARAM.FlawDefectEnable = m_signalctrl.FlawDefectEnable;
-    PARAM.Camera12PixelDeviation = m_signalctrl.Camera12PixelDeviation;
-    PARAM.Camera23PixelDeviation = m_signalctrl.Camera23PixelDeviation;
-    PARAM.Camera24PixelDeviation = m_signalctrl.Camera24PixelDeviation;
-    PARAM.SilkToRollerDist = m_signalctrl.SilkToRollerDist;
-    PARAM.ScratchAreaThreshold = m_signalctrl.ScratchAreaThreshold;
-    PARAM.BubbleStoneAreaThreshold = m_signalctrl.BubbleStoneAreaThreshold;
-    PARAM.DirtyAreaThreshold = m_signalctrl.DirtyAreaThreshold;
     PARAM.YAccuracy = m_signalctrl.YAccuracy;
     PARAM.XCamera0Accuracy = m_signalctrl.XCamera0Accuracy;
     PARAM.XCamera1Accuracy = m_signalctrl.XCamera1Accuracy;
@@ -342,37 +301,31 @@ void LightControl::readRecipeToTable(std::string filePath)
     PARAM.Camera3PhotoRow = m_signalctrl.Camera3PhotoRow;
     PARAM.Camera3ExposureTime = m_signalctrl.Camera3ExposureTime;
     PARAM.Camera3Gain = m_signalctrl.Camera3Gain;
-    PARAM.EncodeUnitToDist = m_signalctrl.temp0;               // 编码器单位刻度对应距离
-    PARAM.EncodePulseFilterUs = m_signalctrl.temp1;            // 编码脉冲滤
-    PARAM.EncodeRevolution = m_signalctrl.temp9;                //编码器转数
-    PARAM.RollerPerimeterUm = m_signalctrl.temp10;               //辊道周长
-    PARAM.ExpectSinglePixelAccuracy = m_signalctrl.temp11;       //期望单个像素精度
-    PARAM.RollerMaxSpeedToRowCount = m_signalctrl.temp12;        //辊道最大速度对应行频
-    PARAM.EveryRowToEncodeCount = m_signalctrl.temp13;           //每行对应的编码计数
-    PARAM.PixelAccuracyUm = m_signalctrl.temp14;                    //像素精度um
-    PARAM.PhotoelectricSignalPulseFilter = m_signalctrl.temp15;     //光电信号脉冲滤波
-    PARAM.CamareTrigerPulseContinueTime10ns = m_signalctrl.temp16;  //相机触发脉冲持续时间10ns
-    PARAM.PhotoelectricToCamareDist = m_signalctrl.temp17;          //光电与相机距离行
-    PARAM.CamareFrameTrigerDelayRowCount = m_signalctrl.temp18;     // 相机帧触发延时行数
-    PARAM.FrameSignalContinueTime = m_signalctrl.temp19;            //帧信号持续时间
-    PARAM.ModuleEnableSignal = m_signalctrl.temp20;                 //模块使能信号
-    PARAM.CamarePhotoRowCount = m_signalctrl.temp21;                //相机拍照行数
-    PARAM.InnerRowFrequency = m_signalctrl.temp22;                  //内部行频
-    PARAM.PhotoMode = m_signalctrl.tempAutoPhoto;                          //拍照模式
-    PARAM.PhotoEndDelayRowCount = m_signalctrl.tempPhotoEndDelayLine;              //拍照延时行数
-    PARAM.LightField1DelayTime = m_signalctrl.temp23;            //光场1延时时间10ns
-    PARAM.LightField1GlowTime = m_signalctrl.temp24;             //光场1发光时间10ns
-    PARAM.LightField2DelayTime = m_signalctrl.temp25;            //光场2延时时间10ns
-    PARAM.LightField2GlowTime = m_signalctrl.temp26;             //光场2发光时间10ns
-    PARAM.LightField3DelayTime = m_signalctrl.temp27;            //光场3延时时间10ns
-    PARAM.LightField3GlowTime= m_signalctrl.temp28;             //光场3发光时间10ns
-    PARAM.LightField4DelayTime= m_signalctrl.temp29;            //光场4延时时间10ns
-    PARAM.LightField4GlowTime= m_signalctrl.temp30;             //光场4发光时间10ns
-    PARAM.SelectedLightFieldNumber = m_signalctrl.temp55;        //选择光场数量
-    PARAM.HorizontalDarkfieldSelectRegister = m_signalctrl.temp56;  //横向暗场选择寄存器
-    PARAM.CamareAndLightFieldControl = m_signalctrl.temp35;         //相机与光场控制
-    PARAM.SignalSwitch = m_signalctrl.temp36;                       //信号切换
-    PARAM.RowSignalSelected = m_signalctrl.temp37;                  //行信号源选择
+    PARAM.EncodePulseFilterUs = m_signalctrl.EncodePulseFilterUs;   // 编码器参数--编码脉冲滤波
+    PARAM.PhotoelectricSensorFiltering = m_signalctrl.PhotoelectricSensorFiltering;// 编码器参数--光电传感器滤波
+    PARAM.WheelEncoderPhotoPulse = m_signalctrl.WheelEncoderPhotoPulse;   //  编码器参数--压轮编码器产生拍照脉冲(四倍频)
+    PARAM.EncoderMode = m_signalctrl.EncoderMode;              // 编码器参数--编码器模式(0辊道/1压轮)
+    PARAM.SolenoidValve1DownDelay = m_signalctrl.SolenoidValve1DownDelay;  // 编码器参数--光电1触发电磁阀降下延时(ms)
+    PARAM.SolenoidValve1UpDelay = m_signalctrl.SolenoidValve1UpDelay;    // 编码器参数--光电1离开电磁阀升起延时(ms)
+    PARAM.SolenoidValve2DownDelay = m_signalctrl.SolenoidValve2DownDelay;  // 编码器参数--光电2触发电磁阀降下延时(ms)
+    PARAM.SolenoidValve2UpDelay = m_signalctrl.SolenoidValve2UpDelay;// 编码器参数--光电2离开电磁阀升起延时(ms)
+    PARAM.WheelAEncoder = m_signalctrl.WheelAEncoder;             // 编码器参数--压轮编码器A相计数
+    PARAM.WheelBEncoder = m_signalctrl.WheelBEncoder;         // 编码器参数--压轮编码器B相计数
+    PARAM.ErrorPhotoCount = m_signalctrl.ErrorPhotoCount;       // 编码器参数--查看错误拍照次数
+    PARAM.LightField1GlowTime = m_signalctrl.LightField1GlowTime;   // 光源控制器参数--光场1发光时间10ns
+    PARAM.LightField2GlowTime = m_signalctrl.LightField2GlowTime;   // 光源控制器参数--光场2发光时间10ns
+    PARAM.LightField3GlowTime = m_signalctrl.LightField3GlowTime;   // 光源控制器参数--光场3发光时间10ns
+    PARAM.LightField4GlowTime = m_signalctrl.LightField4GlowTime;    // 光源控制器参数--光场4发光时间10ns
+    PARAM.LightSignalSynchronizationDelayRegister = m_signalctrl.LightSignalSynchronizationDelayRegister;// 光源控制器参数--光源信号同步信号延时寄存器
+    PARAM.PhotoMode = m_signalctrl.PhotoMode;             // 光源控制器参数--拍照模式
+    PARAM.LightCameraEnable = m_signalctrl.LightCameraEnable;     // 光源控制器参数--光源相机使能信号
+    PARAM.WorkMode = m_signalctrl.WorkMode;              // 光源控制器参数--工作模式(0工作/1测试)
+    PARAM.LightSourcePulseEndPointRegister = m_signalctrl.LightSourcePulseEndPointRegister;// 光源控制器参数--光源脉冲结束点寄存器
+    PARAM.SyncPulsePeriodRegister = m_signalctrl.SyncPulsePeriodRegister; //光源控制器参数--同步脉冲周期寄存器
+    PARAM.CameraFrameSignalTriggerDelay = m_signalctrl.CameraFrameSignalTriggerDelay;// 光源控制器参数--相机帧信号触发延时行数(行)
+    PARAM.TimelapseAfterPhotoShootEnd = m_signalctrl.TimelapseAfterPhotoShootEnd;// 光源控制器参数--拍照结束延时行数(行)
+    PARAM.SelectedLightFieldNumber = m_signalctrl.SelectedLightFieldNumber;// 光源控制器参数--选择光场的数量
+    PARAM.FrameSignalOutput = m_signalctrl.FrameSignalOutput;// 光源控制器参数--帧信号输出
 }
 
 // 全部数据下发
@@ -437,7 +390,6 @@ void LightControl::slotAllGet()
 {
     if (SocketObjectPtr!= nullptr) {
         SocketObjectPtr->GetAllData(m_signalctrl);
-        qDebug()<<"every row line = " << m_signalctrl.temp13;
         LightControl::setUiContentFromStruct();
         INFOMATION.informationMessageBox(this,tr("information"),QString(tr("Get data success.")));
     } else {
@@ -522,21 +474,6 @@ void LightControl::getUiContentIntoStruct()
     m_signalctrl.Camare3Name = ui->Camera3NameLE->text();
     m_signalctrl.ServerIP = ui->ServerIPLE->text();
     m_signalctrl.ServerPort = ui->PortLE->text().toInt();
-    //自定义参数
-    m_signalctrl.SaveOriginImage = ui->SaveOriginImageCB->currentIndex();
-    m_signalctrl.SaveEntireImage = ui->SaveEntireImageCB->currentIndex();
-    m_signalctrl.SaveFlawImage = ui->SaveFlawImageCB->currentIndex();
-    m_signalctrl.SaveCropImage = ui->SaveCropImageCB->currentIndex();
-    m_signalctrl.XYLengthEnable = ui->XYLengthEnableCB->currentIndex();
-    m_signalctrl.FlawDefectEnable = ui->FlawDefectEnableCB->currentIndex();
-    //缺陷检测
-    m_signalctrl.Camera12PixelDeviation = ui->Camera12PixelDeviationLE->text().toInt();
-    m_signalctrl.Camera23PixelDeviation = ui->Camera23PixelDeviationLE->text().toInt();
-    m_signalctrl.Camera24PixelDeviation = ui->Camera24PixelDeviationLE->text().toInt();
-    m_signalctrl.SilkToRollerDist = ui->SilkToRollerDistLE->text().toInt();
-    m_signalctrl.ScratchAreaThreshold = ui->ScratchAreaThresholdLE->text().toInt();
-    m_signalctrl.BubbleStoneAreaThreshold = ui->BubbleStoneAreaThresholdLE->text().toInt();
-    m_signalctrl.DirtyAreaThreshold = ui->DirtyAreaThresholdLE->text().toInt();
     //尺寸测量
     m_signalctrl.YAccuracy = ui->YAccuracyLE->text().toDouble();
     m_signalctrl.XCamera0Accuracy = ui->XCamera0AccuracyLE->text().toDouble();
@@ -559,39 +496,32 @@ void LightControl::getUiContentIntoStruct()
     m_signalctrl.Camera3ExposureTime = ui->Camera3ExposureTimeLE->text().toInt();
     m_signalctrl.Camera3Gain = ui->Camera3GainLE->text().toInt();
     //编码器参数
-    m_signalctrl.temp0 = ui->EncodeUnitToDistLE->text().toInt();
-    m_signalctrl.temp1 = ui->EncodePulseFilterUsLE->text().toInt();
-    m_signalctrl.temp9 = ui->EncodeRevolutionLE->text().toInt();
-    m_signalctrl.temp10 = ui->RollerPerimeterUmLE->text().toInt();
-    m_signalctrl.temp11 = ui->ExpectSinglePixelAccuracyLE->text().toInt();
-    m_signalctrl.temp12 = ui->RollerMaxSpeedToRowCountLE->text().toInt();
-    m_signalctrl.temp13 = ui->EveryRowToEncodeCountLE->text().toInt();
-    //控制器参数
-    m_signalctrl.temp14 = ui->PixelAccuracyUmLE->text().toInt();
-    m_signalctrl.temp15 = ui->PhotoelectricSignalPulseFilterLE->text().toInt();
-    m_signalctrl.temp16 = ui->CamareTrigerPulseContinueTime10nsLE->text().toInt();
-    m_signalctrl.temp17 = ui->PhotoelectricToCamareDistLE->text().toInt();
-    m_signalctrl.temp18 = ui->CamareFrameTrigerDelayRowCountLE->text().toInt();
-    m_signalctrl.temp19 = ui->FrameSignalContinueTimeLE->text().toInt();
-    m_signalctrl.temp20 = ui->ModuleEnableSignalLE->text().toInt();
-    m_signalctrl.temp21 = ui->CamarePhotoRowCountLE->text().toInt();
-    m_signalctrl.temp22 = ui->InnerRowFrequencyLE->text().toInt();
-    m_signalctrl.tempAutoPhoto = ui->PhotoModeLE->text().toInt();
-    m_signalctrl.tempPhotoEndDelayLine = ui->PhotoEndDelayRowCountLE->text().toInt();
+    m_signalctrl.EncodePulseFilterUs = ui->EncodePulseFilterUsLE->text().toInt();
+    m_signalctrl.PhotoelectricSensorFiltering = ui->PhotoelectricSensorFilteringLE->text().toInt();
+    m_signalctrl.WheelEncoderPhotoPulse = ui->WheelEncoderPhotoPulseLE->text().toInt();
+    m_signalctrl.EncoderMode = ui->EncoderModeLE->text().toInt();
+    m_signalctrl.SolenoidValve1DownDelay = ui->SolenoidValve1DownDelayLE->text().toInt();
+    m_signalctrl.SolenoidValve1UpDelay = ui->SolenoidValve1UpDelayLE->text().toInt();
+    m_signalctrl.SolenoidValve2DownDelay = ui->SolenoidValve2DownDelayLE->text().toInt();
+    m_signalctrl.SolenoidValve2UpDelay = ui->SolenoidValve2UpDelayLE->text().toInt();
+    m_signalctrl.WheelAEncoder = ui->WheelAEncoderLE->text().toInt();
+    m_signalctrl.WheelBEncoder = ui->WheelBEncoderLE->text().toInt();
+    m_signalctrl.ErrorPhotoCount = ui->ErrorPhotoCountLE->text().toInt();
     //光源控制器参数
-    m_signalctrl.temp23 = ui->LightField1DelayTimeLE->text().toInt();
-    m_signalctrl.temp24 = ui->LightField1GlowTimeLE->text().toInt();
-    m_signalctrl.temp25 = ui->LightField2DelayTimeLE->text().toInt();
-    m_signalctrl.temp26 = ui->LightField2GlowTimeLE->text().toInt();
-    m_signalctrl.temp27 = ui->LightField3DelayTimeLE->text().toInt();
-    m_signalctrl.temp28 = ui->LightField3GlowTimeLE->text().toInt();
-    m_signalctrl.temp29 = ui->LightField4DelayTimeLE->text().toInt();
-    m_signalctrl.temp30 = ui->LightField4GlowTimeLE->text().toInt();
-    m_signalctrl.temp55 = ui->SelectedLightFieldNumberLE->text().toInt();
-    m_signalctrl.temp56 = ui->HorizontalDarkfieldSelectRegisterLE->text().toInt();
-    m_signalctrl.temp35 = ui->CamareAndLightFieldControlCB->currentIndex();
-    m_signalctrl.temp36 = ui->SignalSwitchLE->text().toInt();
-    m_signalctrl.temp37 = ui->RowSignalSelectedLE->text().toInt();
+    m_signalctrl.LightField1GlowTime = ui->LightField1GlowTimeLE->text().toInt();
+    m_signalctrl.LightField2GlowTime = ui->LightField2GlowTimeLE->text().toInt();
+    m_signalctrl.LightField3GlowTime = ui->LightField3GlowTimeLE->text().toInt();
+    m_signalctrl.LightField4GlowTime = ui->LightField4GlowTimeLE->text().toInt();
+    m_signalctrl.LightSignalSynchronizationDelayRegister = ui->LightSignalSynchronizationDelayRegisterLE->text().toInt();
+    m_signalctrl.PhotoMode = ui->PhotoModeLE->text().toInt();
+    m_signalctrl.LightCameraEnable = ui->LightCameraEnableLE->text().toInt();
+    m_signalctrl.WorkMode = ui->WorkModeLE->text().toInt();
+    m_signalctrl.LightSourcePulseEndPointRegister = ui->LightSourcePulseEndPointRegisterLE->text().toInt();
+    m_signalctrl.SyncPulsePeriodRegister = ui->SyncPulsePeriodRegisterLE->text().toInt();
+    m_signalctrl.CameraFrameSignalTriggerDelay = ui->CameraFrameSignalTriggerDelayLE->text().toInt();
+    m_signalctrl.TimelapseAfterPhotoShootEnd = ui->TimelapseAfterPhotoShootEndLE->text().toInt();
+    m_signalctrl.SelectedLightFieldNumber = ui->SelectedLightFieldNumberLE->text().toInt();
+    m_signalctrl.FrameSignalOutput = ui->FrameSignalOutputLE->text().toInt();
 }
 
 void LightControl::setUiContentFromStruct()
@@ -605,21 +535,6 @@ void LightControl::setUiContentFromStruct()
     ui->Camera3NameLE->setText(m_signalctrl.Camare3Name);
     ui->ServerIPLE->setText(m_signalctrl.ServerIP);
     ui->PortLE->setText(QString::number(m_signalctrl.ServerPort));
-    //自定义参数
-    ui->SaveOriginImageCB->setCurrentIndex(m_signalctrl.SaveOriginImage);
-    ui->SaveEntireImageCB->setCurrentIndex(m_signalctrl.SaveEntireImage);
-    ui->SaveFlawImageCB->setCurrentIndex(m_signalctrl.SaveFlawImage);
-    ui->SaveCropImageCB->setCurrentIndex(m_signalctrl.SaveCropImage);
-    ui->XYLengthEnableCB->setCurrentIndex(m_signalctrl.XYLengthEnable);
-    ui->FlawDefectEnableCB->setCurrentIndex(m_signalctrl.FlawDefectEnable);
-    //缺陷检测
-    ui->Camera12PixelDeviationLE->setText(QString::number(m_signalctrl.Camera12PixelDeviation));
-    ui->Camera23PixelDeviationLE->setText(QString::number(m_signalctrl.Camera23PixelDeviation));
-    ui->Camera24PixelDeviationLE->setText(QString::number(m_signalctrl.Camera24PixelDeviation));
-    ui->SilkToRollerDistLE->setText(QString::number(m_signalctrl.SilkToRollerDist));
-    ui->ScratchAreaThresholdLE->setText(QString::number(m_signalctrl.ScratchAreaThreshold));
-    ui->BubbleStoneAreaThresholdLE->setText(QString::number(m_signalctrl.BubbleStoneAreaThreshold));
-    ui->DirtyAreaThresholdLE->setText(QString::number(m_signalctrl.DirtyAreaThreshold));
     //尺寸测量
     ui->YAccuracyLE->setText(QString::number(m_signalctrl.YAccuracy));
     ui->XCamera0AccuracyLE->setText(QString::number(m_signalctrl.XCamera0Accuracy));
@@ -642,40 +557,36 @@ void LightControl::setUiContentFromStruct()
     ui->Camera3ExposureTimeLE->setText(QString::number(m_signalctrl.Camera3ExposureTime));
     ui->Camera3GainLE->setText(QString::number(m_signalctrl.Camera3Gain));
     //编码器参数
-    ui->EncodeUnitToDistLE->setText(QString::number(m_signalctrl.temp0));
-    ui->EncodePulseFilterUsLE->setText(QString::number(m_signalctrl.temp1));
-    ui->EncodeRevolutionLE->setText(QString::number(m_signalctrl.temp9));
-    ui->RollerPerimeterUmLE->setText(QString::number(m_signalctrl.temp10));
-    ui->ExpectSinglePixelAccuracyLE->setText(QString::number(m_signalctrl.temp11));
-    ui->RollerMaxSpeedToRowCountLE->setText(QString::number(m_signalctrl.temp12));
-    ui->EveryRowToEncodeCountLE->setText(QString::number(m_signalctrl.temp13));
-    //控制器参数
-    ui->PixelAccuracyUmLE->setText(QString::number(m_signalctrl.temp14));
-    ui->PhotoelectricSignalPulseFilterLE->setText(QString::number(m_signalctrl.temp15));
-    ui->CamareTrigerPulseContinueTime10nsLE->setText(QString::number(m_signalctrl.temp16));
-    ui->PhotoelectricToCamareDistLE->setText(QString::number(m_signalctrl.temp17));
-    ui->CamareFrameTrigerDelayRowCountLE->setText( QString::number(m_signalctrl.temp18));
-    ui->FrameSignalContinueTimeLE->setText(QString::number(m_signalctrl.temp19));
-    ui->ModuleEnableSignalLE->setText(QString::number(m_signalctrl.temp20));
-    ui->CamarePhotoRowCountLE->setText(QString::number(m_signalctrl.temp21));
-    ui->InnerRowFrequencyLE->setText(QString::number(m_signalctrl.temp22));
-    ui->PhotoModeLE->setText(QString::number(m_signalctrl.tempAutoPhoto));
-    ui->PhotoEndDelayRowCountLE->setText(QString::number(m_signalctrl.tempPhotoEndDelayLine));
+    ui->EncodePulseFilterUsLE->setText(QString::number(m_signalctrl.EncodePulseFilterUs));
+    ui->PhotoelectricSensorFilteringLE->setText(QString::number(m_signalctrl.PhotoelectricSensorFiltering));
+    ui->WheelEncoderPhotoPulseLE->setText(QString::number(m_signalctrl.WheelEncoderPhotoPulse));
+    ui->EncoderModeLE->setText(QString::number(m_signalctrl.EncoderMode));
+    ui->SolenoidValve1DownDelayLE->setText(QString::number(m_signalctrl.SolenoidValve1DownDelay));
+    ui->SolenoidValve1UpDelayLE->setText(QString::number(m_signalctrl.SolenoidValve1UpDelay));
+    ui->SolenoidValve2DownDelayLE->setText(QString::number(m_signalctrl.SolenoidValve2DownDelay));
+    ui->SolenoidValve2UpDelayLE->setText(QString::number(m_signalctrl.SolenoidValve2UpDelay));
+    ui->WheelAEncoderLE->setText(QString::number(m_signalctrl.WheelAEncoder));
+    ui->WheelBEncoderLE->setText(QString::number(m_signalctrl.WheelBEncoder));
+    ui->ErrorPhotoCountLE->setText(QString::number(m_signalctrl.ErrorPhotoCount));
     //光源控制器参数
-    ui->LightField1DelayTimeLE->setText(QString::number(m_signalctrl.temp23));
-    ui->LightField1GlowTimeLE->setText(QString::number(m_signalctrl.temp24));
-    ui->LightField2DelayTimeLE->setText(QString::number(m_signalctrl.temp25));
-    ui->LightField2GlowTimeLE->setText(QString::number(m_signalctrl.temp26));
-    ui->LightField3DelayTimeLE->setText(QString::number(m_signalctrl.temp27));
-    ui->LightField3GlowTimeLE->setText(QString::number(m_signalctrl.temp28));
-    ui->LightField4DelayTimeLE->setText(QString::number(m_signalctrl.temp29));
-    ui->LightField4GlowTimeLE->setText(QString::number(m_signalctrl.temp30));
-    ui->SelectedLightFieldNumberLE->setText(QString::number(m_signalctrl.temp55));
-    ui->HorizontalDarkfieldSelectRegisterLE->setText(QString::number(m_signalctrl.temp56));
-    ui->CamareAndLightFieldControlCB->setCurrentIndex(m_signalctrl.temp35);
-    ui->SignalSwitchLE->setText(QString::number(m_signalctrl.temp36));
-    ui->RowSignalSelectedLE->setText(QString::number(m_signalctrl.temp37));
+    ui->LightField1GlowTimeLE->setText(QString::number(m_signalctrl.LightField1GlowTime));
+    ui->LightField2GlowTimeLE->setText(QString::number(m_signalctrl.LightField2GlowTime));
+    ui->LightField3GlowTimeLE->setText(QString::number(m_signalctrl.LightField3GlowTime));
+    ui->LightField4GlowTimeLE->setText(QString::number(m_signalctrl.LightField4GlowTime));
+    ui->LightSignalSynchronizationDelayRegisterLE->setText(QString::number(m_signalctrl.LightSignalSynchronizationDelayRegister));
+    ui->PhotoModeLE->setText(QString::number(m_signalctrl.PhotoMode));
+    ui->LightCameraEnableLE->setText(QString::number(m_signalctrl.LightCameraEnable));
+    ui->WorkModeLE->setText(QString::number(m_signalctrl.WorkMode));
+    ui->LightSourcePulseEndPointRegisterLE->setText(QString::number(m_signalctrl.LightSourcePulseEndPointRegister));
+    ui->SyncPulsePeriodRegisterLE->setText(QString::number(m_signalctrl.SyncPulsePeriodRegister));
+    ui->CameraFrameSignalTriggerDelayLE->setText(QString::number(m_signalctrl.CameraFrameSignalTriggerDelay));
+    ui->TimelapseAfterPhotoShootEndLE->setText(QString::number(m_signalctrl.TimelapseAfterPhotoShootEnd));
+    ui->SelectedLightFieldNumberLE->setText(QString::number(m_signalctrl.SelectedLightFieldNumber));
+    ui->FrameSignalOutputLE->setText(QString::number(m_signalctrl.FrameSignalOutput));
 
+    //
+    // 初始化全局变量
+    //
     //
     // 初始化全局变量
     //
@@ -687,19 +598,6 @@ void LightControl::setUiContentFromStruct()
     PARAM.Camera3Name = m_signalctrl.Camare3Name;
     PARAM.serverIp = m_signalctrl.ServerIP;
     PARAM.serverPort = m_signalctrl.ServerPort;
-    PARAM.isSaveOriginImage = m_signalctrl.SaveOriginImage;
-    PARAM.isSaveEntireImage = m_signalctrl.SaveEntireImage;
-    PARAM.isSaveFlawImage = m_signalctrl.SaveFlawImage;
-    PARAM.isSaveCropImage = m_signalctrl.SaveCropImage;
-    PARAM.XYLengthEnable = m_signalctrl.XYLengthEnable;
-    PARAM.FlawDefectEnable = m_signalctrl.FlawDefectEnable;
-    PARAM.Camera12PixelDeviation = m_signalctrl.Camera12PixelDeviation;
-    PARAM.Camera23PixelDeviation = m_signalctrl.Camera23PixelDeviation;
-    PARAM.Camera24PixelDeviation = m_signalctrl.Camera24PixelDeviation;
-    PARAM.SilkToRollerDist = m_signalctrl.SilkToRollerDist;
-    PARAM.ScratchAreaThreshold = m_signalctrl.ScratchAreaThreshold;
-    PARAM.BubbleStoneAreaThreshold = m_signalctrl.BubbleStoneAreaThreshold;
-    PARAM.DirtyAreaThreshold = m_signalctrl.DirtyAreaThreshold;
     PARAM.YAccuracy = m_signalctrl.YAccuracy;
     PARAM.XCamera0Accuracy = m_signalctrl.XCamera0Accuracy;
     PARAM.XCamera1Accuracy = m_signalctrl.XCamera1Accuracy;
@@ -719,46 +617,45 @@ void LightControl::setUiContentFromStruct()
     PARAM.Camera3PhotoRow = m_signalctrl.Camera3PhotoRow;
     PARAM.Camera3ExposureTime = m_signalctrl.Camera3ExposureTime;
     PARAM.Camera3Gain = m_signalctrl.Camera3Gain;
-    PARAM.EncodeUnitToDist = m_signalctrl.temp0;               // 编码器单位刻度对应距离
-    PARAM.EncodePulseFilterUs = m_signalctrl.temp1;            // 编码脉冲滤
-    PARAM.EncodeRevolution = m_signalctrl.temp9;                //编码器转数
-    PARAM.RollerPerimeterUm = m_signalctrl.temp10;               //辊道周长
-    PARAM.ExpectSinglePixelAccuracy = m_signalctrl.temp11;       //期望单个像素精度
-    PARAM.RollerMaxSpeedToRowCount = m_signalctrl.temp12;        //辊道最大速度对应行频
-    PARAM.EveryRowToEncodeCount = m_signalctrl.temp13;           //每行对应的编码计数
-    PARAM.PixelAccuracyUm = m_signalctrl.temp14;                    //像素精度um
-    PARAM.PhotoelectricSignalPulseFilter = m_signalctrl.temp15;     //光电信号脉冲滤波
-    PARAM.CamareTrigerPulseContinueTime10ns = m_signalctrl.temp16;  //相机触发脉冲持续时间10ns
-    PARAM.PhotoelectricToCamareDist = m_signalctrl.temp17;          //光电与相机距离行
-    PARAM.CamareFrameTrigerDelayRowCount = m_signalctrl.temp18;     // 相机帧触发延时行数
-    PARAM.FrameSignalContinueTime = m_signalctrl.temp19;            //帧信号持续时间
-    PARAM.ModuleEnableSignal = m_signalctrl.temp20;                 //模块使能信号
-    PARAM.CamarePhotoRowCount = m_signalctrl.temp21;                //相机拍照行数
-    PARAM.InnerRowFrequency = m_signalctrl.temp22;                  //内部行频
-    PARAM.PhotoMode = m_signalctrl.tempAutoPhoto;                          //拍照模式
-    PARAM.PhotoEndDelayRowCount = m_signalctrl.tempPhotoEndDelayLine;              //拍照延时行数
-    PARAM.LightField1DelayTime = m_signalctrl.temp23;            //光场1延时时间10ns
-    PARAM.LightField1GlowTime = m_signalctrl.temp24;             //光场1发光时间10ns
-    PARAM.LightField2DelayTime = m_signalctrl.temp25;            //光场2延时时间10ns
-    PARAM.LightField2GlowTime = m_signalctrl.temp26;             //光场2发光时间10ns
-    PARAM.LightField3DelayTime = m_signalctrl.temp27;            //光场3延时时间10ns
-    PARAM.LightField3GlowTime= m_signalctrl.temp28;             //光场3发光时间10ns
-    PARAM.LightField4DelayTime= m_signalctrl.temp29;            //光场4延时时间10ns
-    PARAM.LightField4GlowTime= m_signalctrl.temp30;             //光场4发光时间10ns
-    PARAM.SelectedLightFieldNumber = m_signalctrl.temp55;        //选择光场数量
-    PARAM.HorizontalDarkfieldSelectRegister = m_signalctrl.temp56;  //横向暗场选择寄存器
-    PARAM.CamareAndLightFieldControl = m_signalctrl.temp35;         //相机与光场控制
-    PARAM.SignalSwitch = m_signalctrl.temp36;                       //信号切换
-    PARAM.RowSignalSelected = m_signalctrl.temp37;                  //行信号源选择
+    PARAM.EncodePulseFilterUs = m_signalctrl.EncodePulseFilterUs;   // 编码器参数--编码脉冲滤波
+    PARAM.PhotoelectricSensorFiltering = m_signalctrl.PhotoelectricSensorFiltering;// 编码器参数--光电传感器滤波
+    PARAM.WheelEncoderPhotoPulse = m_signalctrl.WheelEncoderPhotoPulse;   //  编码器参数--压轮编码器产生拍照脉冲(四倍频)
+    PARAM.EncoderMode = m_signalctrl.EncoderMode;              // 编码器参数--编码器模式(0辊道/1压轮)
+    PARAM.SolenoidValve1DownDelay = m_signalctrl.SolenoidValve1DownDelay;  // 编码器参数--光电1触发电磁阀降下延时(ms)
+    PARAM.SolenoidValve1UpDelay = m_signalctrl.SolenoidValve1UpDelay;    // 编码器参数--光电1离开电磁阀升起延时(ms)
+    PARAM.SolenoidValve2DownDelay = m_signalctrl.SolenoidValve2DownDelay;  // 编码器参数--光电2触发电磁阀降下延时(ms)
+    PARAM.SolenoidValve2UpDelay = m_signalctrl.SolenoidValve2UpDelay;// 编码器参数--光电2离开电磁阀升起延时(ms)
+    PARAM.WheelAEncoder = m_signalctrl.WheelAEncoder;             // 编码器参数--压轮编码器A相计数
+    PARAM.WheelBEncoder = m_signalctrl.WheelBEncoder;         // 编码器参数--压轮编码器B相计数
+    PARAM.ErrorPhotoCount = m_signalctrl.ErrorPhotoCount;       // 编码器参数--查看错误拍照次数
+    PARAM.LightField1GlowTime = m_signalctrl.LightField1GlowTime;   // 光源控制器参数--光场1发光时间10ns
+    PARAM.LightField2GlowTime = m_signalctrl.LightField2GlowTime;   // 光源控制器参数--光场2发光时间10ns
+    PARAM.LightField3GlowTime = m_signalctrl.LightField3GlowTime;   // 光源控制器参数--光场3发光时间10ns
+    PARAM.LightField4GlowTime = m_signalctrl.LightField4GlowTime;    // 光源控制器参数--光场4发光时间10ns
+    PARAM.LightSignalSynchronizationDelayRegister = m_signalctrl.LightSignalSynchronizationDelayRegister;// 光源控制器参数--光源信号同步信号延时寄存器
+    PARAM.PhotoMode = m_signalctrl.PhotoMode;             // 光源控制器参数--拍照模式
+    PARAM.LightCameraEnable = m_signalctrl.LightCameraEnable;     // 光源控制器参数--光源相机使能信号
+    PARAM.WorkMode = m_signalctrl.WorkMode;              // 光源控制器参数--工作模式(0工作/1测试)
+    PARAM.LightSourcePulseEndPointRegister = m_signalctrl.LightSourcePulseEndPointRegister;// 光源控制器参数--光源脉冲结束点寄存器
+    PARAM.SyncPulsePeriodRegister = m_signalctrl.SyncPulsePeriodRegister; //光源控制器参数--同步脉冲周期寄存器
+    PARAM.CameraFrameSignalTriggerDelay = m_signalctrl.CameraFrameSignalTriggerDelay;// 光源控制器参数--相机帧信号触发延时行数(行)
+    PARAM.TimelapseAfterPhotoShootEnd = m_signalctrl.TimelapseAfterPhotoShootEnd;// 光源控制器参数--拍照结束延时行数(行)
+    PARAM.SelectedLightFieldNumber = m_signalctrl.SelectedLightFieldNumber;// 光源控制器参数--选择光场的数量
+    PARAM.FrameSignalOutput = m_signalctrl.FrameSignalOutput;// 光源控制器参数--帧信号输出
 }
 
 void LightControl::getFrameSignal()
 {
     if (SocketObjectPtr == nullptr) {
         unsigned int FrameSignal;
-        unsigned int AlmLightSignal;
-        SocketObjectPtr->GetRealTimeData(FrameSignal,AlmLightSignal);
-        PARAM.FrameSignal = FrameSignal;
+        unsigned int CoderACount;
+        unsigned int CoderBCount;
+        unsigned int errorPhotoCount;
+        SocketObjectPtr->GetRealTimeData(FrameSignal,CoderACount,CoderBCount,errorPhotoCount);
+        PARAM.FrameSignalOutput = FrameSignal;
+        PARAM.WheelAEncoder = CoderACount;
+        PARAM.WheelBEncoder = CoderBCount;
+        PARAM.ErrorPhotoCount = errorPhotoCount;
     }
 }
 

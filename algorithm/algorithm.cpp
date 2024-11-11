@@ -13,40 +13,54 @@ Algorithm::~Algorithm()
 {}
 
 //拼图
-void Algorithm::init(std::vector<cv::Mat>& mat0, std::vector<cv::Mat>& mat1, CropArgPackage packages)
+void Algorithm::init(JigsawPuzzleDataPack pack,
+                  cv::Mat& image1,
+                  cv::Mat& image2,
+                  cv::Mat& image3)
 {
-    cv::Mat mat00 = mat0[0];
-    cv::Mat mat10 = mat1[0];
-    CameraCropArg arg0 = packages.args[0];
-    CameraCropArg arg1 = packages.args[0];
-    image1 = Algorithm::HorizontalPuzzle(mat0[0],
-                                         mat1[0],
+    cv::Mat mat00 = pack.mat0[0];
+    cv::Mat mat10 = pack.mat1[0];
+    CameraCropArg arg0 = pack.packages.args[0];
+    CameraCropArg arg1 = pack.packages.args[0];
+    image1 = Algorithm::HorizontalPuzzle(pack.mat0[0],
+                                         pack.mat1[0],
                                          arg0,
                                          arg1);
-    image2 = Algorithm::HorizontalPuzzle(mat0[1],
-                                         mat1[1],
+    image2 = Algorithm::HorizontalPuzzle(pack.mat0[1],
+                                         pack.mat1[1],
                                          arg0,
                                          arg1);
-    image3 = Algorithm::HorizontalPuzzle(mat0[2],
-                                         mat1[2],
+    image3 = Algorithm::HorizontalPuzzle(pack.mat0[2],
+                                         pack.mat1[2],
                                          arg0,
                                          arg1);
 }
 
-void Algorithm::Execu(int currentFrameCount)
+void Algorithm::RegisterResultCallback(CallbackFun func)
 {
-    double length = 0;
-    double width = 0;
-    QString imagePath = "";
+    mainFunction = func;//执行函数
+}
+
+void Algorithm::SyncExecu(int& currentFrameCount,
+                      cv::Mat& image1,
+                      cv::Mat& image2,
+                      cv::Mat& image3)
+{
     std::vector<std::shared_ptr<NewDefectUnitData>> frameGlassResult;
-    proPtr->CV_DefectsDetected(image1,image2,image3,length,width,imagePath);
-    NewGlassResult data;
-    data.res = proPtr->getDefectResult();
-    data.currentFrameCount = currentFrameCount;
-    data.pixGlassLength = length;
-    data.pixGlassWidth = width;
-    data.FaceQimagePath = imagePath;
-    ResultQue.push(data);
+    // proPtr->CV_DefectsDetected(image1,image2,image3,length,width,imagePath);//多线程处理
+    std::shared_ptr<std::thread> processThread = std::make_shared<std::thread>(&ProcessTile::CV_DefectsDetected,
+                                            proPtr.get(),
+                                            image1,
+                                            image2,
+                                            image3,
+                                            currentFrameCount);
+    threadMap.insert(std::make_pair(currentFrameCount,processThread));
+    if (threadMap[currentFrameCount]->joinable()) {
+        threadMap[currentFrameCount]->join();
+        NewGlassResult result;
+        proPtr->getDefectResult(currentFrameCount, result);
+        mainFunction(result);
+    }
 }
 
 void Algorithm::TestExecu(cv::Mat& image)
@@ -55,13 +69,9 @@ void Algorithm::TestExecu(cv::Mat& image)
     double width = 0;
     QString Path;
     std::vector<std::shared_ptr<NewDefectUnitData>> frameGlassResult;
-    proPtr->CV_DefectsDetected(image,image2,image3,length,width,Path);
-}
-
-void Algorithm::GetFrameResult(NewGlassResult& result)
-{
-    result = ResultQue.front();
-    ResultQue.pop();
+    proPtr->CV_DefectsDetected(image,image,image,0);
+    NewGlassResult result;
+    proPtr->getDefectResult(0, result);
 }
 
 void Algorithm::Stop()

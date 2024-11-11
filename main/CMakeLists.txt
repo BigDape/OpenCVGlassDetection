@@ -79,7 +79,6 @@ else()
  endif()
  find_package(OpenCV 4.10.0 REQUIRED)
 
- set(QWT_DIR C:/Qt/6.8.0/msvc2022_64)
  target_link_libraries(hikvision PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
                                          Qt${QT_VERSION_MAJOR}::Charts
                                          camera
@@ -89,9 +88,8 @@ else()
                                          algorithm
                                          jsoncpp
                                          ${OpenCV_LIBS}
-                                         ${QWT_DIR}/lib/qwt.lib
                                         )
- target_include_directories(hikvision PUBLIC C:/Qt/6.8.0/msvc2022_64/include/Qwt)
+ target_include_directories(hikvision PUBLIC C:/Qt/6.8.0/msvc2022_64/include)
 
  qt_add_resources(hikvision "./"
      PREFIX "/"

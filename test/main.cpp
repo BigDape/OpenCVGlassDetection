@@ -32,6 +32,7 @@ int main() {
     std::cout << "图像分割并保存完成。" << std::endl;
     return 0 ;
 #endif
+    try{
     //
     // 动态加载算法组件
     //
@@ -55,12 +56,24 @@ int main() {
         algorithmPtr = createFunc();
     }
     std::cout<<"test 1233"<<std::endl;
-    cv::Mat image1 = cv::imread("D:/testopencv/part1.jpg");
+    cv::Mat image1 = cv::imread("D:/testopencv/part2.jpg");
     qDebug()<<"image1 sucess";
     cv::Mat grayImage;
     cv::cvtColor(image1, grayImage, cv::COLOR_BGR2GRAY);
 
     algorithmPtr->TestExecu(grayImage);
+    } catch(...) {
+        qDebug() << "An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+    }
 
     // 霍夫圆变换
     // cv::Mat image1 = cv::imread("D:/testopencv/defect/defect137.jpg");

@@ -450,15 +450,6 @@ D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvis
   C:/Qt/6.8.0/msvc2022_64/include/QtWidgets/qtwidgetsexports.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtWidgets/qtwidgetsglobal.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtWidgets/qwidget.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_axis.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_axis_id.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_event_pattern.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_global.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_picker.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_plot.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_plot_dict.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_plot_item.h \
-  C:/Qt/6.8.0/msvc2022_64/include/Qwt/qwt_plot_picker.h \
   C:/opencv/install/include/opencv2/calib3d.hpp \
   C:/opencv/install/include/opencv2/core.hpp \
   C:/opencv/install/include/opencv2/core/affine.hpp \

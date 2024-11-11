@@ -14,6 +14,7 @@
 #include <opencv2/core/cuda.hpp>
 #include <opencv2/dnn.hpp>
 #include <chrono>
+#include<future>      //std::future std::promise
 
 //检出缺陷滤波
 #define AREATHRESHOLD 25
@@ -87,6 +88,20 @@ extern "C" void cudaProcessClassification(cv::Mat defectimage, cv::dnn::Net net)
 //     }
 // }
 
+ProcessTile::ProcessTile()
+{
+    // 加载模型
+    net = cv::dnn::readNetFromONNX("D:/best.onnx");
+    net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+    net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+    if (!net.empty()) {
+        qDebug()<<"!net.empty()";
+    } else {
+        qDebug()<<"Load onnx model is fail.";
+    }
+}
+
+
 // 离线模式调用的函数
 void ProcessTile::OfflineTileImageProcess(QString fullpath)
 {
@@ -124,11 +139,23 @@ void ProcessTile::OfflineTileImageProcess(QString fullpath)
 void ProcessTile::CV_DefectsDetected(cv::Mat image1,
                                      cv::Mat image2,
                                      cv::Mat image3,
-                                     double& length,
-                                     double& width,
-                                     QString& imagePath)
+                                     int currentFrame)
 {
-    ProcessTile::image1DefectsDetected(image1, length,width,imagePath);
+    try{
+       ProcessTile::image1DefectsDetected(image1,currentFrame);
+    } catch (...) {
+        qDebug() << "An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+    }
+
     ProcessTile::image2DefectsDetected(image2);
     ProcessTile::image3DefectsDetected(image3);
 }
@@ -136,7 +163,7 @@ void ProcessTile::CV_DefectsDetected(cv::Mat image1,
 void ProcessTile::saveMatToImage(QString fullpath,cv::Mat region )
 {
     std::string filename = fullpath.toStdString();
-    bool r = cv::imwrite(filename, region);
+    cv::imwrite(filename, region);
 }
 
 // 左上角坐标点和右上角坐标点
@@ -230,7 +257,7 @@ void ProcessTile::edgeDefectDetection(cv::Mat& region,
             cv::Rect rect(i*640, 0, 640, 640);
             cv::Mat topEdgeRegion = region(rect);
             regionInfor info;
-            info.path =ProcessTile::SyncSaveCurrentTimeImage(topEdgeRegion);
+            info.path = ProcessTile::SyncSaveCurrentTimeImage(topEdgeRegion);
             info.region = topEdgeRegion;
             edgeRegionInfos.push_back(info);
         }
@@ -239,11 +266,13 @@ void ProcessTile::edgeDefectDetection(cv::Mat& region,
             int lastX = regionCol - (regionCol%640);
             cv::Rect rect(lastX, 0, regionCol%640, 640);
             cv::Mat topEdgeRegion = region(rect);
-            regionInfor info;
-            info.path = ProcessTile::SyncSaveCurrentTimeImage(topEdgeRegion);
-            info.region = topEdgeRegion;
-            edgeRegionInfos.push_back(info);
-            ProcessTile::SyncSaveCurrentTimeImage(topEdgeRegion);
+            if (topEdgeRegion.rows != 0 && topEdgeRegion.cols != 0) {
+                regionInfor info;
+                info.path = ProcessTile::SyncSaveCurrentTimeImage(topEdgeRegion);
+                info.region = topEdgeRegion;
+                edgeRegionInfos.push_back(info);
+                ProcessTile::SyncSaveCurrentTimeImage(topEdgeRegion);
+            }
         }
     }
     //
@@ -262,10 +291,12 @@ void ProcessTile::edgeDefectDetection(cv::Mat& region,
             int lastY = regionRow - (regionRow%640);
             cv::Rect rect(regionCol-640,lastY, 640, regionRow%640);
             cv::Mat rightEdgeRegion = region(rect);
-            regionInfor info;
-            info.path = ProcessTile::SyncSaveCurrentTimeImage(rightEdgeRegion);
-            info.region = rightEdgeRegion;
-            edgeRegionInfos.push_back(info);
+            if (rightEdgeRegion.rows != 0 && rightEdgeRegion.cols != 0) {
+                regionInfor info;
+                info.path = ProcessTile::SyncSaveCurrentTimeImage(rightEdgeRegion);
+                info.region = rightEdgeRegion;
+                edgeRegionInfos.push_back(info);
+            }
         }
     }
     //
@@ -284,10 +315,12 @@ void ProcessTile::edgeDefectDetection(cv::Mat& region,
             int lastX = regionCol - (regionCol%640) - 640;
             cv::Rect rect(lastX, regionRow - 640, regionCol%640 , 640);
             cv::Mat bottomEdgeRegion = region(rect);
-            regionInfor info;
-            info.path = ProcessTile::SyncSaveCurrentTimeImage(bottomEdgeRegion);
-            info.region = bottomEdgeRegion;
-            edgeRegionInfos.push_back(info);
+            if (bottomEdgeRegion.rows != 0 && bottomEdgeRegion.cols != 0) {
+                regionInfor info;
+                info.path = ProcessTile::SyncSaveCurrentTimeImage(bottomEdgeRegion);
+                info.region = bottomEdgeRegion;
+                edgeRegionInfos.push_back(info);
+            }
         }
     }
     //
@@ -306,49 +339,42 @@ void ProcessTile::edgeDefectDetection(cv::Mat& region,
             int lastY = regionRow - (regionRow%640) - 640;
             cv::Rect rect(0,lastY, 640, regionRow%640);
             cv::Mat leftEdgeRegion = region(rect);
-            regionInfor info;
-            info.path = ProcessTile::SyncSaveCurrentTimeImage(leftEdgeRegion);
-            info.region = leftEdgeRegion;
-            edgeRegionInfos.push_back(info);
-        }
-    }
-}
-
-void ProcessTile::YoloDefectClassification(std::vector<regionInfor>& Regions)
-{
-    auto start = std::chrono::high_resolution_clock::now();// 开始时间
-    // 加载模型
-    net = cv::dnn::readNetFromONNX("D:/best.onnx");
-    net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-    net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
-    if (!net.empty()) {
-        qDebug()<<"!net.empty()";
-        std::vector<std::thread> threads;
-        //
-        // 缺陷检测
-        //
-        qDebug()<<"Regions.size()"<<Regions.size();
-        for (int i = 0 ; i < (int)Regions.size(); ++i) {
-            threads.push_back(std::thread(&ProcessTile::threadProcessClassification, this, Regions[i]));
-        }
-        for (auto& th : threads) {
-            if (th.joinable()) {
-                th.join();
+            if (leftEdgeRegion.rows != 0 && leftEdgeRegion.cols != 0) {
+                regionInfor info;
+                info.path = ProcessTile::SyncSaveCurrentTimeImage(leftEdgeRegion);
+                info.region = leftEdgeRegion;
+                edgeRegionInfos.push_back(info);
             }
         }
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::milli> duration = end - start;
-        qDebug() << "time：" << duration.count() << " ms";
-    } else {
-        qDebug()<<"Load onnx model is fail.";
     }
-
 }
 
-void ProcessTile::image1DefectsDetected(cv::Mat& image,
-                                        double& glassLength,
-                                        double& glassWidth,
-                                        QString& imagePath)
+void ProcessTile::YoloDefectClassification(std::vector<regionInfor>& Regions, std::vector<NewDefectUnitData>& unitVec)
+{
+    auto start = std::chrono::high_resolution_clock::now();// 开始时间
+    std::vector<std::thread> threads;
+    //
+    // 缺陷检测
+    //
+    qDebug()<<"Regions.size()"<<Regions.size();
+    std::vector<std::promise<NewDefectUnitData>> promiseObjs(Regions.size());
+    for (int i = 0 ; i < (int)Regions.size(); ++i) {
+        std::promise<NewDefectUnitData> promiseObj;
+        threads.push_back(std::thread(&ProcessTile::threadProcessClassification, this, Regions[i], std::ref(promiseObjs[i])));
+    }
+    for (int i=0; i< (int)threads.size();++i) {
+        if (threads[i].joinable()) {
+            NewDefectUnitData it = promiseObjs[i].get_future().get();
+            threads[i].join();
+            unitVec.push_back(it);
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    qDebug() << "time：" << duration.count() << " ms";
+}
+
+void ProcessTile::image1DefectsDetected(cv::Mat& image, int currentframe)
 {
     int DeviceCount = cv::cuda::getCudaEnabledDeviceCount();
     if (DeviceCount < 1) {
@@ -356,7 +382,11 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
         return;
     }
     std::cout << "GPU support available. Device Count ="<<DeviceCount<< std::endl;
-    if (image.rows > 0 ) {
+    int imageRows = image.rows;
+    int imageCols = image.cols;
+    CV_GLASSPART part = CV_GLASSPART::UNKNOW;
+    qDebug()<<"imageRows ="<<imageRows<<",imageCols="<<imageCols;
+    if (imageRows > 0 ) {
         cv::setNumThreads(26);
         auto start = std::chrono::high_resolution_clock::now();// 开始时间
         //
@@ -364,9 +394,12 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
         //
         cv::Mat cannyEdges;
         cv::Canny(image, cannyEdges, 50, 150);
-        // std::string filename2 = "D:/testopencv/cannyEdges.jpg";
-        // cv::imwrite(filename2, cannyEdges);
-       // 获取region
+        QString filename2 = "D:/testopencv/cannyEdges.jpg";
+        ProcessTile::SyncSaveCurrentTimeImage(cannyEdges,filename2);
+
+        //
+        // 获取region
+        //
        std::vector<std::vector<cv::Point> > contours;
        cv::findContours(cannyEdges, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE); //找轮廓
        // 求轮廓的最大外接矩形(该矩形与上下左右边平行)
@@ -375,12 +408,15 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
        cv::RotatedRect maxminAreaRect; //最大外接矩形
        cv::Rect maxBoundingRect(0,0,0,0);
        qDebug()<<"contours.size() = "<<contours.size();
+       std::vector<int> XXs;
        for(int i = 0; i < (int)contours.size(); i++) {
            std::vector<cv::Point> contour = contours[i];
            // 获取轮廓的最大外接矩形
            cv::RotatedRect rect = cv::minAreaRect(contour);
            cv::Rect boundingRect = rect.boundingRect();
            double area = boundingRect.width * boundingRect.height;
+           XXs.push_back(boundingRect.x);
+           XXs.push_back(boundingRect.x + boundingRect.width);
            if (area > maxArea) {
                maxArea = area;
                maxAreaContourIndex = i;
@@ -388,13 +424,88 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
                maxBoundingRect = boundingRect;
            }
        }
-       qDebug()<<"maxAreaContourIndex ="<<maxAreaContourIndex;
+       qDebug()<<"maxBoundingRect.x ="<<maxBoundingRect.x
+                <<",maxBoundingRect.y="<<maxBoundingRect.y
+                <<"maxBoundingRect.w ="<<maxBoundingRect.width
+                <<",maxBoundingRect.height="<<maxBoundingRect.height;
+       qDebug()<<"centor ="<<maxminAreaRect.center.x<<","<<maxminAreaRect.center.y
+                <<" | size = height ="<<maxminAreaRect.size.height<<",width="<<maxminAreaRect.size.width
+                <<" | Angle ="<<maxminAreaRect.angle;
 
+       std::vector<cv::Point2f> oldvertices; // 原始图像四个顶点坐标，用于仿射变换扶正图像
+       std::vector<cv::Point2f> newvertices; // 修正倾斜图像四个顶点坐标，用于仿射变换扶正图像
+       if ( maxBoundingRect.width < imageCols/8) {//区域宽度占比小于图像宽度的1/8,则认定为玻璃中部
+           part = CV_GLASSPART::MID;
+           int PythagoreanSide = maxBoundingRect.width; //勾股定理短直角边
+           qDebug()<<"PythagoreanSide ="<<PythagoreanSide;
+           int minValue = *std::min_element(XXs.begin(), XXs.end());
+           int MaxValue = *std::max_element(XXs.begin(),XXs.end());
+           qDebug()<<"minValue ="<<minValue<<"MaxValue = "<<MaxValue;
+           // 最大矩形边框重新赋值
+           maxBoundingRect.x = minValue;
+           maxBoundingRect.y = 0;
+           maxBoundingRect.width = MaxValue - minValue;
+           maxBoundingRect.height = imageRows;
+           // 中部玻璃平行四边形面部的四个顶点提前重新赋值
+           float midGlassWidth = MaxValue - minValue - PythagoreanSide; //平行四边形的上下边宽度
+           cv::Point2f P1; //平行四边形的左上顶点
+           P1.x = minValue;//也是最大外接矩形的x坐标
+           P1.y = 0; //中部玻璃为0
+           oldvertices.push_back(P1);
+           cv::Point2f P2; //平行四边形的右上顶点
+           P2.x = minValue + midGlassWidth; //P1x坐标加上宽度
+           P2.y = 0;
+           oldvertices.push_back(P2);
+           cv::Point2f P3; //平行四边形的右下顶点
+           cv::Point2f P4; //平行四边形的左下顶点
+           if (maxminAreaRect.angle > 90) {//玻璃上部向右倾斜
+                P4.x = minValue - PythagoreanSide;
+                P4.y = imageRows;
+           } else { //玻璃上部向左倾斜
+               P4.x = minValue + PythagoreanSide;
+               P4.y = imageRows;
+           }
+           P3.x = P4.x + midGlassWidth;
+           P3.y = imageRows;
+           oldvertices.push_back(P3);
+           oldvertices.push_back(P4);// 必须按照顺序压入
+       } else {
+           if (maxBoundingRect.y == 0) {
+               part = CV_GLASSPART::TAIL;
+           } else {
+               part = CV_GLASSPART::HEAD;
+           }
+       }
+       qDebug()<<"centor ="<<maxminAreaRect.center.x<<","<<maxminAreaRect.center.y
+                <<" | size = height ="<<maxminAreaRect.size.height<<",width="<<maxminAreaRect.size.width
+                <<" | Angle ="<<maxminAreaRect.angle;
+       // 边界处理
+       if (maxBoundingRect.x < 0) {
+           maxBoundingRect.x = 0;
+       }
+       if (maxBoundingRect.y < 0) {
+           maxBoundingRect.y = 0;
+       }
+       if (maxBoundingRect.x + maxBoundingRect.width > imageCols) {
+           maxBoundingRect.width = imageCols - maxBoundingRect.x;
+       }
+       if (maxBoundingRect.y + maxBoundingRect.height > imageRows) {
+           maxBoundingRect.height = imageRows - maxBoundingRect.y;
+       }
+       qDebug()<<"maxAreaContourIndex ="<<maxAreaContourIndex;
+       qDebug()<<"maxBoundingRect.x ="<<maxBoundingRect.x
+                <<",maxBoundingRect.y="<<maxBoundingRect.y
+                <<"maxBoundingRect.w ="<<maxBoundingRect.width
+                <<",maxBoundingRect.height="<<maxBoundingRect.height;
+       cv::Mat tmp1 = image(maxBoundingRect);
+       QString filenametmp1 = "D:/testopencv/tmp1.jpg";
+       ProcessTile::SyncSaveCurrentTimeImage(tmp1,filenametmp1);
+       //
        // 找到玻璃区域
+       //
        if (maxAreaContourIndex != -1) {
-           std::vector<cv::Point2f> oldvertices;//原始图像四个顶点坐标
-           std::vector<cv::Point2f> newvertices; // 修正倾斜图像四个顶点坐标
-           ProcessTile::calculateBoundingRectangle(maxBoundingRect,maxminAreaRect, oldvertices, newvertices);
+
+           ProcessTile::calculateBoundingRectangle(part, maxBoundingRect,maxminAreaRect, oldvertices, newvertices);//计算出图片扶正的顶点矩阵
 
            // todo:优化仿射变换，速度太慢
            // 仿射变换原图
@@ -403,9 +514,8 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
                                              newvertices,
                                              image,
                                              warpedImage);
-           // std::string filename45 = "D:/testopencv/warpedImage.jpg";
-           // cv::imwrite(filename45, warpedImage);
-           // 结束时间
+           QString filename45 = "D:/testopencv/warpedImage.jpg";
+           ProcessTile::SyncSaveCurrentTimeImage(warpedImage,filename45);
 
             // 仿射变换二值图像
            cv::Mat warpedEageImage;//仿射变换后的二值图片
@@ -413,9 +523,8 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
                                              newvertices,
                                              cannyEdges,
                                              warpedEageImage);
-           // std::string filename46 = "D:/testopencv/warpedEageImage.jpg";
-           // cv::imwrite(filename46, warpedEageImage);
-
+           QString filename46 = "D:/testopencv/warpedEageImage.jpg";
+           ProcessTile::SyncSaveCurrentTimeImage(warpedEageImage,filename46);
            qDebug()<<"最大外轮廓的面积："<<maxArea;
 
            //
@@ -435,14 +544,15 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
            cv::Mat croppedImage = warpedImage(boundingRect1);
            cv::Mat croppedEdgeImage =warpedEageImage(boundingRect1);
 
-           // std::string filename47 = "D:/testopencv/croppedEdgeImage.jpg";
-           // cv::imwrite(filename47, croppedEdgeImage);
-
+           QString filename48 = "D:/testopencv/croppedImage.jpg";
+           ProcessTile::SyncSaveCurrentTimeImage(croppedImage,filename48);
+           QString filename47 = "D:/testopencv/croppedEdgeImage.jpg";
+           ProcessTile::SyncSaveCurrentTimeImage(croppedEdgeImage,filename47);
            //
            // 计算长宽
            //
-           glassLength = maxminAreaRect.size.width;
-           glassWidth = maxminAreaRect.size.height;
+           double glassLength = croppedImage.rows;
+           double glassWidth = croppedImage.cols;
            qDebug()<<"glassLength = "<<glassLength <<",glassWidth="<<glassWidth;
 
            //
@@ -460,7 +570,6 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
                                             leftAddition,
                                             rightAddition);
 
-
            //
            // 面部缺陷检出
            //
@@ -470,11 +579,10 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
            cv::Mat framcroppedEdgeImage;
            ProcessTile::CuttinGlassDdges(croppedEdgeImage, framcroppedEdgeImage);//将图片的四周640个像素切割（去边）
 
-           std::string filename3 = "D:/testopencv/framCroppedImage.jpg";
-           cv::imwrite(filename3, framCroppedImage);
-           std::string filename4 = "D:/testopencv/framcroppedEdgeImage.jpg";
-           cv::imwrite(filename4, framcroppedEdgeImage);
-
+           QString filename3 = "D:/testopencv/framCroppedImage.jpg";
+           ProcessTile::SyncSaveCurrentTimeImage(framCroppedImage,filename3);
+           QString filename4 = "D:/testopencv/framcroppedEdgeImage.jpg";
+           ProcessTile::SyncSaveCurrentTimeImage(framcroppedEdgeImage,filename4);
            //
            // 将面部相邻的缺陷联通起来
            // 将相连的域联通
@@ -544,6 +652,7 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
            // 保存到本地
            //
            std::vector<regionInfor> defectRegions;
+           std::unordered_map<int,cv::Rect> rectMap;
            for (int i = 0; i < (int)components.size(); i++) {
                // 单个缺陷的矩形框
                cv::Rect rect = components[i].rect;
@@ -581,14 +690,21 @@ void ProcessTile::image1DefectsDetected(cv::Mat& image,
            cv::Mat NewCroppedImage;
            cv::transpose(croppedImage, NewCroppedImage);
            cv::flip(NewCroppedImage, NewCroppedImage, 0);
-           imagePath = ProcessTile::SyncSaveCurrentTimeImage(NewCroppedImage,filePath);
-
+           QString imagePath = ProcessTile::SyncSaveCurrentTimeImage(NewCroppedImage,filePath);
            // 合并边图和面部图，进行分类
            std::vector<regionInfor> mergeRegions;
            mergeRegions.reserve(edgeregions.size() + defectRegions.size());
            mergeRegions.insert(mergeRegions.end(), edgeregions.begin(), edgeregions.end());
            mergeRegions.insert(mergeRegions.end(), defectRegions.begin(), defectRegions.end());
-           ProcessTile::YoloDefectClassification(mergeRegions);
+           std::vector<NewDefectUnitData> unitResult;
+           ProcessTile::YoloDefectClassification(mergeRegions,unitResult);
+           NewGlassResult result;
+           result.res = unitResult;
+           result.pixGlassLength = glassLength;
+           result.pixGlassWidth = glassWidth;
+           result.FaceQimagePath = imagePath;
+           result.currentFrameCount = currentframe;
+           frameResultMap.insert(currentframe,result);
        }
     } else {
         qWarning()<<"image1 row <= 0";
@@ -725,7 +841,8 @@ void ProcessTile::affineTransformation(std::vector<cv::Point2f> oldvertices,
     cv::warpPerspective(image, warpedImage, warpMatrix, image.size());
 }
 
-void ProcessTile::calculateBoundingRectangle(cv::Rect maxBoundingRect,
+void ProcessTile::calculateBoundingRectangle(CV_GLASSPART part,
+                                             cv::Rect maxBoundingRect,
                                              cv::RotatedRect Rect1,
                                              std::vector<cv::Point2f>& oldvertices,
                                              std::vector<cv::Point2f>& newvertices)
@@ -733,12 +850,19 @@ void ProcessTile::calculateBoundingRectangle(cv::Rect maxBoundingRect,
     //
     // 在原图上，四个顶点
     //
-    cv::Point2f P[4];
-    Rect1.points(P);
-    for (int  i =0 ; i < 4; ++i) {
-        oldvertices.push_back(P[i]);
-        qDebug()<<"oldvertices, X="<<P[i].x<<",Y="<<P[i].y;
+    if (part == CV_GLASSPART::HEAD || part == CV_GLASSPART::TAIL) {//玻璃头部或者尾部才能正确获取原图的四个顶点
+        cv::Point2f P[4];
+        Rect1.points(P);
+        for (int  i =0 ; i < 4; ++i) {
+            oldvertices.push_back(P[i]);
+            qDebug()<<"oldvertices, X="<<P[i].x<<",Y="<<P[i].y;
+        }
+    } else {//玻璃中部，oldvertices已经赋过值
+        for (int  i =0 ; i < 4; ++i) {
+            qDebug()<<"oldvertices, X="<<oldvertices[i].x<<",Y="<<oldvertices[i].y;
+        }
     }
+
     //
     // 修正图的四个顶点
     //
@@ -771,7 +895,7 @@ void ProcessTile::CuttinGlassDdges(cv::Mat Frame, cv::Mat& result)
     result = Frame(FrameRect);
 }
 
-void ProcessTile::threadProcessClassification(regionInfor defectimage)
+void ProcessTile::threadProcessClassification(regionInfor defectimage, std::promise<NewDefectUnitData>& promiseObj)
 {
     cv::Mat threeChannelImage;
     cv::cvtColor(defectimage.region, threeChannelImage, cv::COLOR_BGRA2BGR);
@@ -817,8 +941,8 @@ void ProcessTile::threadProcessClassification(regionInfor defectimage)
     result.pixX = x;
     result.pixY = y;
     result.pixArea = h*w;
-    result.imagePath =defectimage.path;
-    defectResult.push(result);
+    result.imagePath = defectimage.path;
+    promiseObj.set_value(result);//设置结果
 }
 
 cv::Rect ProcessTile::getDefectStandardRect(cv::Mat& framCroppedImage,int pixX, int pixY, int pixLength, int pixWidth)
@@ -850,10 +974,11 @@ QString ProcessTile::SyncSaveCurrentTimeImage(cv::Mat& region,QString path/*=""*
 {
     try{
         if (path == "") {
-            auto time = std::chrono::high_resolution_clock::now();
-            auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count();
+            // auto time = std::chrono::high_resolution_clock::now();
+            // auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count();
+            int randomNumber = std::rand() % 123567;
             QString time2 = QDateTime::currentDateTime().toString("hh-mm-ss");
-            path = "D:/testopencv/defect/"+time2 +"-"+ QString::number(nanoseconds%1000000)+".jpg";
+            path = "D:/testopencv/defect/"+time2 +"-"+ QString::number(randomNumber)+".jpg";
         }
         std::thread th1(&ProcessTile::saveMatToImage,this,path,region);
         th1.detach();
@@ -872,9 +997,11 @@ QString ProcessTile::SyncSaveCurrentTimeImage(cv::Mat& region,QString path/*=""*
     }
 }
 
-std::vector<NewDefectUnitData> ProcessTile::getDefectResult()
+bool ProcessTile::getDefectResult(int currentFrame, NewGlassResult& glassResult)
 {
-    std::vector<NewDefectUnitData> res = defectResult.vector_;
-    defectResult.clear();
-    return defectResult.vector_;
+    if (frameResultMap.find(currentFrame, glassResult) != false) {
+        return true;
+    } else {
+        return false;
+    }
 }

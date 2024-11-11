@@ -22,19 +22,29 @@ struct ConnectedComponent {
     int y;
 };
 
+/**
+ * @brief The CV_GLASSPART enum 图片属于玻璃的什么部分
+ */
+enum CV_GLASSPART {
+    UNKNOW = 0,
+    HEAD,
+    MID,
+    TAIL,
+    EMPTY,
+};
+
 class ProcessTile
 {
 public:
-    ProcessTile(){}
+    ProcessTile();
     void OfflineTileImageProcess(QString fullpath);
 
     void CV_DefectsDetected(cv::Mat image1,
-                                         cv::Mat image2,
-                                         cv::Mat image3,
-                                         double& length,
-                                         double& width,
-                                        QString& imagePath);
-    std::vector<NewDefectUnitData> getDefectResult();//获取每一帧图片
+                            cv::Mat image2,
+                            cv::Mat image3,
+                            int currentFrame);
+
+    bool getDefectResult(int currentFrame, NewGlassResult& glassResult);//获取每一帧图片
 private:
     void saveMatToImage(QString fullpath,cv::Mat region);
     void cropRectangleMat(const cv::Mat image, cv::Mat &dst, int row1y, int Column1x, int row2y, int Column2x);
@@ -51,11 +61,8 @@ private:
      * @param [in] Regions 缺陷小图
      * @param [out] frameGlassResult 每帧图片结果
      */
-    void YoloDefectClassification(std::vector<regionInfor>& Regions);
-    void image1DefectsDetected(cv::Mat& image,
-                               double& glassLength,
-                               double& glassWidth,
-                               QString& imagePath);
+    void YoloDefectClassification(std::vector<regionInfor>& Regions, std::vector<NewDefectUnitData>& unitVec);
+    void image1DefectsDetected(cv::Mat& image, int currentframe);
     void image2DefectsDetected(cv::Mat& image);
     void image3DefectsDetected(cv::Mat& image);
     bool isClose(ConnectedComponent c1, ConnectedComponent c2, int threshold);
@@ -73,12 +80,13 @@ private:
                               std::vector<cv::Point2f> newvertices,
                               cv::Mat image,
                               cv::Mat& warpedImage);
-    void calculateBoundingRectangle(cv::Rect maxBoundingRect,
+    void calculateBoundingRectangle(CV_GLASSPART part,
+                                    cv::Rect maxBoundingRect,
                                     cv::RotatedRect Rect1,
                                     std::vector<cv::Point2f>& oldvertices,
                                     std::vector<cv::Point2f>& newvertices);
     void CuttinGlassDdges(cv::Mat Frame, cv::Mat& result);
-    void threadProcessClassification(regionInfor defectimage);
+    void threadProcessClassification(regionInfor defectimage, std::promise<NewDefectUnitData>& promiseObj);
     /**
      * @brief getDefectStandardRect 获取缺陷小图标准矩形框
      * @param framCroppedImage 面部整图
@@ -101,8 +109,7 @@ private:
     cv::dnn::Net net; //神经网络
     std::mutex mut;   //锁
     std::atomic<int> defectid = 0;     // 缺陷id（每块玻璃的id）
-    std::unordered_map<int,cv::Rect> rectMap;
-    SafeDefinitionThreadSafeVector<NewDefectUnitData> defectResult; //缺陷结果
+    ThreadSafeUnorderedMap<int,NewGlassResult> frameResultMap; // 每帧结果数据
 };
 
 

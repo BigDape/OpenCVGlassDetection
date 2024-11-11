@@ -314,21 +314,6 @@ void Jsoncpp::writeComDataToJson(QString recipeFullpath, const SignalControl& da
         root["SystemParams"]["Camare3Name"] = data.Camare3Name.toStdString().c_str();
         root["SystemParams"]["ServerIP"] = data.ServerIP.toStdString().c_str();
         root["SystemParams"]["ServerPort"] = data.ServerPort;
-        //自定义参数
-        root["CustomParams"]["SaveOriginImage"] = data.SaveOriginImage;
-        root["CustomParams"]["SaveEntireImage"] = data.SaveEntireImage;
-        root["CustomParams"]["SaveFlawImage"] = data.SaveFlawImage;
-        root["CustomParams"]["SaveCropImage"] = data.SaveCropImage;
-        root["CustomParams"]["XYLengthEnable"] = data.XYLengthEnable;
-        root["CustomParams"]["FlawDefectEnable"] = data.FlawDefectEnable;
-        //缺陷检测
-        root["DefectDetectionParams"]["Camera12PixelDeviation"] = data.Camera12PixelDeviation;
-        root["DefectDetectionParams"]["Camera23PixelDeviation"] = data.Camera23PixelDeviation;
-        root["DefectDetectionParams"]["Camera24PixelDeviation"] = data.Camera24PixelDeviation;
-        root["DefectDetectionParams"]["SilkToRollerDist"] = data.SilkToRollerDist;
-        root["DefectDetectionParams"]["ScratchAreaThreshold"] = data.ScratchAreaThreshold;
-        root["DefectDetectionParams"]["BubbleStoneAreaThreshold"] = data.BubbleStoneAreaThreshold;
-        root["DefectDetectionParams"]["DirtyAreaThreshold"] = data.DirtyAreaThreshold;
         //尺寸测量
         root["DimensionalMeasurementParams"]["YAccuracy"] = data.YAccuracy;
         root["DimensionalMeasurementParams"]["XCamera0Accuracy"] = data.XCamera0Accuracy;
@@ -351,47 +336,33 @@ void Jsoncpp::writeComDataToJson(QString recipeFullpath, const SignalControl& da
         root["CamareParams"]["Camera3ExposureTime"] = data.Camera3ExposureTime;
         root["CamareParams"]["Camera3Gain"] = data.Camera3Gain;
         //编码器参数
-        root["EncoderParams"]["EncodeUnitToDist"] = data.temp0;
-        root["EncoderParams"]["EncodePulseFilterUs"] = data.temp1;
-        root["EncoderParams"]["EncodeCountEndFlag"] = data.temp2;
-        root["EncoderParams"]["EncodeCount"] = data.temp3;
-        root["EncoderParams"]["EncodeTriggerRowCount"] = data.temp4;
-        root["EncoderParams"]["Encode4FrequencyMultiplierCount"] = data.temp5;
-        root["EncoderParams"]["EncodeUnitTimePulseCount"] = data.temp6;
-        root["EncoderParams"]["EncodeCountTimeHalfSecond"] = data.temp7;
-        root["EncoderParams"]["EncodeChannel"] = data.temp8;
-        root["EncoderParams"]["EncodeRevolution"] = data.temp9;
-        root["EncoderParams"]["RollerPerimeterUm"] = data.temp10;
-        root["EncoderParams"]["ExpectSinglePixelAccuracy"] = data.temp11;
-        root["EncoderParams"]["RollerMaxSpeedToRowCount"] = data.temp12;
-        root["EncoderParams"]["EveryRowToEncodeCount"] = data.temp13;
-        root["EncoderParams"]["PressureEncodecoefficient"] = data.tempRollerCofficient;
-        //控制器参数
-        root["ControllerParams"]["PixelAccuracyUm"] = data.temp14;
-        root["ControllerParams"]["PhotoelectricSignalPulseFilter"] = data.temp15;
-        root["ControllerParams"]["CamareTrigerPulseContinueTime10ns"] = data.temp16;
-        root["ControllerParams"]["PhotoelectricToCamareDist"] = data.temp17;
-        root["ControllerParams"]["CamareFrameTrigerDelayRowCount"] = data.temp18;
-        root["ControllerParams"]["FrameSignalContinueTime"] = data.temp19;
-        root["ControllerParams"]["ModuleEnableSignal"] = data.temp20;
-        root["ControllerParams"]["CamarePhotoRowCount"] = data.temp21;
-        root["ControllerParams"]["InnerRowFrequency"] = data.temp22;
-        root["ControllerParams"]["PhotoMode"] = data.tempAutoPhoto;
-        root["ControllerParams"]["PhotoEndDelayRowCount"] = data.temp18;
+        root["EncoderParams"]["EncodePulseFilterUs"] = data.EncodePulseFilterUs;
+        root["EncoderParams"]["PhotoelectricSensorFiltering"] = data.PhotoelectricSensorFiltering;
+        root["EncoderParams"]["WheelEncoderPhotoPulse"] = data.WheelEncoderPhotoPulse;
+        root["EncoderParams"]["EncoderMode"] = data.EncoderMode;
+        root["EncoderParams"]["SolenoidValve1DownDelay"] = data.SolenoidValve1DownDelay;
+        root["EncoderParams"]["SolenoidValve1UpDelay"] = data.SolenoidValve1UpDelay;
+        root["EncoderParams"]["SolenoidValve2DownDelay"] = data.SolenoidValve2DownDelay;
+        root["EncoderParams"]["SolenoidValve2UpDelay"] = data.SolenoidValve2UpDelay;
+        root["EncoderParams"]["WheelAEncoder"] = data.WheelAEncoder;
+        root["EncoderParams"]["WheelBEncoder"] = data.WheelBEncoder;
+        root["EncoderParams"]["ErrorPhotoCount"] = data.ErrorPhotoCount;
+
         //光源控制器参数
-        root["LighterParams"]["LightField1DelayTime"] = data.temp23;
-        root["LighterParams"]["LightField1GlowTime"] = data.temp24;
-        root["LighterParams"]["LightField2DelayTime"] = data.temp25;
-        root["LighterParams"]["LightField2GlowTime"] = data.temp26;
-        root["LighterParams"]["LightField3DelayTime"] = data.temp27;
-        root["LighterParams"]["LightField3GlowTime"] = data.temp28;
-        root["LighterParams"]["LightField4DelayTime"] = data.temp29;
-        root["LighterParams"]["LightField4GlowTime"] = data.temp30;
-        root["LighterParams"]["SelectedLightFieldNumber"] = data.temp55;
-        root["LighterParams"]["HorizontalDarkfieldSelectRegister"] = data.temp56;
-        root["LighterParams"]["CamareAndLightFieldControl"] = data.temp35;
-        root["LighterParams"]["SignalSwitch"] = data.temp36;
-        root["LighterParams"]["RowSignalSelected"] = data.temp37;
+        root["LighterParams"]["LightField1GlowTime"] = data.LightField1GlowTime;
+        root["LighterParams"]["LightField2GlowTime"] = data.LightField2GlowTime;
+        root["LighterParams"]["LightField3GlowTime"] = data.LightField3GlowTime;
+        root["LighterParams"]["LightField4GlowTime"] = data.LightField4GlowTime;
+        root["LighterParams"]["LightSignalSynchronizationDelayRegister"] = data.LightSignalSynchronizationDelayRegister;
+        root["LighterParams"]["PhotoMode"] = data.PhotoMode;
+        root["LighterParams"]["LightCameraEnable"] = data.LightCameraEnable;
+        root["LighterParams"]["WorkMode"] = data.WorkMode;
+        root["LighterParams"]["LightSourcePulseEndPointRegister"] = data.LightSourcePulseEndPointRegister;
+        root["LighterParams"]["SyncPulsePeriodRegister"] = data.SyncPulsePeriodRegister;
+        root["LighterParams"]["CameraFrameSignalTriggerDelay"] = data.CameraFrameSignalTriggerDelay;
+        root["LighterParams"]["TimelapseAfterPhotoShootEnd"] = data.TimelapseAfterPhotoShootEnd;
+        root["LighterParams"]["SelectedLightFieldNumber"] = data.SelectedLightFieldNumber;
+        root["LighterParams"]["FrameSignalOutput"] = data.FrameSignalOutput;
 
 
         Json::StreamWriterBuilder jswBuilder;
@@ -425,36 +396,10 @@ void Jsoncpp::writeEmptyRecipeToJson(QString path)
         root["SystemParams"]["Camare3Name"] = "DSXL810002382";
         root["SystemParams"]["ServerIP"] = "192.168.1.200";
         root["SystemParams"]["ServerPort"] = 7002;
-        //自定义参数
-        root["CustomParams"]["SaveOriginImage"] = 0;
-        root["CustomParams"]["SaveEntireImage"] = 0;
-        root["CustomParams"]["SaveFlawImage"] = 0;
-        root["CustomParams"]["SaveCropImage"] = 0;
-        root["CustomParams"]["XYLengthEnable"] = 0;
-        root["CustomParams"]["FlawDefectEnable"] = 0;
-        //缺陷检测
-        root["DefectDetectionParams"]["Camera12PixelDeviation"] = 0;
-        root["DefectDetectionParams"]["Camera23PixelDeviation"] = 0;
-        root["DefectDetectionParams"]["Camera24PixelDeviation"] = 0;
-        root["DefectDetectionParams"]["SilkToRollerDist"] = 0;
-        root["DefectDetectionParams"]["ScratchAreaThreshold"] = 0;
-        root["DefectDetectionParams"]["BubbleStoneAreaThreshold"] = 0;
-        root["DefectDetectionParams"]["DirtyAreaThreshold"] = 0;
         //尺寸测量
-        root["DimensionalMeasurementParams"]["YAccuracyB"] = 0;
-        root["DimensionalMeasurementParams"]["YAccuracyK"] = 0;
-        root["DimensionalMeasurementParams"]["Width"] = 0;
-        root["DimensionalMeasurementParams"]["WidthDeviation"] = 0;
-        root["DimensionalMeasurementParams"]["Digonal1"] = 0;
-        root["DimensionalMeasurementParams"]["Digonal1Deviation"] = 0;
-        root["DimensionalMeasurementParams"]["Diagonal2"] = 0;
-        root["DimensionalMeasurementParams"]["Digonal2Deviation"] = 0;
-        root["DimensionalMeasurementParams"]["Camera1Pixel0Accuracy"] = 0;
-        root["DimensionalMeasurementParams"]["Camera1PixelKValue"] = 0;
-        root["DimensionalMeasurementParams"]["Camera21AccuracyRatio"] = 0;
-        root["DimensionalMeasurementParams"]["Camera2PixelKValue"] = 0;
-        root["DimensionalMeasurementParams"]["Length"] = 0;
-        root["DimensionalMeasurementParams"]["LengthDeviation"] = 0;
+        root["DimensionalMeasurementParams"]["YAccuracy"] = 0;
+        root["DimensionalMeasurementParams"]["XCamera0Accuracy"] = 0;
+        root["DimensionalMeasurementParams"]["XCamera1Accuracy"] = 0;
         //相机参数
         root["CamareParams"]["Camera0Frame"] = 0;
         root["CamareParams"]["Camera0PhotoRow"] = 0;
@@ -473,47 +418,34 @@ void Jsoncpp::writeEmptyRecipeToJson(QString path)
         root["CamareParams"]["Camera3ExposureTime"] = 0;
         root["CamareParams"]["Camera3Gain"] = 0;
         //编码器参数
-        root["EncoderParams"]["EncodeUnitToDist"] = 0;
         root["EncoderParams"]["EncodePulseFilterUs"] = 0;
-        root["EncoderParams"]["EncodeRevolution"] = 0;
-        root["EncoderParams"]["RollerPerimeterUm"] = 0;
-        root["EncoderParams"]["ExpectSinglePixelAccuracy"] = 0;
-        root["EncoderParams"]["RollerMaxSpeedToRowCount"] = 0;
-        root["EncoderParams"]["EveryRowToEncodeCount"] = 0;
-        //控制器参数
-        root["ControllerParams"]["PixelAccuracyUm"] = 0;
-        root["ControllerParams"]["PhotoelectricSignalPulseFilter"] = 0;
-        root["ControllerParams"]["CamareTrigerPulseContinueTime10ns"] = 0;
-        root["ControllerParams"]["PhotoelectricToCamareDist"] = 0;
-        root["ControllerParams"]["CamareFrameTrigerDelayRowCount"] = 0;
-        root["ControllerParams"]["FrameSignalContinueTime"] = 0;
-        root["ControllerParams"]["ModuleEnableSignal"] = 0;
-        root["ControllerParams"]["CamarePhotoRowCount"] = 0;
-        root["ControllerParams"]["InnerRowFrequency"] = 0;
-        root["ControllerParams"]["PhotoMode"] = 0;
-        root["ControllerParams"]["PhotoEndDelayRowCount"] = 0;
-        //光源控制器参数
-        root["LighterParams"]["LightField1DelayTime"] = 0;
-        root["LighterParams"]["LightField1GlowTime"] = 0;
-        root["LighterParams"]["LightField2DelayTime"] = 0;
-        root["LighterParams"]["LightField2GlowTime"] = 0;
-        root["LighterParams"]["LightField3DelayTime"] = 0;
-        root["LighterParams"]["LightField3GlowTime"] = 0;
-        root["LighterParams"]["LightField4DelayTime"] = 0;
-        root["LighterParams"]["LightField4GlowTime"] = 0;
-        root["LighterParams"]["SelectedLightFieldNumber"] = 0;
-        root["LighterParams"]["HorizontalDarkfieldSelectRegister"] = 0;
-        root["LighterParams"]["CamareAndLightFieldControl"] = 0;
-        root["LighterParams"]["SignalSwitch"] = 0;
-        root["LighterParams"]["RowSignalSelected"] = 0;
+        root["EncoderParams"]["PhotoelectricSensorFiltering"] = 0;
+        root["EncoderParams"]["WheelEncoderPhotoPulse"] = 0;
+        root["EncoderParams"]["EncoderMode"] = 0;
+        root["EncoderParams"]["SolenoidValve1DownDelay"] = 0;
+        root["EncoderParams"]["SolenoidValve1UpDelay"] = 0;
+        root["EncoderParams"]["SolenoidValve2DownDelay"] = 0;
+        root["EncoderParams"]["SolenoidValve2UpDelay"] = 0;
+        root["EncoderParams"]["WheelAEncoder"] = 0;
+        root["EncoderParams"]["WheelBEncoder"] = 0;
+        root["EncoderParams"]["ErrorPhotoCount"] = 0;
 
-        // std::string json_content = writer.write(root);
-        // std::ofstream ofs;
-        // ofs.open(path.toStdString().data());
-        // if (ofs.is_open()) {
-        //     ofs<<json_content;
-        //     ofs.close();
-        // }
+        //光源控制器参数
+        root["LighterParams"]["LightField1GlowTime"] = 0;
+        root["LighterParams"]["LightField2GlowTime"] = 0;
+        root["LighterParams"]["LightField3GlowTime"] = 0;
+        root["LighterParams"]["LightField4GlowTime"] = 0;
+        root["LighterParams"]["LightSignalSynchronizationDelayRegister"] = 0;
+        root["LighterParams"]["PhotoMode"] = 0;
+        root["LighterParams"]["LightCameraEnable"] = 0;
+        root["LighterParams"]["WorkMode"] = 0;
+        root["LighterParams"]["LightSourcePulseEndPointRegister"] = 0;
+        root["LighterParams"]["SyncPulsePeriodRegister"] = 0;
+        root["LighterParams"]["CameraFrameSignalTriggerDelay"] = 0;
+        root["LighterParams"]["TimelapseAfterPhotoShootEnd"] = 0;
+        root["LighterParams"]["SelectedLightFieldNumber"] = 0;
+        root["LighterParams"]["FrameSignalOutput"] = 0;
+
         Json::StyledWriter writer;
         std::string json_content = writer.write(root);
         std::ofstream ofs;
@@ -565,21 +497,6 @@ void Jsoncpp::readRecipeFromJson(QString path, SignalControl& signalCtrl)
         signalCtrl.Camare3Name = root["SystemParams"]["Camare3Name"].asCString();
         signalCtrl.ServerIP = root["SystemParams"]["ServerIP"].asCString();
         signalCtrl.ServerPort = root["SystemParams"]["ServerPort"].asInt();
-        //自定义参数
-        signalCtrl.SaveOriginImage = root["CustomParams"]["SaveOriginImage"].asInt();
-        signalCtrl.SaveEntireImage = root["CustomParams"]["SaveEntireImage"].asInt();
-        signalCtrl.SaveFlawImage = root["CustomParams"]["SaveFlawImage"].asInt();
-        signalCtrl.SaveCropImage = root["CustomParams"]["SaveCropImage"].asInt();
-        signalCtrl.XYLengthEnable = root["CustomParams"]["XYLengthEnable"].asInt();
-        signalCtrl.FlawDefectEnable = root["CustomParams"]["FlawDefectEnable"].asInt();
-        //缺陷检测
-        signalCtrl.Camera12PixelDeviation = root["DefectDetectionParams"]["Camera12PixelDeviation"].asInt();
-        signalCtrl.Camera23PixelDeviation = root["DefectDetectionParams"]["Camera23PixelDeviation"].asInt();
-        signalCtrl.Camera24PixelDeviation = root["DefectDetectionParams"]["Camera24PixelDeviation"].asInt();
-        signalCtrl.SilkToRollerDist = root["DefectDetectionParams"]["SilkToRollerDist"].asInt();
-        signalCtrl.ScratchAreaThreshold = root["DefectDetectionParams"]["ScratchAreaThreshold"].asInt();
-        signalCtrl.BubbleStoneAreaThreshold = root["DefectDetectionParams"]["BubbleStoneAreaThreshold"].asInt();
-        signalCtrl.DirtyAreaThreshold = root["DefectDetectionParams"]["DirtyAreaThreshold"].asInt();
         //尺寸测量
         signalCtrl.YAccuracy = root["DimensionalMeasurementParams"]["YAccuracy"].asDouble();
         signalCtrl.XCamera0Accuracy = root["DimensionalMeasurementParams"]["XCamera0Accuracy"].asDouble();
@@ -602,39 +519,32 @@ void Jsoncpp::readRecipeFromJson(QString path, SignalControl& signalCtrl)
         signalCtrl.Camera3ExposureTime = root["CamareParams"]["Camera3ExposureTime"].asInt();
         signalCtrl.Camera3Gain = root["CamareParams"]["Camera3Gain"].asInt();
         //编码器参数
-        signalCtrl.temp0 = root["EncoderParams"]["EncodeUnitToDist"].asInt();
-        signalCtrl.temp1 = root["EncoderParams"]["EncodePulseFilterUs"].asInt();
-        signalCtrl.temp9 = root["EncoderParams"]["EncodeRevolution"].asInt();
-        signalCtrl.temp10 = root["EncoderParams"]["RollerPerimeterUm"].asInt();
-        signalCtrl.temp11 = root["EncoderParams"]["ExpectSinglePixelAccuracy"].asInt();
-        signalCtrl.temp12 = root["EncoderParams"]["RollerMaxSpeedToRowCount"].asInt();
-        signalCtrl.temp13 = root["EncoderParams"]["EveryRowToEncodeCount"].asInt();
-        // 控制器参数
-        signalCtrl.temp14 = root["ControllerParams"]["PixelAccuracyUm"].asDouble();
-        signalCtrl.temp15 = root["ControllerParams"]["PhotoelectricSignalPulseFilter"].asInt();
-        signalCtrl.temp16 = root["ControllerParams"]["CamareTrigerPulseContinueTime10ns"].asInt();
-        signalCtrl.temp17 = root["ControllerParams"]["PhotoelectricToCamareDist"].asInt();
-        signalCtrl.temp18 = root["ControllerParams"]["CamareFrameTrigerDelayRowCount"].asInt();
-        signalCtrl.temp19 = root["ControllerParams"]["FrameSignalContinueTime"].asInt();
-        signalCtrl.temp20 = root["ControllerParams"]["ModuleEnableSignal"].asInt();
-        signalCtrl.temp21 = root["ControllerParams"]["CamarePhotoRowCount"].asInt();
-        signalCtrl.temp22 = root["ControllerParams"]["InnerRowFrequency"].asInt();
-        signalCtrl.tempAutoPhoto = root["ControllerParams"]["PhotoMode"].asInt();
-        signalCtrl.tempPhotoEndDelayLine = root["ControllerParams"]["PhotoEndDelayRowCount"].asInt();
+        signalCtrl.EncodePulseFilterUs = root["EncoderParams"]["EncodePulseFilterUs"].asInt();
+        signalCtrl.PhotoelectricSensorFiltering = root["EncoderParams"]["PhotoelectricSensorFiltering"].asInt();
+        signalCtrl.WheelEncoderPhotoPulse = root["EncoderParams"]["WheelEncoderPhotoPulse"].asInt();
+        signalCtrl.EncoderMode = root["EncoderParams"]["EncoderMode"].asInt();
+        signalCtrl.SolenoidValve1DownDelay = root["EncoderParams"]["SolenoidValve1DownDelay"].asInt();
+        signalCtrl.SolenoidValve1UpDelay = root["EncoderParams"]["SolenoidValve1UpDelay"].asInt();
+        signalCtrl.SolenoidValve2DownDelay = root["EncoderParams"]["SolenoidValve2DownDelay"].asInt();
+        signalCtrl.SolenoidValve2UpDelay = root["EncoderParams"]["SolenoidValve2UpDelay"].asInt();
+        signalCtrl.WheelAEncoder = root["EncoderParams"]["WheelAEncoder"].asInt();
+        signalCtrl.WheelBEncoder = root["EncoderParams"]["WheelBEncoder"].asInt();
+        signalCtrl.ErrorPhotoCount = root["EncoderParams"]["ErrorPhotoCount"].asInt();
         // 光源控制器参数
-        signalCtrl.temp23 = root["LighterParams"]["LightField1DelayTime"].asInt();
-        signalCtrl.temp24 = root["LighterParams"]["LightField1GlowTime"].asInt();
-        signalCtrl.temp25 = root["LighterParams"]["LightField2DelayTime"].asInt();
-        signalCtrl.temp26 = root["LighterParams"]["LightField2GlowTime"].asInt();
-        signalCtrl.temp27 = root["LighterParams"]["LightField3DelayTime"].asInt();
-        signalCtrl.temp28 = root["LighterParams"]["LightField3GlowTime"].asInt();
-        signalCtrl.temp29 = root["LighterParams"]["LightField4DelayTime"].asInt();
-        signalCtrl.temp30 = root["LighterParams"]["LightField4GlowTime"].asInt();
-        signalCtrl.temp55 = root["LighterParams"]["SelectedLightFieldNumber"].asInt();
-        signalCtrl.temp56 = root["LighterParams"]["HorizontalDarkfieldSelectRegister"].asInt();
-        signalCtrl.temp35 = root["LighterParams"]["CamareAndLightFieldControl"].asInt();
-        signalCtrl.temp36 = root["LighterParams"]["SignalSwitch"].asInt();
-        signalCtrl.temp37 = root["LighterParams"]["RowSignalSelected"].asInt();
+        signalCtrl.LightField1GlowTime = root["LighterParams"]["LightField1GlowTime"].asInt();
+        signalCtrl.LightField2GlowTime = root["LighterParams"]["LightField2GlowTime"].asInt();
+        signalCtrl.LightField3GlowTime = root["LighterParams"]["LightField3GlowTime"].asInt();
+        signalCtrl.LightField4GlowTime = root["LighterParams"]["LightField4GlowTime"].asInt();
+        signalCtrl.LightSignalSynchronizationDelayRegister = root["LighterParams"]["LightSignalSynchronizationDelayRegister"].asInt();
+        signalCtrl.PhotoMode = root["LighterParams"]["PhotoMode"].asInt();
+        signalCtrl.LightCameraEnable = root["LighterParams"]["LightCameraEnable"].asInt();
+        signalCtrl.WorkMode = root["LighterParams"]["WorkMode"].asInt();
+        signalCtrl.LightSourcePulseEndPointRegister = root["LighterParams"]["LightSourcePulseEndPointRegister"].asInt();
+        signalCtrl.SyncPulsePeriodRegister = root["LighterParams"]["SyncPulsePeriodRegister"].asInt();
+        signalCtrl.CameraFrameSignalTriggerDelay = root["LighterParams"]["CameraFrameSignalTriggerDelay"].asInt();
+        signalCtrl.TimelapseAfterPhotoShootEnd = root["LighterParams"]["TimelapseAfterPhotoShootEnd"].asInt();
+        signalCtrl.SelectedLightFieldNumber = root["LighterParams"]["SelectedLightFieldNumber"].asInt();
+        signalCtrl.FrameSignalOutput = root["LighterParams"]["FrameSignalOutput"].asInt();
     }
 }
 
@@ -652,21 +562,6 @@ void Jsoncpp::writeRecipeToJson(QString fullpath, SignalControl signalCtrl)
         root["SystemParams"]["Camare3Name"] = signalCtrl.Camare3Name.toStdString().data();
         root["SystemParams"]["ServerIP"] = signalCtrl.ServerIP.toStdString().data();
         root["SystemParams"]["ServerPort"] = signalCtrl.ServerPort;
-        //自定义参数
-        root["CustomParams"]["SaveOriginImage"] = signalCtrl.SaveOriginImage;
-        root["CustomParams"]["SaveEntireImage"] = signalCtrl.SaveEntireImage;
-        root["CustomParams"]["SaveFlawImage"] = signalCtrl.SaveFlawImage;
-        root["CustomParams"]["SaveCropImage"] = signalCtrl.SaveCropImage;
-        root["CustomParams"]["XYLengthEnable"] = signalCtrl.XYLengthEnable;
-        root["CustomParams"]["FlawDefectEnable"] = signalCtrl.FlawDefectEnable;
-        //缺陷检测
-        root["DefectDetectionParams"]["Camera12PixelDeviation"] = signalCtrl.Camera12PixelDeviation;
-        root["DefectDetectionParams"]["Camera23PixelDeviation"] = signalCtrl.Camera23PixelDeviation;
-        root["DefectDetectionParams"]["Camera24PixelDeviation"] = signalCtrl.Camera24PixelDeviation;
-        root["DefectDetectionParams"]["SilkToRollerDist"] = signalCtrl.SilkToRollerDist;
-        root["DefectDetectionParams"]["ScratchAreaThreshold"] = signalCtrl.ScratchAreaThreshold;
-        root["DefectDetectionParams"]["BubbleStoneAreaThreshold"] = signalCtrl.BubbleStoneAreaThreshold;
-        root["DefectDetectionParams"]["DirtyAreaThreshold"] = signalCtrl.DirtyAreaThreshold;
         //尺寸测量
         root["DimensionalMeasurementParams"]["YAccuracy"] = signalCtrl.YAccuracy;
         root["DimensionalMeasurementParams"]["XCamera0Accuracy"] = signalCtrl.XCamera0Accuracy;
@@ -689,46 +584,33 @@ void Jsoncpp::writeRecipeToJson(QString fullpath, SignalControl signalCtrl)
         root["CamareParams"]["Camera3ExposureTime"] = signalCtrl.Camera3ExposureTime;
         root["CamareParams"]["Camera3Gain"] = signalCtrl.Camera3Gain;
         //编码器参数
-        root["EncoderParams"]["EncodeUnitToDist"] = signalCtrl.temp0;
-        root["EncoderParams"]["EncodePulseFilterUs"] = signalCtrl.temp1;
-        root["EncoderParams"]["EncodeRevolution"] = signalCtrl.temp9;
-        root["EncoderParams"]["RollerPerimeterUm"] = signalCtrl.temp10;
-        root["EncoderParams"]["ExpectSinglePixelAccuracy"] = signalCtrl.temp11;
-        root["EncoderParams"]["RollerMaxSpeedToRowCount"] = signalCtrl.temp12;
-        root["EncoderParams"]["EveryRowToEncodeCount"] = signalCtrl.temp13;
-        //控制器参数
-        root["ControllerParams"]["PixelAccuracyUm"] = signalCtrl.temp14;
-        root["ControllerParams"]["PhotoelectricSignalPulseFilter"] = signalCtrl.temp15;
-        root["ControllerParams"]["CamareTrigerPulseContinueTime10ns"] = signalCtrl.temp16;
-        root["ControllerParams"]["PhotoelectricToCamareDist"] = signalCtrl.temp17;
-        root["ControllerParams"]["CamareFrameTrigerDelayRowCount"] = signalCtrl.temp18;
-        root["ControllerParams"]["FrameSignalContinueTime"] = signalCtrl.temp19;
-        root["ControllerParams"]["ModuleEnableSignal"] = signalCtrl.temp20;
-        root["ControllerParams"]["CamarePhotoRowCount"] = signalCtrl.temp21;
-        root["ControllerParams"]["InnerRowFrequency"] = signalCtrl.temp22;
-        root["ControllerParams"]["PhotoMode"] = signalCtrl.tempAutoPhoto;
-        root["ControllerParams"]["PhotoEndDelayRowCount"] = signalCtrl.tempPhotoEndDelayLine;
+        root["EncoderParams"]["EncodePulseFilterUs"] = signalCtrl.EncodePulseFilterUs;
+        root["EncoderParams"]["PhotoelectricSensorFiltering"] = signalCtrl.PhotoelectricSensorFiltering;
+        root["EncoderParams"]["WheelEncoderPhotoPulse"] = signalCtrl.WheelEncoderPhotoPulse;
+        root["EncoderParams"]["EncoderMode"] = signalCtrl.EncoderMode;
+        root["EncoderParams"]["SolenoidValve1DownDelay"] = signalCtrl.SolenoidValve1DownDelay;
+        root["EncoderParams"]["SolenoidValve1UpDelay"] = signalCtrl.SolenoidValve1UpDelay;
+        root["EncoderParams"]["SolenoidValve2DownDelay"] = signalCtrl.SolenoidValve2DownDelay;
+        root["EncoderParams"]["SolenoidValve2UpDelay"] = signalCtrl.SolenoidValve2UpDelay;
+        root["EncoderParams"]["WheelAEncoder"] = signalCtrl.WheelAEncoder;
+        root["EncoderParams"]["WheelBEncoder"] = signalCtrl.WheelBEncoder;
+        root["EncoderParams"]["ErrorPhotoCount"] = signalCtrl.ErrorPhotoCount;
         //光源控制器参数
-        root["LighterParams"]["LightField1DelayTime"] = signalCtrl.temp23;
-        root["LighterParams"]["LightField1GlowTime"] = signalCtrl.temp24;
-        root["LighterParams"]["LightField2DelayTime"] = signalCtrl.temp25;
-        root["LighterParams"]["LightField2GlowTime"] = signalCtrl.temp26;
-        root["LighterParams"]["LightField3DelayTime"] = signalCtrl.temp27;
-        root["LighterParams"]["LightField3GlowTime"] = signalCtrl.temp28;
-        root["LighterParams"]["LightField4DelayTime"] = signalCtrl.temp29;
-        root["LighterParams"]["LightField4GlowTime"] = signalCtrl.temp30;
-        root["LighterParams"]["SelectedLightFieldNumber"] = signalCtrl.temp55;
-        root["LighterParams"]["HorizontalDarkfieldSelectRegister"] = signalCtrl.temp56;
-        root["LighterParams"]["CamareAndLightFieldControl"] = signalCtrl.temp35;
-        root["LighterParams"]["SignalSwitch"] = signalCtrl.temp36;
-        root["LighterParams"]["RowSignalSelected"] = signalCtrl.temp37;
-        // std::string json_content = writer.write(root);
-        // std::ofstream ofs;
-        // ofs.open(fullpath.toStdString().data());
-        // if (ofs.is_open()) {
-        //     ofs<<json_content;
-        //     ofs.close();
-        // }
+        root["LighterParams"]["LightField1GlowTime"] = signalCtrl.LightField1GlowTime;
+        root["LighterParams"]["LightField2GlowTime"] = signalCtrl.LightField2GlowTime;
+        root["LighterParams"]["LightField3GlowTime"] = signalCtrl.LightField3GlowTime;
+        root["LighterParams"]["LightField4GlowTime"] = signalCtrl.LightField4GlowTime;
+        root["LighterParams"]["LightSignalSynchronizationDelayRegister"] = signalCtrl.LightSignalSynchronizationDelayRegister;
+        root["LighterParams"]["PhotoMode"] = signalCtrl.PhotoMode;
+        root["LighterParams"]["LightCameraEnable"] = signalCtrl.LightCameraEnable;
+        root["LighterParams"]["WorkMode"] = signalCtrl.WorkMode;
+        root["LighterParams"]["LightSourcePulseEndPointRegister"] = signalCtrl.LightSourcePulseEndPointRegister;
+        root["LighterParams"]["SyncPulsePeriodRegister"] = signalCtrl.SyncPulsePeriodRegister;
+        root["LighterParams"]["CameraFrameSignalTriggerDelay"] = signalCtrl.CameraFrameSignalTriggerDelay;
+        root["LighterParams"]["TimelapseAfterPhotoShootEnd"] = signalCtrl.TimelapseAfterPhotoShootEnd;
+        root["LighterParams"]["SelectedLightFieldNumber"] = signalCtrl.SelectedLightFieldNumber;
+        root["LighterParams"]["FrameSignalOutput"] = signalCtrl.FrameSignalOutput;
+
         Json::StyledWriter writer;
         std::string json_content = writer.write(root);
         std::ofstream ofs;
@@ -779,21 +661,6 @@ void Jsoncpp::updateRecipeToJson(QString fullpath, SignalControl signalCtrl)
     root["SystemParams"]["Camare3Name"] = signalCtrl.Camare3Name.toStdString().data();
     root["SystemParams"]["ServerIP"] = signalCtrl.ServerIP.toStdString().data();
     root["SystemParams"]["ServerPort"] = signalCtrl.ServerPort;
-    //自定义参数
-    root["CustomParams"]["SaveOriginImage"] = signalCtrl.SaveOriginImage;
-    root["CustomParams"]["SaveEntireImage"] = signalCtrl.SaveEntireImage;
-    root["CustomParams"]["SaveFlawImage"] = signalCtrl.SaveFlawImage;
-    root["CustomParams"]["SaveCropImage"] = signalCtrl.SaveCropImage;
-    root["CustomParams"]["XYLengthEnable"] = signalCtrl.XYLengthEnable;
-    root["CustomParams"]["FlawDefectEnable"] = signalCtrl.FlawDefectEnable;
-    //缺陷检测
-    root["DefectDetectionParams"]["Camera12PixelDeviation"] = signalCtrl.Camera12PixelDeviation;
-    root["DefectDetectionParams"]["Camera23PixelDeviation"] = signalCtrl.Camera23PixelDeviation;
-    root["DefectDetectionParams"]["Camera24PixelDeviation"] = signalCtrl.Camera24PixelDeviation;
-    root["DefectDetectionParams"]["SilkToRollerDist"] = signalCtrl.SilkToRollerDist;
-    root["DefectDetectionParams"]["ScratchAreaThreshold"] = signalCtrl.ScratchAreaThreshold;
-    root["DefectDetectionParams"]["BubbleStoneAreaThreshold"] = signalCtrl.BubbleStoneAreaThreshold;
-    root["DefectDetectionParams"]["DirtyAreaThreshold"] = signalCtrl.DirtyAreaThreshold;
     //尺寸测量
     root["DimensionalMeasurementParams"]["YAccuracy"] = signalCtrl.YAccuracy;
     root["DimensionalMeasurementParams"]["XCamera0Accuracy"] = signalCtrl.XCamera0Accuracy;
@@ -816,39 +683,32 @@ void Jsoncpp::updateRecipeToJson(QString fullpath, SignalControl signalCtrl)
     root["CamareParams"]["Camera3ExposureTime"] = signalCtrl.Camera3ExposureTime;
     root["CamareParams"]["Camera3Gain"] = signalCtrl.Camera3Gain;
     //编码器参数
-    root["EncoderParams"]["EncodeUnitToDist"] = signalCtrl.temp0;
-    root["EncoderParams"]["EncodePulseFilterUs"] = signalCtrl.temp1;
-    root["EncoderParams"]["EncodeRevolution"] = signalCtrl.temp9;
-    root["EncoderParams"]["RollerPerimeterUm"] = signalCtrl.temp10;
-    root["EncoderParams"]["ExpectSinglePixelAccuracy"] = signalCtrl.temp11;
-    root["EncoderParams"]["RollerMaxSpeedToRowCount"] = signalCtrl.temp12;
-    root["EncoderParams"]["EveryRowToEncodeCount"] = signalCtrl.temp13;
-    //控制器参数
-    root["ControllerParams"]["PixelAccuracyUm"] = signalCtrl.temp14;
-    root["ControllerParams"]["PhotoelectricSignalPulseFilter"] = signalCtrl.temp15;
-    root["ControllerParams"]["CamareTrigerPulseContinueTime10ns"] = signalCtrl.temp16;
-    root["ControllerParams"]["PhotoelectricToCamareDist"] = signalCtrl.temp17;
-    root["ControllerParams"]["CamareFrameTrigerDelayRowCount"] = signalCtrl.temp18;
-    root["ControllerParams"]["FrameSignalContinueTime"] = signalCtrl.temp19;
-    root["ControllerParams"]["ModuleEnableSignal"] = signalCtrl.temp20;
-    root["ControllerParams"]["CamarePhotoRowCount"] = signalCtrl.temp21;
-    root["ControllerParams"]["InnerRowFrequency"] = signalCtrl.temp22;
-    root["ControllerParams"]["PhotoMode"] = signalCtrl.tempAutoPhoto;
-    root["ControllerParams"]["PhotoEndDelayRowCount"] = signalCtrl.tempPhotoEndDelayLine;
+    root["EncoderParams"]["EncodePulseFilterUs"] = signalCtrl.EncodePulseFilterUs;
+    root["EncoderParams"]["PhotoelectricSensorFiltering"] = signalCtrl.PhotoelectricSensorFiltering;
+    root["EncoderParams"]["WheelEncoderPhotoPulse"] = signalCtrl.WheelEncoderPhotoPulse;
+    root["EncoderParams"]["EncoderMode"] = signalCtrl.EncoderMode;
+    root["EncoderParams"]["SolenoidValve1DownDelay"] = signalCtrl.SolenoidValve1DownDelay;
+    root["EncoderParams"]["SolenoidValve1UpDelay"] = signalCtrl.SolenoidValve1UpDelay;
+    root["EncoderParams"]["SolenoidValve2DownDelay"] = signalCtrl.SolenoidValve2DownDelay;
+    root["EncoderParams"]["SolenoidValve2UpDelay"] = signalCtrl.SolenoidValve2UpDelay;
+    root["EncoderParams"]["WheelAEncoder"] = signalCtrl.WheelAEncoder;
+    root["EncoderParams"]["WheelBEncoder"] = signalCtrl.WheelBEncoder;
+    root["EncoderParams"]["ErrorPhotoCount"] = signalCtrl.ErrorPhotoCount;
     //光源控制器参数
-    root["LighterParams"]["LightField1DelayTime"] = signalCtrl.temp23;
-    root["LighterParams"]["LightField1GlowTime"] = signalCtrl.temp24;
-    root["LighterParams"]["LightField2DelayTime"] = signalCtrl.temp25;
-    root["LighterParams"]["LightField2GlowTime"] = signalCtrl.temp26;
-    root["LighterParams"]["LightField3DelayTime"] = signalCtrl.temp27;
-    root["LighterParams"]["LightField3GlowTime"] = signalCtrl.temp28;
-    root["LighterParams"]["LightField4DelayTime"] = signalCtrl.temp29;
-    root["LighterParams"]["LightField4GlowTime"] = signalCtrl.temp30;
-    root["LighterParams"]["SelectedLightFieldNumber"] = signalCtrl.temp55;
-    root["LighterParams"]["HorizontalDarkfieldSelectRegister"] = signalCtrl.temp56;
-    root["LighterParams"]["CamareAndLightFieldControl"] = signalCtrl.temp35;
-    root["LighterParams"]["SignalSwitch"] = signalCtrl.temp36;
-    root["LighterParams"]["RowSignalSelected"] = signalCtrl.temp37;
+    root["LighterParams"]["LightField1GlowTime"] = signalCtrl.LightField1GlowTime;
+    root["LighterParams"]["LightField2GlowTime"] = signalCtrl.LightField2GlowTime;
+    root["LighterParams"]["LightField3GlowTime"] = signalCtrl.LightField3GlowTime;
+    root["LighterParams"]["LightField4GlowTime"] = signalCtrl.LightField4GlowTime;
+    root["LighterParams"]["LightSignalSynchronizationDelayRegister"] = signalCtrl.LightSignalSynchronizationDelayRegister;
+    root["LighterParams"]["PhotoMode"] = signalCtrl.PhotoMode;
+    root["LighterParams"]["LightCameraEnable"] = signalCtrl.LightCameraEnable;
+    root["LighterParams"]["WorkMode"] = signalCtrl.WorkMode;
+    root["LighterParams"]["LightSourcePulseEndPointRegister"] = signalCtrl.LightSourcePulseEndPointRegister;
+    root["LighterParams"]["SyncPulsePeriodRegister"] = signalCtrl.SyncPulsePeriodRegister;
+    root["LighterParams"]["CameraFrameSignalTriggerDelay"] = signalCtrl.CameraFrameSignalTriggerDelay;
+    root["LighterParams"]["TimelapseAfterPhotoShootEnd"] = signalCtrl.TimelapseAfterPhotoShootEnd;
+    root["LighterParams"]["SelectedLightFieldNumber"] = signalCtrl.SelectedLightFieldNumber;
+    root["LighterParams"]["FrameSignalOutput"] = signalCtrl.FrameSignalOutput;
 
     std::ofstream ofs(fullpath.toStdString().c_str());
     if (ofs.is_open()) {

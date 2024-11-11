@@ -39,6 +39,7 @@ private:
     void initLoadRecipe();
     void initSocket();
     void initConnect();
+    void SendDataToSignal();//系统初始化时，先发送一遍数据，不用再手动发送
     // 将当前的m_root写入到json文件中
     void writeCurrentRooterToJson();
     // 新建一个初始化文件app.ini
@@ -57,7 +58,6 @@ private slots:
     void slotTestConnect();
     void slotTrigger();
     void slotChangeRecipe(int index);
-
 
 private:
     Ui::LightControl* ui;

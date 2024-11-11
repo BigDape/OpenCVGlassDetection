@@ -17,15 +17,22 @@ namespace HSAlgorithmNamespace
     class HSAlgorithmInterface
     {
     public:
+        typedef std::function<void (NewGlassResult& result)> CallbackFun; //回调函数
         virtual ~HSAlgorithmInterface(){}
 
-        virtual void init(std::vector<cv::Mat>& mat0, std::vector<cv::Mat>& mat1, CropArgPackage packages) = 0;
+        virtual void init(JigsawPuzzleDataPack pack,
+                          cv::Mat& image1,
+                          cv::Mat& image2,
+                          cv::Mat& image3) = 0;
 
-        virtual void Execu(int currentFrameCount) = 0;
+        virtual void RegisterResultCallback(CallbackFun func) = 0;
+
+        virtual void SyncExecu(int& currentFrameCount,
+                           cv::Mat& image1,
+                           cv::Mat& image2,
+                           cv::Mat& image3) = 0;
 
         virtual void TestExecu(cv::Mat& image) = 0;
-
-        virtual void GetFrameResult(NewGlassResult& result) = 0;
 
         virtual void Stop() = 0;
 

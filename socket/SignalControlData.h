@@ -15,7 +15,10 @@ public:
     virtual void SetReg(unsigned short addr_s,
                         unsigned short addr_e,
                         unsigned int data) override;
-    virtual void GetRealTimeData(unsigned int& FrameSignal, unsigned int& AlmLightSignal) override;
+    virtual void GetRealTimeData(unsigned int& FrameSignal,
+                                 unsigned int& CoderACount,
+                                 unsigned int& CoderBCount,
+                                 unsigned int& errorPhotoCount) override;
     virtual void GetAllData(SignalControl& data) override;
     virtual bool TestIPConnect() override;
 private:

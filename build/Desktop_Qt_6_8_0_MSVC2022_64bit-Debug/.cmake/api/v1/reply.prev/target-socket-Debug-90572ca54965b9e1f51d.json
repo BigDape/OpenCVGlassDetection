@@ -322,6 +322,11 @@
 					"backtrace" : 2,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.8.0/msvc2022_64/include/QtNetwork"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "C:/opencv/install/include"
 				}
 			],
 			"language" : "CXX",
@@ -329,6 +334,7 @@
 			{
 				"backtraces" : 
 				[
+					2,
 					2,
 					2
 				],
@@ -424,6 +430,331 @@
 			{
 				"backtrace" : 30,
 				"fragment" : "userenv.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_img_hash4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 25,
+				"fragment" : "C:\\opencv\\install\\x64\\vc17\\lib\\opencv_world4100d.lib",
 				"role" : "libraries"
 			},
 			{

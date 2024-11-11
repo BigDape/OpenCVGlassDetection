@@ -78,7 +78,10 @@ namespace SocketNameSpace
         /**
          * @brief GetRealTimeData 单次获取信号板寄存器地址，外部需实时获取
          */
-        virtual void GetRealTimeData(unsigned int& FrameSignal, unsigned int& AlmLightSignal) = 0;
+        virtual void GetRealTimeData(unsigned int& FrameSignal,
+                                     unsigned int& CoderACount,
+                                     unsigned int& CoderBCount,
+                                     unsigned int& errorPhotoCount) = 0;
         /**
          * @brief GetAllData 获取信号板所有寄存器地址
          */

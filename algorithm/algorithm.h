@@ -13,10 +13,16 @@ class Algorithm: public HSAlgorithmNamespace::HSAlgorithmInterface
 public:
     Algorithm();
     virtual ~Algorithm();
-    virtual void init(std::vector<cv::Mat>& mat0, std::vector<cv::Mat>& mat1, CropArgPackage packages) override;
-    virtual void Execu(int currentFrameCount) override;
+    virtual void init(JigsawPuzzleDataPack pack,
+                      cv::Mat& image1,
+                      cv::Mat& image2,
+                      cv::Mat& image3) override;
+    virtual void RegisterResultCallback(CallbackFun func) override;
+    virtual void SyncExecu(int& currentFrameCount,
+                       cv::Mat& image1,
+                       cv::Mat& image2,
+                       cv::Mat& image3) override;
     virtual void TestExecu(cv::Mat& image) override;
-    virtual void GetFrameResult(NewGlassResult& result) override;
     virtual void Stop() override;
     virtual void Exit() override;
 private:
@@ -27,10 +33,8 @@ private:
 
 private:
     std::shared_ptr<ProcessTile> proPtr;
-    cv::Mat image1;                         // 透视场图像
-    cv::Mat image2;                         // 反射亮场
-    cv::Mat image3;                         // 反射暗场
     std::queue<NewGlassResult> ResultQue; //结果队列
+    std::unordered_map<int,std::shared_ptr<std::thread>> threadMap; //线程hash表，帧->线程
+    CallbackFun mainFunction; //显示结果函数
 };
-
 #endif // ALGORITHM_H

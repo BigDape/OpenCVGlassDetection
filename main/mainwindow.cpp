@@ -12,13 +12,6 @@
 #include <stdlib.h>
 #include <QThreadPool>
 #include <QLineEdit>
-#include <Qwt/qwt_picker_machine.h>
-#include <Qwt/qwt_legend_label.h>
-#include <Qwt/qwt_plot_shapeitem.h>
-#include <Qwt/qwt_plot_marker.h>
-#include <Qwt/qwt_symbol.h>
-#include <Qwt/qwt_legend.h>
-#include <Qwt/qwt_plot_curve.h>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
 #include "Form/DushenCameraWidget.h"
@@ -28,12 +21,11 @@ typedef HSDatabaseNamespace::HSDatabaseInterface* (*CreateDatabaseObjectFunc1)()
 typedef HSAlgorithmNamespace::HSAlgorithmInterface* (*createAlgorithmObjectFunc1)();
 typedef CameraNameSpace::HSCameraInterface* (*createCameraObjectFunc1)();
 typedef SocketNameSpace::HSSocketInterface* (*createSocketObjectFunc1)();
+typedef HSJsoncppNamespace::HSJsoncppInterface* (*createJsoncppObjectFunc)();
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , databasePtr(nullptr)
-    , algorithmPtr(nullptr)
     , dataanalysisPtr(nullptr)
     , hbox_layout(nullptr)
 {
@@ -145,6 +137,26 @@ void MainWindow::InitComponents()
         cameraPtr0 = createFunc();
         cameraPtr1 = createFunc();
     }
+    //
+    // 动态加载jsoncpp组件
+    //
+    if (jsoncppPtr==nullptr) {
+        QString exePath = QCoreApplication::applicationDirPath();
+        QString dllPath = exePath + "/../jsoncpp/jsoncpp.dll";
+        jsoncppDllHandle = LoadLibrary(dllPath.toStdWString().c_str());
+        if (!jsoncppDllHandle) {
+            qFatal() << "Failed to load DLL. Error code: " << GetLastError();
+        }
+        // 获取创建数据库对象的函数指针
+        createJsoncppObjectFunc createFunc = (createJsoncppObjectFunc)GetProcAddress(jsoncppDllHandle, "createJsoncppObject");
+        if (!createFunc) {
+            qDebug() << "Failed to get function pointer. Error code: " << GetLastError() ;
+            FreeLibrary(jsoncppDllHandle);
+        } else {
+            qDebug() << "Success to get  jsoncppDllHandle function pointer. ";
+        }
+        jsoncppPtr = createFunc();
+    }
 }
 
 void MainWindow::InitDatabaseParam()
@@ -159,6 +171,75 @@ void MainWindow::InitDatabaseParam()
         glassPrimaryKey = newGlassID;
     } else {
         qDebug()<<"InitDatabaseParam fail";
+    }
+    // PARAM赋值读取
+    if (jsoncppPtr!= nullptr) {
+        QString iniPath = QDir::currentPath() + QString("/") + SYSTEMNAME;
+        qDebug()<<"iniPath ="<<iniPath;
+        QFile inifile(iniPath);
+        if (!inifile.exists()) {
+            qDebug()<<"iniPath is not exist.=>"<<iniPath;
+        }
+        QString needLoadJsonFile = PARAM.GetParamterFromIniFile(iniPath,"system/recipe");//需要加载的工单名称system模块的recipe配置文件
+        QString neddLoadJsonFileName = QDir::currentPath() + QString("/Recipes/") + needLoadJsonFile + QString(".json");
+        qDebug()<<"neddLoadJsonFileName = "<<neddLoadJsonFileName;
+        SignalControl signalctrl;
+        jsoncppPtr->readRecipeFromJson(neddLoadJsonFileName, signalctrl);
+        // 初始化全局变量
+        PARAM.SystemName = signalctrl.systemName;
+        PARAM.camDefineNum = signalctrl.CamareNumber;
+        PARAM.Camera0Name = signalctrl.Camare0Name;
+        PARAM.Camera1Name = signalctrl.Camare1Name;
+        PARAM.Camera2Name = signalctrl.Camare2Name;
+        PARAM.Camera3Name = signalctrl.Camare3Name;
+        PARAM.serverIp = signalctrl.ServerIP;
+        PARAM.serverPort = signalctrl.ServerPort;
+        PARAM.YAccuracy = signalctrl.YAccuracy;
+        PARAM.XCamera0Accuracy = signalctrl.XCamera0Accuracy;
+        PARAM.XCamera1Accuracy = signalctrl.XCamera1Accuracy;
+        PARAM.Camera0Frame = signalctrl.Camera0Frame;
+        PARAM.Camera0PhotoRow = signalctrl.Camera0PhotoRow;
+        PARAM.Camera0ExposureTime = signalctrl.Camera0ExposureTime;
+        PARAM.Camera0Gain = signalctrl.Camera0Gain;
+        PARAM.Camera1Frame = signalctrl.Camera1Frame;
+        PARAM.Camera1PhotoRow = signalctrl.Camera1PhotoRow;
+        PARAM.Camera1ExposureTime = signalctrl.Camera1ExposureTime;
+        PARAM.Camera1Gain = signalctrl.Camera1Gain;
+        PARAM.Camera2Frame = signalctrl.Camera2Frame;
+        PARAM.Camera2PhotoRow = signalctrl.Camera2PhotoRow;
+        PARAM.Camera2ExposureTime = signalctrl.Camera2ExposureTime;
+        PARAM.Camera2Gain = signalctrl.Camera2Gain;
+        PARAM.Camera3Frame = signalctrl.Camera3Frame;
+        PARAM.Camera3PhotoRow = signalctrl.Camera3PhotoRow;
+        PARAM.Camera3ExposureTime = signalctrl.Camera3ExposureTime;
+        PARAM.Camera3Gain = signalctrl.Camera3Gain;
+        // 控制器参数
+        PARAM.EncodePulseFilterUs = signalctrl.EncodePulseFilterUs;
+        PARAM.PhotoelectricSensorFiltering = signalctrl.PhotoelectricSensorFiltering;
+        PARAM.WheelEncoderPhotoPulse = signalctrl.WheelEncoderPhotoPulse;
+        PARAM.EncoderMode = signalctrl.EncoderMode;
+        PARAM.SolenoidValve1DownDelay = signalctrl.SolenoidValve1DownDelay;
+        PARAM.SolenoidValve1UpDelay = signalctrl.SolenoidValve1UpDelay;
+        PARAM.SolenoidValve2DownDelay = signalctrl.SolenoidValve2DownDelay;
+        PARAM.SolenoidValve2UpDelay = signalctrl.SolenoidValve2UpDelay;
+        PARAM.WheelAEncoder = signalctrl.WheelAEncoder;
+        PARAM.WheelBEncoder = signalctrl.WheelBEncoder;
+        PARAM.ErrorPhotoCount = signalctrl.ErrorPhotoCount;
+        // 光源控制器参数
+        PARAM.LightField1GlowTime = signalctrl.LightField1GlowTime;
+        PARAM.LightField2GlowTime = signalctrl.LightField2GlowTime;
+        PARAM.LightField3GlowTime = signalctrl.LightField3GlowTime;
+        PARAM.LightField4GlowTime = signalctrl.LightField4GlowTime;
+        PARAM.LightSignalSynchronizationDelayRegister = signalctrl.LightSignalSynchronizationDelayRegister;
+        PARAM.PhotoMode = signalctrl.PhotoMode;
+        PARAM.LightCameraEnable = signalctrl.LightCameraEnable;
+        PARAM.WorkMode = signalctrl.WorkMode;
+        PARAM.LightSourcePulseEndPointRegister = signalctrl.LightSourcePulseEndPointRegister;
+        PARAM.SyncPulsePeriodRegister = signalctrl.SyncPulsePeriodRegister;
+        PARAM.CameraFrameSignalTriggerDelay = signalctrl.CameraFrameSignalTriggerDelay;
+        PARAM.TimelapseAfterPhotoShootEnd = signalctrl.TimelapseAfterPhotoShootEnd;
+        PARAM.SelectedLightFieldNumber = signalctrl.SelectedLightFieldNumber;
+        PARAM.FrameSignalOutput = signalctrl.FrameSignalOutput;
     }
 }
 
@@ -262,6 +343,7 @@ void MainWindow::slot_ShowSystemSettingForm()
 
 void MainWindow::slot_ActionStart()
 {
+    qDebug()<<"slot_ActionStart";
     //
     // 进行开始流程，打开相机
     // 设置界面上相关按钮的亮和灰
@@ -284,37 +366,42 @@ void MainWindow::slot_ActionStart()
             QString message = m_args[1].camName + tr("camera is not started.");
             INFOMATION.criticalMessageBox(this,message);
         }
-        if (res) {
-            _timer1 = new QTimer();
-            connect(_timer1, &QTimer::timeout, this, &MainWindow::slot_RefreshSystemTime);
-            _timer1->start(1000);
-            _timer1->stop();
-        }
     }
     PARAM.currentsystem = SYSTEMSTATUS::RUNNING;
     //
     // 根据信号平台帧信号获取图片
     //
-    int nowFrameSignal = PARAM.FrameSignal;//当前帧信号状态
+    std::shared_ptr<std::thread> startThread = std::make_shared<std::thread>(&MainWindow::ProcessThreadCV, this);
+    threadPool.push_back(startThread);
+}
+
+void MainWindow::ProcessThreadCV()
+{
+    //
+    // 根据信号平台帧信号获取图片
+    //
+    int nowFrameSignal = PARAM.FrameSignalOutput;//当前帧信号状态
 LOOPGET:
-    if ( nowFrameSignal > 0 && nowFrameSignal == PARAM.FrameSignal) {//帧信号持续拉高
+    if ( nowFrameSignal > 0 && nowFrameSignal == PARAM.FrameSignalOutput) {//帧信号持续拉高
         runstatus = RUNNINGSTATUS::MID;
         MainWindow::slot_GetCameraBuffer();
-    } else if(nowFrameSignal > 0 && nowFrameSignal != PARAM.FrameSignal) {//帧信号从高到低
+    } else if(nowFrameSignal > 0 && nowFrameSignal != PARAM.FrameSignalOutput) {//帧信号从高到低
         runstatus = RUNNINGSTATUS::END;
         MainWindow::slot_GetCameraBuffer();
-        nowFrameSignal = PARAM.FrameSignal; //临时帧信号拉低
-    } else if(nowFrameSignal <= 0 && nowFrameSignal != PARAM.FrameSignal) {//帧信号从低到高
+        nowFrameSignal = PARAM.FrameSignalOutput; //临时帧信号拉低
+    } else if(nowFrameSignal <= 0 && nowFrameSignal != PARAM.FrameSignalOutput) {//帧信号从低到高
         runstatus = RUNNINGSTATUS::START;
-        nowFrameSignal = PARAM.FrameSignal; //临时帧信号拉高
+        nowFrameSignal = PARAM.FrameSignalOutput; //临时帧信号拉高
         glassPrimaryKey++;                  //玻璃id+1
         MainWindow::slot_GetCameraBuffer(); //获取图片并处理
+    } else {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        qDebug()<<"No frame signal";
     }
     runstatus = RUNNINGSTATUS::UNKNOWN;
     if (PARAM.currentsystem != SYSTEMSTATUS::STOP) {
         goto LOOPGET;
     }
-
 }
 
 void MainWindow::slot_ActionStop()
@@ -329,6 +416,13 @@ void MainWindow::slot_ActionStop()
     m_offline->setEnabled(true);
 
     PARAM.currentsystem = SYSTEMSTATUS::STOP;
+    if (!threadPool.empty()) {
+        for (auto& it : threadPool) {
+            if(it->joinable()) {
+                it->join();
+            }
+        }
+    }
 }
 
 
@@ -353,29 +447,29 @@ void MainWindow::slot_Offline()
     //
     // todo: 从最深层次加载图片
     //
-    try {
-      //获取选择的目录路径
-      _offlineSelectedDir = QFileDialog::getExistingDirectory(this,"选择一个目录","./",QFileDialog::ShowDirsOnly);
-      //若目录路径不为空
-      if (!_offlineSelectedDir.isEmpty()) {
-          //将路径中的斜杠替换为反斜杠
-          _offlineSelectedDir = _offlineSelectedDir.replace(QRegularExpression("\\"), "/");
-          qDebug()<<"_selectedDir =" <<_offlineSelectedDir;
-          QDir dir(_offlineSelectedDir);
-          QFileInfoList fileList = dir.entryInfoList(QStringList() << "*.jpg");
-          //遍历容器
-          for(auto fileInfo:fileList) {
-             //输出文件名包含后缀
-             qDebug() << fileInfo.fileName();
-             //输出文件的完整路径名
-             qDebug() << fileInfo.absoluteFilePath();
-          }
-          PARAM.offlineFullPath = _offlineSelectedDir;
-          PARAM.isOffline = true; //等待处理线程触发
-      }
-   } catch(...) {
-      qDebug()<<"slot_ButtonExportClicked() error";
-   }
+   //  try {
+   //    //获取选择的目录路径
+   //    _offlineSelectedDir = QFileDialog::getExistingDirectory(this,"选择一个目录","./",QFileDialog::ShowDirsOnly);
+   //    //若目录路径不为空
+   //    if (!_offlineSelectedDir.isEmpty()) {
+   //        //将路径中的斜杠替换为反斜杠
+   //        _offlineSelectedDir = _offlineSelectedDir.replace(QRegularExpression("\\"), "/");
+   //        qDebug()<<"_selectedDir =" <<_offlineSelectedDir;
+   //        QDir dir(_offlineSelectedDir);
+   //        QFileInfoList fileList = dir.entryInfoList(QStringList() << "*.jpg");
+   //        //遍历容器
+   //        for(auto fileInfo:fileList) {
+   //           //输出文件名包含后缀
+   //           qDebug() << fileInfo.fileName();
+   //           //输出文件的完整路径名
+   //           qDebug() << fileInfo.absoluteFilePath();
+   //        }
+   //        PARAM.offlineFullPath = _offlineSelectedDir;
+   //        PARAM.isOffline = true; //等待处理线程触发
+   //    }
+   // } catch(...) {
+   //    qDebug()<<"slot_ButtonExportClicked() error";
+   // }
 }
 
 void MainWindow::slot_Calibrate()
@@ -942,20 +1036,34 @@ void MainWindow::InitCameraSettingTableWidget()
     DushenCameraArgs arg0;
     arg0.camName = PARAM.Camera0Name;
     arg0.camNumber = PARAM.camDefineNum;
-    arg0.fieldnumberset = PARAM.FieldNumberSet;
+    arg0.fieldnumberset = PARAM.SelectedLightFieldNumber;
     arg0.expo = PARAM.Camera0ExposureTime;
     arg0.framecount = PARAM.Camera0Frame;
     arg0.height = PARAM.Camera0PhotoRow;
     arg0.gain = PARAM.Camera0Gain;
+    qDebug()<<"arg0.camName = "<<arg0.camName
+            <<",arg0.camNumber="<<arg0.camNumber
+             <<",arg0.fieldnumberset="<<arg0.fieldnumberset
+             <<",arg0.expo="<<arg0.expo
+             <<",arg0.framecount="<<arg0.framecount
+             <<",arg0.height="<<arg0.height
+             <<",arg0.gain ="<<arg0.gain;
     m_args.push_back(arg0);
     DushenCameraArgs arg1;
     arg1.camName = PARAM.Camera1Name;
     arg1.camNumber = PARAM.camDefineNum;
-    arg1.fieldnumberset = PARAM.FieldNumberSet;
+    arg1.fieldnumberset = PARAM.SelectedLightFieldNumber;
     arg1.expo = PARAM.Camera1ExposureTime;
     arg1.framecount = PARAM.Camera1Frame;
     arg1.height = PARAM.Camera1PhotoRow;
     arg1.gain = PARAM.Camera1Gain;
+    qDebug()<<"arg1.camName = "<<arg1.camName
+             <<",arg1.camNumber="<<arg1.camNumber
+             <<",arg1.fieldnumberset="<<arg1.fieldnumberset
+             <<",arg1.expo="<<arg1.expo
+             <<",arg1.framecount="<<arg1.framecount
+             <<",arg1.height="<<arg1.height
+             <<",arg1.gain ="<<arg1.gain;
     m_args.push_back(arg1);
     DushenCameraWidget * camerawid = new DushenCameraWidget(nullptr);
     camerawid->InitDushenCameraWidget(cameraPtr0,m_args[0]);
@@ -963,6 +1071,9 @@ void MainWindow::InitCameraSettingTableWidget()
     DushenCameraWidget * camerawid1 = new DushenCameraWidget(nullptr);
     camerawid1->InitDushenCameraWidget(cameraPtr1,m_args[1]);
     hbox_layout->addWidget(camerawid1);
+    //启动相机
+    camerawid->StartCamera();
+    camerawid1->StartCamera();
 }
 
 void MainWindow::InitRealTimeFlawTableWidget()
@@ -1058,6 +1169,7 @@ void MainWindow::slot_RefreshSystemTime()
 
 void MainWindow::slot_GetCameraBuffer()
 {
+    qDebug()<<"slot_GetCameraBuffer()";
     FrameImage imageunit0;
     FrameImage imageunit1;
     // 获取每帧图片
@@ -1084,36 +1196,39 @@ void MainWindow::slot_GetCameraBuffer()
     }
     NewGlassResult result;//算法结果
     if (algorithmPtr != nullptr){
+        JigsawPuzzleDataPack pack;
+        pack.packages = PARAM.crops;
+        pack.mat0 = mat0;
+        pack.mat1 = mat1;
+        pack.cameraNumber = 2;
+        cv::Mat projectionImage,reflectionLightImage,reflectionDarkImage;
         // 多个相机拼图
-        algorithmPtr->init(mat0,mat1,PARAM.crops);
+        algorithmPtr->init(pack,projectionImage,reflectionLightImage,reflectionDarkImage);
+        algorithmPtr->RegisterResultCallback(std::bind(&MainWindow::MainWindowsDisplay, this, std::placeholders::_1));
         // 执行当前算法
         int currentcount = imageunit0.framecount; //获取当前帧数
-        algorithmPtr->Execu(currentcount);
-        // 获取算法
-        algorithmPtr->GetFrameResult(result);
+        algorithmPtr->SyncExecu(currentcount,projectionImage,reflectionLightImage,reflectionDarkImage);
     } else {
         qDebug()<<"algorithmPtr == nullptr";
         return;
     }
+}
 
+void MainWindow::MainWindowsDisplay(NewGlassResult& result)
+{
     // 存储入数据库
     std::vector<GlassDefect2> glassDefectDatas;
     MainWindow::realUpdateDatabase(result, glassDefectDatas);
     // 汇总信息
     MainWindow::upDateOverView(runstatus);
     // 投射场图像显示
-    QString imageUrl = result.FaceQimagePath;//图像地址
-    MainWindow::imageDisplay(imageUrl);
+    MainWindow::imageDisplay(result.FaceQimagePath);
     // 统计数据
     MainWindow::UpdateStatisticsTable(result);
     // 缺陷数据
-    if (glassDefectDatas.size() > 0) {
-        MainWindow::realUpdateDefectTable(glassDefectDatas);
-    }
+    MainWindow::realUpdateDefectTable(glassDefectDatas);
     // 实时缺陷小图
-    if ((int)result.res.size() > 0) {
-        MainWindow::realUpdateDefectDisplay(result);
-    }
+    MainWindow::realUpdateDefectDisplay(result);
     // todo:缺陷尺寸数据
 }
 
@@ -1235,6 +1350,7 @@ void MainWindow::realUpdateDatabase(NewGlassResult& result,std::vector<GlassDefe
 
 void MainWindow::realUpdateDefectTable(std::vector<GlassDefect2>& glassDefectDatas)
 {
+    if (glassDefectDatas.size() <= 0) return;
     QTableWidgetItem *itemID = ui->SingleFlawtableWidget->item(0, 0);
     int currentRow = ui->SingleFlawtableWidget->rowCount();
     ui->SingleFlawtableWidget->setRowCount(currentRow + glassDefectDatas.size());
@@ -1305,6 +1421,7 @@ void MainWindow::realUpdateDefectTable(std::vector<GlassDefect2>& glassDefectDat
 
 void MainWindow::realUpdateDefectDisplay(NewGlassResult& result)
 {
+    if ((int)result.res.size() <= 0) return;
     GlassDefect info;
     info.id = defectPrimaryKey;              //主键id,在所有缺陷中的顺序
     info.defectId = result.res[0].id;        // 缺陷id，在一块玻璃中缺陷的顺序

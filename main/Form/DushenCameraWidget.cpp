@@ -40,13 +40,12 @@ void DushenCameraWidget::InitDushenCameraWidget(CameraNameSpace::HSCameraInterfa
     CameraCounts = CameraObject->getCameraCounts();
     CameraName = CameraObject->getCameraFriendlyNames();
     //在下拉框中添加相机名称
-    for (int i = 0; i < CameraCounts; i++) {
-        if(i < (int)(CameraName.size() -1)) {
+    if (CameraCounts <= CameraName.size()) {
+        for (int i = 0; i < CameraCounts; i++) {
             ui->comboBox_Devices->addItem(CameraName[i]);
-        } else {
-            qDebug() <<"inner error!";
         }
     }
+
     //
     // 打开相机，按钮不能操作
     //
@@ -101,7 +100,10 @@ void DushenCameraWidget::InitDushenCameraWidget(CameraNameSpace::HSCameraInterfa
 
 void DushenCameraWidget::AutoOpen()
 {
-    if (CameraObject->IsScanned(RealCameraName) && !CameraObject->IsOpened(RealCameraName)) {
+    bool scanR = CameraObject->IsScanned(RealCameraName);
+    bool openR = CameraObject->IsOpened(RealCameraName);
+    qDebug()<<"RealCameraName ="<<RealCameraName<<",scanR = "<<scanR<<",openR = "<<openR;
+    if (scanR && !openR) {
         if (!CameraObject->SearchCamera(RealCameraName)) {
             RealCameraName = CameraObject->getCurrentCameraFriendlyName();
             qDebug() << "Default Camera Not matched , use The First Selection";
@@ -120,9 +122,14 @@ void DushenCameraWidget::AutoOpen()
             CameraObject->LoadIni(RealCameraName);//加载ini配置文件
             if (CameraObject->IsOpened(RealCameraName)) {
                 ui->cbx_SoftTrigger->setChecked(true);
+                qDebug()<<"CameraObject->IsOpened("<<RealCameraName<<")";
             }
             //todo:自动更新数据，包括界面上的图片和帧率
+        } else {
+            qDebug()<<"result != CameraNameSpace::HSCameraError::SUCCESS";
         }
+    } else {
+        qDebug()<<"Camera is not Scan.";
     }
 }
 

@@ -464,7 +464,6 @@
 	],
 	"MOC_INCLUDES" : 
 	[
-		"C:/Qt/6.8.0/msvc2022_64/include/Qwt",
 		"D:/GlassCV1015/hikvision/camare",
 		"D:/GlassCV1015/hikvision/tool",
 		"D:/GlassCV1015/hikvision/socket",
@@ -472,8 +471,8 @@
 		"D:/GlassCV1015/hikvision/algorithm",
 		"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.5/include",
 		"D:/GlassCV1015/hikvision/jsoncpp",
-		"C:/Qt/6.8.0/msvc2022_64/include/QtCore",
 		"C:/Qt/6.8.0/msvc2022_64/include",
+		"C:/Qt/6.8.0/msvc2022_64/include/QtCore",
 		"C:/Qt/6.8.0/msvc2022_64/mkspecs/win32-msvc",
 		"C:/Qt/6.8.0/msvc2022_64/include/QtWidgets",
 		"C:/Qt/6.8.0/msvc2022_64/include/QtGui",

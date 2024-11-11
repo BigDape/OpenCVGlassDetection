@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <Qwt/qwt_plot.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>
@@ -41,41 +40,13 @@ public:
 public:
     QString CurrentRecipe;            // 当前工单名称：8nm
     QString SystemName;               // 当前系统名称：大拓智能视觉检测
+    int camDefineNum;                 // 相机个数
     QString Camera0Name;              // 当前照相机0名称：DSXL810003076
     QString Camera1Name;              // 当前照相机1名称：DSXL810002378
     QString Camera2Name;              // 当前照相机2名称：DSXL810002135
     QString Camera3Name;              // 当前照相机3名称：DSXL810002382
     QString serverIp;                 // 控制器IP地址：192.168.1.200
     int serverPort;                   // 控制器Port：7002
-    int FrameSignal;                  // 帧信号
-    bool AlmLightSignal;              // 报警信号灯
-    int AlmLightVal;                  // 报警值
-    int FieldNumberSet;               // 场数
-    QStringList camName;
-    int camDefineNum;                   // 照相机个数
-    QList<QString> camListName;         // 照相机名称list
-    QList<int> FieldSelectedView;       // 光场选择的视角：1表示选中，0表示未选中
-    quint64 GlassID_INT;                // 玻璃ID
-    double RollerAngle;                 // 玻璃偏移的角度
-    double encodeRollerYLength;         // 差分计算出来的长度
-    std::vector<CourTour> courtourMapXY;// 轮廓点
-    QwtPlot* m_plot;
-    bool isOffline;                     // 是否触发了离线模式
-    QString offlineFullPath;            // 离线模式路径
-    int isSaveOriginImage;              // 保存原图
-    int isSaveEntireImage;              // 保存整图
-    int isSaveFlawImage;                // 保存缺捡图
-    int isSaveCropImage;                // 保存裁剪图像
-    int XYLengthEnable;                 // 尺寸测量启用
-    int FlawDefectEnable;               // 缺陷检测启用
-    int Camera12PixelDeviation;         // 12相机像素偏差
-    int Camera23PixelDeviation;         // 23相机像素偏差
-    int Camera24PixelDeviation;         // 24相机像素偏差
-    int SilkToRollerDist;               // 丝印到辊道距离
-    int ScratchAreaThreshold;           // 划痕面积阈值
-    int BubbleStoneAreaThreshold;       // 气节面积阈值
-    int DirtyAreaThreshold;             // 脏污面积阈值
-
     double YAccuracy;                  // Y方向像素精度
     double XCamera0Accuracy;            // X方向相机0像素精度
     double XCamera1Accuracy;            // x方向相机1像素精度
@@ -95,37 +66,32 @@ public:
     int Camera3PhotoRow;                // 相机3拍照行数
     int Camera3ExposureTime;            // 相机3曝光时间
     int Camera3Gain;                    // 相机3增益
-    int EncodeUnitToDist;               // 编码器单位刻度对应距离
-    int EncodePulseFilterUs;            // 编码脉冲滤波
-    int EncodeRevolution;               // 编码器转数
-    int RollerPerimeterUm;              // 辊道周长
-    int ExpectSinglePixelAccuracy;      // 期望单个像素精度
-    int RollerMaxSpeedToRowCount;       // 辊道最大速度对应行频
-    int EveryRowToEncodeCount;          // 每行对应的编码计数
-    int PixelAccuracyUm;                    //像素精度um
-    int PhotoelectricSignalPulseFilter;     //光电信号脉冲滤波
-    int CamareTrigerPulseContinueTime10ns;  //相机触发脉冲持续时间10ns
-    int PhotoelectricToCamareDist;          //光电与相机距离行
-    int CamareFrameTrigerDelayRowCount;     // 相机帧触发延时行数
-    int FrameSignalContinueTime;            //帧信号持续时间
-    int ModuleEnableSignal;                 //模块使能信号
-    int CamarePhotoRowCount;                //相机拍照行数
-    int InnerRowFrequency;                  //内部行频
-    int PhotoMode;                          //拍照模式
-    int PhotoEndDelayRowCount;              //拍照延时行数
-    int LightField1DelayTime;            //光场1延时时间10ns
-    int LightField1GlowTime;             //光场1发光时间10ns
-    int LightField2DelayTime;            //光场2延时时间10ns
-    int LightField2GlowTime;             //光场2发光时间10ns
-    int LightField3DelayTime;            //光场3延时时间10ns
-    int LightField3GlowTime;             //光场3发光时间10ns
-    int LightField4DelayTime;            //光场4延时时间10ns
-    int LightField4GlowTime;             //光场4发光时间10ns
-    int SelectedLightFieldNumber;        //选择光场数量
-    int HorizontalDarkfieldSelectRegister;  //横向暗场选择寄存器
-    int CamareAndLightFieldControl;         //相机与光场控制
-    int SignalSwitch;                       //信号切换
-    int RowSignalSelected;                  //行信号源选择
+    unsigned int EncodePulseFilterUs;   // 编码器参数--编码脉冲滤波
+    unsigned int PhotoelectricSensorFiltering;// 编码器参数--光电传感器滤波
+    unsigned int WheelEncoderPhotoPulse;   //  编码器参数--压轮编码器产生拍照脉冲(四倍频)
+    unsigned int EncoderMode;              // 编码器参数--编码器模式(0辊道/1压轮)
+    unsigned int SolenoidValve1DownDelay;  // 编码器参数--光电1触发电磁阀降下延时(ms)
+    unsigned int SolenoidValve1UpDelay;    // 编码器参数--光电1离开电磁阀升起延时(ms)
+    unsigned int SolenoidValve2DownDelay;  // 编码器参数--光电2触发电磁阀降下延时(ms)
+    unsigned int SolenoidValve2UpDelay;// 编码器参数--光电2离开电磁阀升起延时(ms)
+    unsigned int WheelAEncoder;             // 编码器参数--压轮编码器A相计数
+    unsigned int WheelBEncoder;         // 编码器参数--压轮编码器B相计数
+    unsigned int ErrorPhotoCount;       // 编码器参数--查看错误拍照次数
+    unsigned int LightField1GlowTime;   // 光源控制器参数--光场1发光时间10ns
+    unsigned int LightField2GlowTime;   // 光源控制器参数--光场2发光时间10ns
+    unsigned int LightField3GlowTime;   // 光源控制器参数--光场3发光时间10ns
+    unsigned int LightField4GlowTime;    // 光源控制器参数--光场4发光时间10ns
+    unsigned int LightSignalSynchronizationDelayRegister;// 光源控制器参数--光源信号同步信号延时寄存器
+    unsigned int PhotoMode;             // 光源控制器参数--拍照模式
+    unsigned int LightCameraEnable;     // 光源控制器参数--光源相机使能信号
+    unsigned int WorkMode;              // 光源控制器参数--工作模式(0工作/1测试)
+    unsigned int LightSourcePulseEndPointRegister;// 光源控制器参数--光源脉冲结束点寄存器
+    unsigned int SyncPulsePeriodRegister; //光源控制器参数--同步脉冲周期寄存器
+    unsigned int CameraFrameSignalTriggerDelay;// 光源控制器参数--相机帧信号触发延时行数(行)
+    unsigned int TimelapseAfterPhotoShootEnd;// 光源控制器参数--拍照结束延时行数(行)
+    unsigned int SelectedLightFieldNumber;// 光源控制器参数--选择光场的数量
+    unsigned int FrameSignalOutput;// 光源控制器参数--帧信号输出
+
     std::unordered_map<int,std::pair<QString,QString>> rowMapXY; //当前玻璃的缺陷坐标
     CropArgPackage crops;  //标定数据
     SYSTEMSTATUS currentsystem;  //当前系统状态

@@ -59,6 +59,7 @@ void DushenBasicFunc::InitSpinExpoTime()
         if (status != DVP_STATUS_OK) {
             QMessageBox::about(NULL, "About", "Get exposure time description fail!");
         }
+        qDebug()<<"m_handle ="<<m_handle<<",m_expo ="<<m_expo;
         status = dvpSetExposure(m_handle, m_expo);
         if (status != DVP_STATUS_OK) {
             QMessageBox::about(NULL, "About", "Set exposure time fail!");
@@ -76,6 +77,7 @@ void DushenBasicFunc::InitSpinGain()
         if (status != DVP_STATUS_OK) {
             QMessageBox::about(NULL, "About", "Get analog gain description fail!");
         }
+        qDebug()<<"m_handle = "<<m_handle<<", m_gain ="<<m_gain;
         status = dvpSetAnalogGain(m_handle, m_gain);
         if (status != DVP_STATUS_OK) {
             QMessageBox::about(NULL, "About", "Set analog gain fail!");
@@ -93,6 +95,7 @@ void DushenBasicFunc::InitImageHeight()
         if (status != DVP_STATUS_OK) {
             QMessageBox::about(NULL, "About", "Get ROI fail!");
         } else {
+            qDebug()<<"m_handle ="<<m_handle<<",m_height ="<<m_height;
             roi.H = m_height;
             status = dvpSetRoi(m_handle,roi);
             if (status != DVP_STATUS_OK) {
@@ -107,6 +110,7 @@ void DushenBasicFunc::InitFrameCount()
 {
     dvpStatus status;
     if (IsValidHandle(m_handle)) {
+        qDebug()<<"m_handle ="<<m_handle<<", m_framecount="<<m_framecount;
         status = dvpSetFramesPerTrigger(m_handle, m_framecount);
         if (status != DVP_STATUS_OK) {
             QMessageBox::about(NULL, "About", "set framecount fail!");
@@ -144,7 +148,6 @@ void DushenBasicFunc::InitTrigger()
 
 void DushenBasicFunc::InitROIMode()
 {
-
     dvpStatus status;
     dvpSelectionDescr QuickRoiDescr;
 
@@ -181,7 +184,6 @@ void DushenBasicFunc::InitTargetFormat()
 
 void DushenBasicFunc::InitColorSolution()
 {
-
     dvpSelection ColorSolutionDetail;
     dvpStatus status;
     dvpSelectionDescr ColorSolutionDescr;
@@ -258,13 +260,6 @@ CameraNameSpace::HSCameraError DushenBasicFunc::StopFunc(const QString FriendlyN
         if (m_handle != 0) {
             dvpStatus status = dvpStop(m_handle);
             if (status == DVP_STATUS_OK) {
-                //todo:这里线程逻辑待思考
-//                if (m_timer->isActive()) {
-//                    m_timer->stop();
-//                }
-//                m_pThread->requestInterruption();
-//                m_pThread->quit();
-//                m_pThread->wait();
                 m_IsStarted = false;
                 return CameraNameSpace::HSCameraError::SUCCESS;
             } else {
@@ -484,7 +479,6 @@ CameraNameSpace::HSCameraError DushenBasicFunc::setSoftTriggerFlag(bool flag)
 
 CameraNameSpace::HSCameraError DushenBasicFunc::StartFunc(const QString FriendlyName)
 {
-
     if (m_currentFriendlyName == FriendlyName) {
         if (m_IsOpened == false) {
             return (CameraNameSpace::HSCameraError::INNER_ERROR);
@@ -533,6 +527,9 @@ CameraNameSpace::HSCameraError DushenBasicFunc::StartFunc(const QString Friendly
 
 bool DushenBasicFunc::IsStarted(const QString FriendlyName)
 {
+    qDebug()<<"FriendlyName ="<<FriendlyName
+             <<",m_currentFriendlyName="<<m_currentFriendlyName
+             <<",m_IsStarted =" <<m_IsStarted;
     if (m_currentFriendlyName == FriendlyName) {
         return m_IsStarted;
     } else {
@@ -688,9 +685,12 @@ dvpInt32  DushenBasicFunc::OnGetFrame(dvpHandle handle, dvpStreamEvent event, vo
     data.iWidth = pFrame->iWidth;
     data.uBytes = pFrame->uBytes;
     data.uTimestamp = pFrame->uTimestamp;
-    printf("Frame ID:%lld, timestamp:%lld, %d*%d, %dbytes, format:%d\r",
-           pFrame->uFrameID, pFrame->uTimestamp, pFrame->iWidth,
-           pFrame->iHeight, pFrame->uBytes, pFrame->format);
+    qDebug()<<"Frame ID:"<<pFrame->uFrameID
+             <<",timestamp:"<<pFrame->uTimestamp
+             <<",iWidt:"<<pFrame->iWidth
+             <<",iHeight:"<<pFrame->iHeight
+             <<",uBytes:"<<pFrame->uBytes
+             <<",format:"<<pFrame->format;
     DushenBasicFunc::MapSS.push(handle, data);
     return 0;
 }
