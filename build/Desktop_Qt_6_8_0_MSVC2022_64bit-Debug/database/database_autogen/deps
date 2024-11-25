@@ -1,12 +1,4 @@
 database_autogen/timestamp: \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXCompilerFlag.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/FindWrapAtomic.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/Qt6Config.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake \
@@ -95,10 +87,18 @@ database_autogen/timestamp: \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessAliasTargets.cmake \
-	D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
-	D:/GlassCV1015/hikvision/database/CMakeLists.txt \
-	D:/GlassCV1015/hikvision/database/HSDatabaseInterface.cpp \
-	D:/GlassCV1015/hikvision/database/HSDatabaseInterface.h \
-	D:/GlassCV1015/hikvision/database/database.cpp \
-	D:/GlassCV1015/hikvision/database/database.h \
-	C:/Program\ Files/CMake/bin/cmake.exe
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake \
+	D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	D:/code/hivision/database/CMakeLists.txt \
+	D:/code/hivision/database/HSDatabaseInterface.cpp \
+	D:/code/hivision/database/HSDatabaseInterface.h \
+	D:/code/hivision/database/database.cpp \
+	D:/code/hivision/database/database.h \
+	C:/Qt/Tools/CMake_64/bin/cmake.exe

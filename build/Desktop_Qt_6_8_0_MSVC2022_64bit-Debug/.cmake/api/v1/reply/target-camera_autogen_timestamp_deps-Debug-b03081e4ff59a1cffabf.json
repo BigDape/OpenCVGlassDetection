@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"camare/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "HSTool::@3475fea270df04150876"
+		}
+	],
+	"id" : "camera_autogen_timestamp_deps::@3dbd564a4d31c1faeba7",
+	"isGeneratorProvided" : true,
+	"name" : "camera_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "camare",
+		"source" : "camare"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

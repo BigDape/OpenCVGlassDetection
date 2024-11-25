@@ -144,7 +144,7 @@ void Tcp::slot_writeData( QByteArray data )
         return;
 
     qint64 ret = m_pSock->write(data);
-    qDebug()<<"slot_writeData ret ="<< ret;
+    //qDebug()<<"slot_writeData ret ="<< ret;
     if( ret > 0 )
     {
         if (m_nPort == 7002)
@@ -161,7 +161,7 @@ void Tcp::OnReadyRead()
 //    buffer = m_pSock->readAll();
 //    qDebug() << buffer;
     qint64 len = m_pSock->read( ReadBuff, MaxBuffLength );
-    qDebug()<<"OnReadyRead() len="<<len;
+    //qDebug()<<"OnReadyRead() len="<<len;
     if( len <= 0 )
         return;
     else
@@ -174,7 +174,7 @@ void Tcp::OnSockStateChanged(QAbstractSocket::SocketState state)
 //    {
 //        qDebug() << "port" << m_nPort << ", state changed" << state;
 //    }
-    qDebug()<<"QAbstractSocket::SocketState state ="<<state;
+    //qDebug()<<"QAbstractSocket::SocketState state ="<<state;
     if (QAbstractSocket::UnconnectedState == state)
     {
         m_bConnFlag = false;

@@ -1,4 +1,4 @@
-D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/socket/socket_autogen/EWIEGA46WW/moc_TcpPackComm.cpp: D:/GlassCV1015/hikvision/socket/TcpPackComm.h \
+D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/socket/socket_autogen/EWIEGA46WW/moc_TcpPackComm.cpp: D:/code/hivision/socket/TcpPackComm.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QMutex \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QThread \
@@ -128,4 +128,4 @@ D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/socket/sock
   C:/Qt/6.8.0/msvc2022_64/include/QtNetwork/qtnetwork-config.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtNetwork/qtnetworkexports.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtNetwork/qtnetworkglobal.h \
-  D:/GlassCV1015/hikvision/socket/Tcp.h
+  D:/code/hivision/socket/Tcp.h

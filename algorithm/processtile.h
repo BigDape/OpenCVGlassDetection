@@ -23,15 +23,14 @@ struct ConnectedComponent {
 };
 
 /**
- * @brief The CV_GLASSPART enum 图片属于玻璃的什么部分
+ * @brief The EdgeElement class 边界小图元素
  */
-enum CV_GLASSPART {
-    UNKNOW = 0,
-    HEAD,
-    MID,
-    TAIL,
-    EMPTY,
+struct EdgeElement {
+    int id;           // 边界小图的id
+    cv::Rect rect;    // 边界小图位置信息
+    cv::Vec4i point2; // 计算梯度值
 };
+
 
 class ProcessTile
 {
@@ -55,7 +54,8 @@ private:
                              int topAddition,
                              int bottomAddition,
                              int leftAddition,
-                             int rightAddition);//边部缺陷检出
+                             int rightAddition,
+                             std::vector<DoorClampAndHole>& results);//边部缺陷检出
     /**
      * @brief YoloDefectClassification 调用YOLO数据模型计算
      * @param [in] Regions 缺陷小图
@@ -105,6 +105,13 @@ private:
 
     QString SyncSaveCurrentTimeImage(cv::Mat& region, QString path=QString(""));//异步保存图片
 
+    void DoorClampDetection(cv::Mat& region,
+                            cv::Rect& rect,
+                            int id,
+                            std::vector<EdgeElement>& Y1Y2X1X2);//从边界小图中获取门夹结果
+    void DoorClampResultData(std::vector<EdgeElement> Y1Y2X1X2,
+                             std::vector<regionInfor> edgeRegionInfos,
+                             std::vector<DoorClampAndHole>& results); // 门夹数据处理
 private:
     cv::dnn::Net net; //神经网络
     std::mutex mut;   //锁

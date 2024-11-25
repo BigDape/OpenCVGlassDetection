@@ -1,12 +1,4 @@
 jsoncpp_autogen/timestamp: \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXCompilerFlag.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/FindWrapAtomic.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/Qt6Config.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake \
@@ -65,24 +57,32 @@ jsoncpp_autogen/timestamp: \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessAliasTargets.cmake \
-	D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
-	D:/GlassCV1015/hikvision/jsoncpp/CMakeLists.txt \
-	D:/GlassCV1015/hikvision/jsoncpp/HSJsoncppInterface.cpp \
-	D:/GlassCV1015/hikvision/jsoncpp/HSJsoncppInterface.h \
-	D:/GlassCV1015/hikvision/jsoncpp/allocator.h \
-	D:/GlassCV1015/hikvision/jsoncpp/assertions.h \
-	D:/GlassCV1015/hikvision/jsoncpp/config.h \
-	D:/GlassCV1015/hikvision/jsoncpp/forwards.h \
-	D:/GlassCV1015/hikvision/jsoncpp/json.h \
-	D:/GlassCV1015/hikvision/jsoncpp/json_features.h \
-	D:/GlassCV1015/hikvision/jsoncpp/json_reader.cpp \
-	D:/GlassCV1015/hikvision/jsoncpp/json_tool.h \
-	D:/GlassCV1015/hikvision/jsoncpp/json_value.cpp \
-	D:/GlassCV1015/hikvision/jsoncpp/json_writer.cpp \
-	D:/GlassCV1015/hikvision/jsoncpp/jsoncpp.cpp \
-	D:/GlassCV1015/hikvision/jsoncpp/jsoncpp.h \
-	D:/GlassCV1015/hikvision/jsoncpp/reader.h \
-	D:/GlassCV1015/hikvision/jsoncpp/value.h \
-	D:/GlassCV1015/hikvision/jsoncpp/version.h \
-	D:/GlassCV1015/hikvision/jsoncpp/writer.h \
-	C:/Program\ Files/CMake/bin/cmake.exe
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake \
+	D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	D:/code/hivision/jsoncpp/CMakeLists.txt \
+	D:/code/hivision/jsoncpp/HSJsoncppInterface.cpp \
+	D:/code/hivision/jsoncpp/HSJsoncppInterface.h \
+	D:/code/hivision/jsoncpp/allocator.h \
+	D:/code/hivision/jsoncpp/assertions.h \
+	D:/code/hivision/jsoncpp/config.h \
+	D:/code/hivision/jsoncpp/forwards.h \
+	D:/code/hivision/jsoncpp/json.h \
+	D:/code/hivision/jsoncpp/json_features.h \
+	D:/code/hivision/jsoncpp/json_reader.cpp \
+	D:/code/hivision/jsoncpp/json_tool.h \
+	D:/code/hivision/jsoncpp/json_value.cpp \
+	D:/code/hivision/jsoncpp/json_writer.cpp \
+	D:/code/hivision/jsoncpp/jsoncpp.cpp \
+	D:/code/hivision/jsoncpp/jsoncpp.h \
+	D:/code/hivision/jsoncpp/reader.h \
+	D:/code/hivision/jsoncpp/value.h \
+	D:/code/hivision/jsoncpp/version.h \
+	D:/code/hivision/jsoncpp/writer.h \
+	C:/Qt/Tools/CMake_64/bin/cmake.exe

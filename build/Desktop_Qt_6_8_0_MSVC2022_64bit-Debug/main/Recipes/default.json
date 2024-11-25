@@ -1,0 +1,64 @@
+{
+   "CamareParams" : {
+      "Camera0ExposureTime" : 50,
+      "Camera0Frame" : 5,
+      "Camera0Gain" : 3,
+      "Camera0PhotoRow" : 15000,
+      "Camera1ExposureTime" : 50,
+      "Camera1Frame" : 5,
+      "Camera1Gain" : 3,
+      "Camera1PhotoRow" : 15000,
+      "Camera2ExposureTime" : 50,
+      "Camera2Frame" : 5,
+      "Camera2Gain" : 3,
+      "Camera2PhotoRow" : 15000,
+      "Camera3ExposureTime" : 50,
+      "Camera3Frame" : 5,
+      "Camera3Gain" : 3,
+      "Camera3PhotoRow" : 15000
+   },
+   "DimensionalMeasurementParams" : {
+      "XCamera0Accuracy" : 0.10000000000000001,
+      "XCamera1Accuracy" : 0.10000000000000001,
+      "YAccuracy" : 0.10000000000000001
+   },
+   "EncoderParams" : {
+      "EncodePulseFilterUs" : 10,
+      "EncoderMode" : 1,
+      "ErrorPhotoCount" : 0,
+      "PhotoelectricSensorFiltering" : 10,
+      "SolenoidValve1DownDelay" : 0,
+      "SolenoidValve1UpDelay" : 0,
+      "SolenoidValve2DownDelay" : 0,
+      "SolenoidValve2UpDelay" : 0,
+      "WheelAEncoder" : 0,
+      "WheelBEncoder" : 0,
+      "WheelEncoderPhotoPulse" : 5
+   },
+   "LighterParams" : {
+      "CameraFrameSignalTriggerDelay" : 4000,
+      "FrameSignalOutput" : 0,
+      "LightCameraEnable" : 65535,
+      "LightField1GlowTime" : 3100,
+      "LightField2GlowTime" : 2100,
+      "LightField3GlowTime" : 4900,
+      "LightField4GlowTime" : 0,
+      "LightSignalSynchronizationDelayRegister" : 0,
+      "LightSourcePulseEndPointRegister" : 3000,
+      "PhotoMode" : 1,
+      "SelectedLightFieldNumber" : 3,
+      "SyncPulsePeriodRegister" : 8333,
+      "TimelapseAfterPhotoShootEnd" : 0,
+      "WorkMode" : 0
+   },
+   "SystemParams" : {
+      "Camare0Name" : "DSXL810003247",
+      "Camare1Name" : "DSXL810002038",
+      "Camare2Name" : "0",
+      "Camare3Name" : "0",
+      "CamareNumber" : 2,
+      "ServerIP" : "192.168.1.200",
+      "ServerPort" : 7002,
+      "SystemName" : "Haoshi Intelligent visual inspection"
+   }
+}

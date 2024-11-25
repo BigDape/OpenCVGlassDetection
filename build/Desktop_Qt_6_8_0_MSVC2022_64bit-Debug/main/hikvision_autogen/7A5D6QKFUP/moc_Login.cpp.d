@@ -1,4 +1,4 @@
-D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_autogen/7A5D6QKFUP/moc_Login.cpp: D:/GlassCV1015/hikvision/main/Form/Login.h \
+D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_autogen/7A5D6QKFUP/moc_Login.cpp: D:/code/hivision/main/Form/Login.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20functional.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20iterator.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20memory.h \

@@ -1,0 +1,26 @@
+{
+   "Camera0" : {
+      "bottomPixCrop" : 22,
+      "leftPixCrop" : 1400,
+      "rightPixCrop" : 620,
+      "topPixCrop" : 118
+   },
+   "Camera1" : {
+      "bottomPixCrop" : 40,
+      "leftPixCrop" : 620,
+      "rightPixCrop" : 1400,
+      "topPixCrop" : 100
+   },
+   "Camera2" : {
+      "bottomPixCrop" : 0,
+      "leftPixCrop" : 0,
+      "rightPixCrop" : 0,
+      "topPixCrop" : 0
+   },
+   "Camera3" : {
+      "bottomPixCrop" : 0,
+      "leftPixCrop" : 0,
+      "rightPixCrop" : 0,
+      "topPixCrop" : 0
+   }
+}

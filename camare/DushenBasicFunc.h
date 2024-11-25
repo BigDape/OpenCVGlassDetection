@@ -16,9 +16,11 @@
 #include "HSCameraInterface.h"
 #include "DVPCamera.h"
 
+#define GRABTIMEOUT 3000 // 图像获取的超时时间 ms
+
 // 线程安全的unorder_map
 template<typename K, typename V>
-class ThreadSafeUnorderedMap {
+class CAThreadSafeUnorderedMap {
 public:
     // 插入键值对
     void insert(const K& key, const std::queue<V>& value) {
@@ -64,6 +66,7 @@ public:
             if (!tmp.empty()) {
                 value = tmp.front();
                 tmp.pop();
+                unordered_map_[key] = tmp;
             }
         }
         return value;
@@ -99,6 +102,24 @@ struct callbackDataStruct{
                        , uBytes(0)
                        , format(dvpImageFormat::FORMAT_B16_G16_R16)
                        , buffer(nullptr){}
+};
+
+struct deepCopyStruct{
+    dvpUint64 uFrameID;
+    dvpUint64 uTimestamp;
+    dvpInt32 iWidth;
+    dvpInt32 iHeight;
+    dvpUint32 uBytes;
+    dvpImageFormat format;
+    cv::Mat buffer0;    // 透射亮场
+    cv::Mat buffer1;    // 反射亮场
+    cv::Mat buffer2;    // 反射暗场
+    deepCopyStruct():uFrameID(0)
+        , uTimestamp(0)
+        , iWidth(0)
+        , iHeight(0)
+        , uBytes(0)
+        , format(dvpImageFormat::FORMAT_B16_G16_R16){}
 };
 
 
@@ -147,8 +168,8 @@ public:
     virtual QString DispRate() override;
     virtual QImage DispImage() override;
     virtual CameraNameSpace::HSCameraError startGetFrameBuffer(FrameImage& imageunit) override;
-    virtual int GetCurrentFrameCount() override;// 获取当前获取到的图像是第几帧，从0开始
-
+    void saveMatToImage(QString fullpath,cv::Mat region );
+    QString SyncSaveCurrentTimeImage(cv::Mat& region,QString path="");
 private:
     dvpQuickRoi QuickRoiDetail;
     QString QuickRoiDetailInfo[16];
@@ -185,10 +206,16 @@ private:
     int m_FieldSelectedView = 1;            // 相机选择的场
     bool m_SoftTriggerFlag =  false;        // 软触发信号
     int ImageOffset = 200;                  // 偏移行数
-    int ImageLineSize = 0;                  // 一行像元的字节数
-    static int m_currentFrameCount;            // 当前帧数
+    static int ImageLineSize;                  // 一行像元的字节数
+    std::atomic<int> deleteid = 0;
+    dvpFrame m_pFrame;                      // 采集到的图像的结构体指针
+    void* pBuffer;                          // 采集到的图像的内存首地址
+    cv::Mat offsetBuffer0;                   // 图片buffer缓存，透射
+    cv::Mat offsetBuffer1;                   // 图片buffer缓存，反射亮
+    cv::Mat offsetBuffer2;                  // 图片buffer缓存，反射暗
 public:
-    static ThreadSafeUnorderedMap<dvpHandle,callbackDataStruct> MapSS;// handle->buffer
+    static CAThreadSafeUnorderedMap<dvpHandle,callbackDataStruct> MapSS;// handle->buffer
+    static CAThreadSafeUnorderedMap<dvpHandle,deepCopyStruct> MapDC;// handle->cv::Mat
     static dvpInt32 OnGetFrame(dvpHandle handle, dvpStreamEvent event, void* pContext, dvpFrame* pFrame, void* pBuffer);
 };
 

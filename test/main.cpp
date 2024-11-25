@@ -56,14 +56,14 @@ int main() {
         algorithmPtr = createFunc();
     }
     std::cout<<"test 1233"<<std::endl;
-    cv::Mat image1 = cv::imread("D:/testopencv/part2.jpg");
+    cv::Mat image1 = cv::imread("D:/testopencv/projectionImage4.jpg");
     qDebug()<<"image1 sucess";
     cv::Mat grayImage;
     cv::cvtColor(image1, grayImage, cv::COLOR_BGR2GRAY);
 
     algorithmPtr->TestExecu(grayImage);
     } catch(...) {
-        qDebug() << "An unknown error occurred.";
+        qDebug() << "main test An unknown error occurred.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -75,47 +75,5 @@ int main() {
         }
     }
 
-    // 霍夫圆变换
-    // cv::Mat image1 = cv::imread("D:/testopencv/defect/defect137.jpg");
-    // qDebug()<<"image1 sucess";
-    // cv::Mat grayImage;
-    // cv::cvtColor(image1, grayImage, cv::COLOR_BGR2GRAY);
-    // std::vector<cv::Vec3f> circles;
-    // cv::HoughCircles(grayImage, circles, cv::HOUGH_GRADIENT, 1, 50, 100, 30, 0, 0);
-    // for (size_t i = 0; i < circles.size(); i++) {
-    //     float x = circles[i][0];
-    //     float y = circles[i][1];
-    //     float radius = circles[i][2];
-    //     qDebug() << "Circle " << i + 1 << " center: (" << x << ", " << y << "), radius: " << radius;
-    // }
-
-    // 最大内接矩形
-    // cv::Mat image1 = cv::imread("D:/testopencv/defect/defect132.jpg");
-    // qDebug()<<"image1 sucess";
-    // cv::Mat grayImage;
-    // cv::cvtColor(image1, grayImage, cv::COLOR_BGR2GRAY);
-    // std::vector<std::vector<cv::Point>> contours;
-    // std::vector<cv::Vec4i> hierarchy;
-    // cv::findContours(grayImage, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-    // if (contours.empty()) {
-    //     std::cout << "No contours found." << std::endl;
-    // }
-
-    // double maxArea = 0;
-    // double maxWidth = 0;
-    // double maxHeight = 0;
-    // for (const auto& contour : contours) {
-    //     cv::RotatedRect rotatedRect = cv::minAreaRect(contour);
-    //     double width = rotatedRect.size.width;
-    //     double height = rotatedRect.size.height;
-    //     double area = width * height;
-    //     if (area > maxArea) {
-    //         maxArea = area;
-    //         maxWidth = static_cast<int>(width);
-    //         maxHeight = static_cast<int>(height);
-    //     }
-    // }
-    // qDebug()<<"maxWidth = "<<maxWidth <<", maxHeight ="<<maxHeight;
     return 0;
 }

@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     //注册异常处理函数,使用VS打开D盘的dmp文件，查看崩溃在哪一行
     SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)ApplicationCrashHandler);
     QApplication a(argc, argv);
-
+    // 软件国际化
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {

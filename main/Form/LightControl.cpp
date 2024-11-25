@@ -66,7 +66,7 @@ LightControl::LightControl( QWidget* parent)
     // 实时获取帧信号确定玻璃是否结束
     m_timer = new QTimer();
     connect(m_timer, &QTimer::timeout, this, &LightControl::getFrameSignal);
-    m_timer->start(10);
+    m_timer->start(100);
 }
 
 //析构函数
@@ -646,16 +646,18 @@ void LightControl::setUiContentFromStruct()
 
 void LightControl::getFrameSignal()
 {
-    if (SocketObjectPtr == nullptr) {
-        unsigned int FrameSignal;
-        unsigned int CoderACount;
-        unsigned int CoderBCount;
-        unsigned int errorPhotoCount;
+    if (SocketObjectPtr != nullptr) {
+        unsigned int FrameSignal = 0;
+        unsigned int CoderACount = 0;
+        unsigned int CoderBCount = 0;
+        unsigned int errorPhotoCount = 0;
         SocketObjectPtr->GetRealTimeData(FrameSignal,CoderACount,CoderBCount,errorPhotoCount);
         PARAM.FrameSignalOutput = FrameSignal;
         PARAM.WheelAEncoder = CoderACount;
         PARAM.WheelBEncoder = CoderBCount;
         PARAM.ErrorPhotoCount = errorPhotoCount;
+    } else {
+        qDebug()<<"SocketObjectPtr == nullptr";
     }
 }
 

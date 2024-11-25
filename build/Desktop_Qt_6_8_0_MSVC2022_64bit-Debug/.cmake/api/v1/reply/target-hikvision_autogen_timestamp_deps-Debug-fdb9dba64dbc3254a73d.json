@@ -1,0 +1,54 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"main/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "algorithm::@b8e9a88a05f6c4e5712f"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "jsoncpp::@8d13317d076c1318cd2a"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "database::@c44ac6e9bb193d64d56d"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "socket::@9527ef4114e0baec7268"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "camera::@3dbd564a4d31c1faeba7"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "HSTool::@3475fea270df04150876"
+		}
+	],
+	"id" : "hikvision_autogen_timestamp_deps::@15c4a824ab2728a3f5e7",
+	"isGeneratorProvided" : true,
+	"name" : "hikvision_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "main",
+		"source" : "main"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

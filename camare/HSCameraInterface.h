@@ -8,6 +8,7 @@
 #include <QString>
 #include <windows.h>
 #include <QImage>
+#include "HSTool.h"
 
 struct DushenCameraArgs{
     double expo;        // 相机曝光时间
@@ -19,11 +20,6 @@ struct DushenCameraArgs{
     QString camName;    // 相机名称
 };
 
-struct FrameImage {
-    std::vector<QImage> buffers;//每个场对应图片
-    int fieldnumberset; // 场的数量
-    int framecount;     // 当前帧
-};
 
 namespace CameraNameSpace {
 
@@ -168,8 +164,6 @@ namespace CameraNameSpace {
          * @param queue 结果数据
          */
         virtual HSCameraError startGetFrameBuffer(FrameImage& frame) = 0;
-        // 获取当前获取到的图像是第几帧，从0开始
-        virtual int GetCurrentFrameCount() = 0;
     };
 
 }

@@ -1,4 +1,4 @@
-D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_layout.cpp: D:/GlassCV1015/hikvision/log/src/log4qt/layout.h \
+D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_layout.cpp: D:/code/hivision/log/src/log4qt/layout.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QSharedPointer \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QtClassHelperMacros \
@@ -105,7 +105,7 @@ D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qversiontagging.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qyieldcpu.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qt.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qtdefs.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qtshared.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qtsharedptr.h
+  D:/code/hivision/log/src/log4qt/log4qt.h \
+  D:/code/hivision/log/src/log4qt/log4qtdefs.h \
+  D:/code/hivision/log/src/log4qt/log4qtshared.h \
+  D:/code/hivision/log/src/log4qt/log4qtsharedptr.h

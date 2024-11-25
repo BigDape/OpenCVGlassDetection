@@ -18,14 +18,16 @@ public:
 
 private:
     void InitCalibrateUI();
+    bool CheckParam(CropArgPackage crop);
 
 private slots:
     void SlotSaveClicked();
     void SlotGetClicked();
+    void SlotAboutClicked();
 
 private:
     Ui::Calibrate *ui;
-    HSJsoncppNamespace::HSJsoncppInterface* jsoncppPtr;
+    HSJsoncppNamespace::HSJsoncppInterface* jsoncppPtr = nullptr;
     HMODULE jsoncppDllHandle;
     QString CalibrateJsonPath; //标定json文件路径
 };

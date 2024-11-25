@@ -33,6 +33,7 @@ namespace HSDatabaseNamespace{
         virtual bool closeDataBase() = 0;   //关闭数据库
         virtual bool getCurrentDefectTableMaxID(int64_t& count) = 0;
         virtual bool getCurrentGlassTableMaxID(int64_t& count) = 0;
+        virtual bool getCurrentSizeTableMaxID(int64_t& count) = 0;
     };
 }
 

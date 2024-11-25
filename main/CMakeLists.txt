@@ -88,6 +88,8 @@ else()
                                          algorithm
                                          jsoncpp
                                          ${OpenCV_LIBS}
+                                         opencv_cudawarping
+                                         opencv_cudaarithm
                                         )
  target_include_directories(hikvision PUBLIC C:/Qt/6.8.0/msvc2022_64/include)
 

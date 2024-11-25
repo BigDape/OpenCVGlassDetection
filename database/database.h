@@ -49,7 +49,7 @@ public:
 
     virtual bool getCurrentDefectTableMaxID(int64_t& count) override;
     virtual bool getCurrentGlassTableMaxID(int64_t& count)  override;
-
+    virtual bool getCurrentSizeTableMaxID(int64_t& count) override;
 public:
     QSqlDatabase db;
 };

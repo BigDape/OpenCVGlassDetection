@@ -13,12 +13,12 @@ set(SRC_FILES
     )
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
-
+find_package(OpenCV 4.10.0 REQUIRED)
 # 设置生成动态链接库
 add_library(camera SHARED ${SRC_FILES})
 
 # 添加头文件目录
-target_include_directories(camera PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(camera PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
 
 # 如果有其他依赖项，可以在这里添加
-target_link_libraries(camera Qt6::Core Qt6::Widgets ${CMAKE_CURRENT_SOURCE_DIR}/lib_x86_64/DVPCamera64.lib)
+target_link_libraries(camera Qt6::Core Qt6::Widgets HSTool ${OpenCV_LIBS} ${CMAKE_CURRENT_SOURCE_DIR}/lib_x86_64/DVPCamera64.lib)

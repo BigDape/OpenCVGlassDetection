@@ -1,13 +1,4 @@
 socket_autogen/timestamp: \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXCompilerFlag.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake \
-	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindVulkan.cmake \
 	C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer \
 	C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash \
 	C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList \
@@ -512,19 +503,28 @@ socket_autogen/timestamp: \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessAliasTargets.cmake \
-	D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
-	D:/GlassCV1015/hikvision/socket/CMakeLists.txt \
-	D:/GlassCV1015/hikvision/socket/ElemMatch.h \
-	D:/GlassCV1015/hikvision/socket/HSSocketInterface.cpp \
-	D:/GlassCV1015/hikvision/socket/HSSocketInterface.h \
-	D:/GlassCV1015/hikvision/socket/ParamComm.cpp \
-	D:/GlassCV1015/hikvision/socket/ParamComm.h \
-	D:/GlassCV1015/hikvision/socket/RegParasComm.cpp \
-	D:/GlassCV1015/hikvision/socket/RegParasComm.h \
-	D:/GlassCV1015/hikvision/socket/SignalControlData.cpp \
-	D:/GlassCV1015/hikvision/socket/SignalControlData.h \
-	D:/GlassCV1015/hikvision/socket/Tcp.cpp \
-	D:/GlassCV1015/hikvision/socket/Tcp.h \
-	D:/GlassCV1015/hikvision/socket/TcpPackComm.cpp \
-	D:/GlassCV1015/hikvision/socket/TcpPackComm.h \
-	C:/Program\ Files/CMake/bin/cmake.exe
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake \
+	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindVulkan.cmake \
+	D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	D:/code/hivision/socket/CMakeLists.txt \
+	D:/code/hivision/socket/ElemMatch.h \
+	D:/code/hivision/socket/HSSocketInterface.cpp \
+	D:/code/hivision/socket/HSSocketInterface.h \
+	D:/code/hivision/socket/ParamComm.cpp \
+	D:/code/hivision/socket/ParamComm.h \
+	D:/code/hivision/socket/RegParasComm.cpp \
+	D:/code/hivision/socket/RegParasComm.h \
+	D:/code/hivision/socket/SignalControlData.cpp \
+	D:/code/hivision/socket/SignalControlData.h \
+	D:/code/hivision/socket/Tcp.cpp \
+	D:/code/hivision/socket/Tcp.h \
+	D:/code/hivision/socket/TcpPackComm.cpp \
+	D:/code/hivision/socket/TcpPackComm.h \
+	C:/Qt/Tools/CMake_64/bin/cmake.exe

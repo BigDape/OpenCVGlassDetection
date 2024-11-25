@@ -260,8 +260,6 @@ void DushenCameraWidget::slot_StartCamera()
     } else {
         qDebug()<<BText;
     }
-
-
 }
 
 void DushenCameraWidget::on_pushButton_Loadini_clicked()

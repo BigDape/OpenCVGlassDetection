@@ -13,27 +13,34 @@ Algorithm::~Algorithm()
 {}
 
 //拼图
-void Algorithm::init(JigsawPuzzleDataPack pack,
-                  cv::Mat& image1,
-                  cv::Mat& image2,
-                  cv::Mat& image3)
+void Algorithm::Puzzle(int cameraNumber,
+                    std::vector<cv::Mat> mat0,
+                    std::vector<cv::Mat> mat1,
+                    std::vector<CameraCropArg> args,
+                    cv::Mat& image1,
+                    cv::Mat& image2,
+                    cv::Mat& image3)
 {
-    cv::Mat mat00 = pack.mat0[0];
-    cv::Mat mat10 = pack.mat1[0];
-    CameraCropArg arg0 = pack.packages.args[0];
-    CameraCropArg arg1 = pack.packages.args[0];
-    image1 = Algorithm::HorizontalPuzzle(pack.mat0[0],
-                                         pack.mat1[0],
-                                         arg0,
-                                         arg1);
-    image2 = Algorithm::HorizontalPuzzle(pack.mat0[1],
-                                         pack.mat1[1],
-                                         arg0,
-                                         arg1);
-    image3 = Algorithm::HorizontalPuzzle(pack.mat0[2],
-                                         pack.mat1[2],
-                                         arg0,
-                                         arg1);
+    if (args.size() >= 2 && mat0.size() == 3 && mat1.size() == 3) {//检查参数，两个相机和图像光场数量一致
+        Algorithm::stitchFieldImages(args[0],
+                                     mat0[0],
+                                     args[1],
+                                     mat1[0],
+                                     image1); // 拼接投射亮场图像
+        Algorithm::stitchFieldImages(args[0],
+                                     mat0[1],
+                                     args[1],
+                                     mat1[1],
+                                     image2);// 拼接反射亮场图像
+        Algorithm::stitchFieldImages(args[0],
+                                     mat0[2],
+                                     args[1],
+                                     mat1[2],
+                                     image3);// 拼接反射暗场图像
+
+    } else {
+        qDebug()<<"error: 标定参数或者图像参数错误。";
+    }
 }
 
 void Algorithm::RegisterResultCallback(CallbackFun func)
@@ -46,20 +53,12 @@ void Algorithm::SyncExecu(int& currentFrameCount,
                       cv::Mat& image2,
                       cv::Mat& image3)
 {
-    std::vector<std::shared_ptr<NewDefectUnitData>> frameGlassResult;
-    // proPtr->CV_DefectsDetected(image1,image2,image3,length,width,imagePath);//多线程处理
-    std::shared_ptr<std::thread> processThread = std::make_shared<std::thread>(&ProcessTile::CV_DefectsDetected,
-                                            proPtr.get(),
-                                            image1,
-                                            image2,
-                                            image3,
-                                            currentFrameCount);
-    threadMap.insert(std::make_pair(currentFrameCount,processThread));
-    if (threadMap[currentFrameCount]->joinable()) {
-        threadMap[currentFrameCount]->join();
-        NewGlassResult result;
-        proPtr->getDefectResult(currentFrameCount, result);
-        mainFunction(result);
+    proPtr->CV_DefectsDetected(image1,image2,image3,currentFrameCount);
+    NewGlassResult result;
+    proPtr->getDefectResult(currentFrameCount, result);
+    if (!result.isEmpty){
+        mainFunction(result); //结果数据不为空，在界面上显示
+        qDebug()<<"帧["<<result.currentFrameCount<<"]执行完毕";
     }
 }
 
@@ -69,9 +68,9 @@ void Algorithm::TestExecu(cv::Mat& image)
     double width = 0;
     QString Path;
     std::vector<std::shared_ptr<NewDefectUnitData>> frameGlassResult;
-    proPtr->CV_DefectsDetected(image,image,image,0);
+    proPtr->CV_DefectsDetected(image,image,image,777);
     NewGlassResult result;
-    proPtr->getDefectResult(0, result);
+    proPtr->getDefectResult(777, result);
 }
 
 void Algorithm::Stop()
@@ -84,25 +83,54 @@ void Algorithm::Exit()
 
 }
 
-cv::Mat Algorithm::HorizontalPuzzle(cv::Mat mat00,
-                                    cv::Mat mat10,
-                                    CameraCropArg arg0,
-                                    CameraCropArg arg1)
+void Algorithm::stitchFieldImages(CameraCropArg arg0,
+                                  cv::Mat mat00,
+                                  CameraCropArg arg1,
+                                  cv::Mat mat10,
+                                  cv::Mat& concatImage)
 {
-    cv::Mat resultmat00 = mat00(cv::Rect(arg0.leftPixCrop,
-                                         arg0.topPixCrop,
-                                         mat00.cols-arg0.leftPixCrop-arg0.rightPixCrop,
-                                         mat00.rows-arg0.topPixCrop-arg0.bottomPixCrop));
-    cv::Mat resultmat10 = mat10(cv::Rect(arg1.leftPixCrop,
-                                         arg1.topPixCrop,
-                                         mat10.cols-arg1.leftPixCrop-arg1.rightPixCrop,
-                                         mat10.rows-arg1.topPixCrop-arg1.bottomPixCrop));
-    cv::Mat result(mat00.rows, mat00.cols, mat00.type());
+    try{
+        // 相机0处理
+        int x0 = arg0.leftPixCrop;
+        int y0 = arg0.topPixCrop;
+        int width0 = mat00.cols - arg0.leftPixCrop - arg0.rightPixCrop;
+        int height0 = mat00.rows - arg0.topPixCrop - arg0.bottomPixCrop;
+        cv::Rect crop0 = cv::Rect(x0, y0, width0, height0);
+        qDebug()<<"x0 = "<<x0 <<",y0 = "<<y0<<",width0 ="<<width0<<", height0 ="<<height0;
+        cv::Mat mat00_crop = mat00(crop0);// 裁剪后的图片
+        // 相机1处理
+        int x1 = arg1.leftPixCrop;
+        int y1 = arg1.topPixCrop;
+        int width1 = mat10.cols - arg1.leftPixCrop - arg1.rightPixCrop;
+        int height1 = mat10.rows - arg1.topPixCrop - arg1.bottomPixCrop;
+        cv::Rect crop1 = cv::Rect(x1,y1,width1,height1);
+        qDebug()<<"x1 = "<<x1 <<",y1 = "<<y1<<",width1 ="<<width1<<", height1 ="<<height1;
+        cv::Mat mat10_crop = mat10(crop1);
 
-    // 将第一个图像复制到结果图像的左侧
-    resultmat00.copyTo(result(cv::Rect(0, 0, resultmat00.cols, resultmat00.rows)));
+        qDebug()<<"mat00_crop.rows ="<<mat00_crop.rows<<", mat10_crop.rows ="<<mat10_crop.rows;
+        if (mat00_crop.cols >0 && mat10_crop.cols > 0 &&  mat00_crop.rows == mat10_crop.rows && mat00_crop.rows > 0 && mat10_crop.rows > 0) {
+            cv::hconcat(mat00_crop,mat10_crop,concatImage);
+        } else {
+            qDebug()<<"mat00_crop.cols ="<<mat00_crop.cols
+                    <<", mat10_crop.cols ="<<mat10_crop.cols
+                    <<", mat00_crop.rows="<<mat00_crop.rows
+                    <<", mat10.rows="<<mat10.rows
+                    <<", mat00_crop.rows ="<<mat00_crop.rows
+                    <<", mat10.rows ="<<mat10.rows;
+            qDebug()<<"拼接参数不符合要求。";
+        }
+    } catch(...) {
+        qDebug()<<"Algorithm::stitchFieldImages throw unknow exception.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+    }
 
-    // 将第二个图像复制到结果图像的右侧
-    resultmat10.copyTo(result(cv::Rect(resultmat00.cols, 0, resultmat10.cols, resultmat10.rows)));
-    return result;
 }
+

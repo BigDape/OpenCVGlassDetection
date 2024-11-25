@@ -2,9 +2,11 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QTimer>
+#include <opencv2/opencv.hpp>
 
-ThreadSafeUnorderedMap<dvpHandle,callbackDataStruct> DushenBasicFunc::MapSS;
-int DushenBasicFunc::m_currentFrameCount = 0;            // 当前帧数
+CAThreadSafeUnorderedMap<dvpHandle,callbackDataStruct> DushenBasicFunc::MapSS;
+CAThreadSafeUnorderedMap<dvpHandle,deepCopyStruct> DushenBasicFunc::MapDC;
+int DushenBasicFunc::ImageLineSize = 0;
 
 CameraNameSpace::HSCameraError DushenBasicFunc::InitCamera(DushenCameraArgs args)
 {
@@ -22,7 +24,12 @@ CameraNameSpace::HSCameraError DushenBasicFunc::InitCamera(DushenCameraArgs args
     for (int i = 0; i < FieldNumberSet; i++) {
         Last_Buffer[i] = new byte[ImageLineSize * ImageOffset];
     }
+    offsetBuffer0 = cv::Mat(ImageOffset,8192,CV_8UC1);
+    offsetBuffer1 = cv::Mat(ImageOffset,8192,CV_8UC1);
+    offsetBuffer2 = cv::Mat(ImageOffset,8192,CV_8UC1);
+
     m_currentIniPath = QDir::currentPath()+ "/SystemParam/" + m_currentFriendlyName + ".ini";//配置文件路径
+    qDebug()<<"m_currentIniPath = "<<m_currentIniPath;
     DushenBasicFunc::ScanFunc(m_currentFriendlyName); //扫描
     return CameraNameSpace::HSCameraError::SUCCESS;
 }
@@ -350,6 +357,8 @@ CameraNameSpace::HSCameraError DushenBasicFunc::OpenFunc(const QString FriendlyN
             // 初始化MapSS结构体
             std::queue<callbackDataStruct> initData;
             DushenBasicFunc::MapSS.insert(m_handle, initData);
+            std::queue<deepCopyStruct> newinitData;
+            DushenBasicFunc::MapDC.insert(m_handle, newinitData);
 
             return (CameraNameSpace::HSCameraError::SUCCESS);
         } else {
@@ -489,7 +498,7 @@ CameraNameSpace::HSCameraError DushenBasicFunc::StartFunc(const QString Friendly
             dvpStatus status1 = dvpRegisterStreamCallback(m_handle, DushenBasicFunc::OnGetFrame, STREAM_EVENT_FRAME_THREAD, NULL);
             if (status1 != DVP_STATUS_OK)
             {
-                printf("dvpRegisterStreamCallback failed with err:%d\r\n", status1);
+                qDebug()<<"dvpRegisterStreamCallback failed with err:"<< status1;
             }
 
             dvpStatus status = dvpGetStreamState(m_handle, &state);
@@ -581,82 +590,129 @@ QImage DushenBasicFunc::DispImage()
 
 CameraNameSpace::HSCameraError DushenBasicFunc::startGetFrameBuffer(FrameImage& imageunit)
 {
-    if (!DushenBasicFunc::MapSS.empty(m_handle)){
-        callbackDataStruct data = DushenBasicFunc::MapSS.pop(m_handle);
+    // dvpStatus status;
+    // //pBuffer为图片缓存,在此处做多场分离
+    // status = dvpGetFrame(m_handle, &m_pFrame, &pBuffer, GRABTIMEOUT);
+    // if (status == DVP_STATUS_OK) {
+    //bool isEmpty = DushenBasicFunc::MapSS.empty(m_handle);
+    bool isEmpty = DushenBasicFunc::MapDC.empty(m_handle);
+    if (isEmpty == false) {
+        //callbackDataStruct data = DushenBasicFunc::MapSS.pop(m_handle);
+        deepCopyStruct data = DushenBasicFunc::MapDC.pop(m_handle);
+        if (data.uFrameID == 0) {
+            return (CameraNameSpace::HSCameraError::INNER_ERROR);
+        }
         try{
-            void* pBuffer = data.buffer;       // 采集到的图像的内存首地址
-            imageunit.framecount = data.uFrameID;
-            qDebug() << "imageunit.framecount = " << imageunit.framecount;
-            imageunit.fieldnumberset = FieldNumberSet;
-            qDebug() << "imageunit.fieldnumberset = " << imageunit.fieldnumberset;
-            //单通道图像宽度
-            int FrameWidth = data.iWidth;
-            //单通道图像高度
-            int FrameHeight;
-            if (imageunit.framecount % m_framecount  == 1 || m_framecount == 1) {//第一帧是不带偏移的高度
-                FrameHeight = data.iHeight / FieldNumberSet;        //每个光场的高度
-            } else {//非第一帧，加上200行偏移量
-                FrameHeight = data.iHeight / FieldNumberSet + ImageOffset;
+            imageunit.framecount = data.uFrameID;           // 相机的帧号 从1开始递增
+            imageunit.fieldnumberset = FieldNumberSet;      // 光场的数量
+
+            int FrameWidth = data.iWidth;                           //单通道图像宽度
+            int FrameHeight= data.iHeight / FieldNumberSet;                     //单通道图像高度
+
+
+            if (FrameHeight <= ImageOffset) {
+                qDebug()<<"图片太小，不能多场分离！";
+                return (CameraNameSpace::HSCameraError::INNER_ERROR);
             }
-            qDebug() << "pFrame.format ="<<data.format;
-            int ImageSize = ImageLineSize * FrameHeight;
-            byte** Dest_Buffer = new byte*[FieldNumberSet];
-            for (int i = 0; i < FieldNumberSet; i++) {
-                Dest_Buffer[i] = new byte[ImageSize];
+
+            if (data.uFrameID > 1) {
+                cv::vconcat(offsetBuffer0, data.buffer0, data.buffer0);
+                cv::vconcat(offsetBuffer1, data.buffer1, data.buffer1);
+                cv::vconcat(offsetBuffer2, data.buffer2, data.buffer2);
             }
+
+            cv::Rect rect(0, FrameHeight - ImageOffset, FrameWidth, ImageOffset);
+            offsetBuffer0 = data.buffer0(rect);
+            offsetBuffer1 = data.buffer1(rect);
+            offsetBuffer2 = data.buffer2(rect);
+
+            // if ( data.uFrameID  != 1 ) {  //非第一帧，加上200行偏移量
+            //     FrameHeight = FrameHeight + ImageOffset;
+            // }
+            //int ImageSize = ImageLineSize * FrameHeight;            // 每个场图片的大小
+            // 初始化分离后buffer的目标数组
+            // byte** Dest_Buffer = new byte*[FieldNumberSet];
+            // for (int i = 0; i < FieldNumberSet; i++) {
+            //     Dest_Buffer[i] = new byte[ImageSize];
+            // }
             //重叠区域复制
-            if (imageunit.framecount % m_framecount != 1 && m_framecount > 1) {
-                for (int lightnum1 = 0; lightnum1 < FieldNumberSet; lightnum1++) {
-                    memcpy(Dest_Buffer[lightnum1], Last_Buffer[lightnum1], ImageLineSize * ImageOffset);
-                }
-            }
+            // if( data.uFrameID  != 1 ) {
+            //     for (int lightnum1 = 0; lightnum1 < FieldNumberSet; lightnum1++) {
+            //         memcpy(Dest_Buffer[lightnum1], Last_Buffer[lightnum1], ImageLineSize * ImageOffset);//非第一帧
+            //     }
+            // }
             // 图片重组
-            for (int HeightCount = 0; HeightCount < data.iHeight / FieldNumberSet; HeightCount++) {
-                for (int lightnum2 = 0; lightnum2 < FieldNumberSet; lightnum2++) {
-                    if (imageunit.framecount % m_framecount == 1 || m_framecount == 1) {
-                        memcpy(Dest_Buffer[lightnum2] + HeightCount * ImageLineSize,
-                               (byte*)pBuffer + (FieldNumberSet * HeightCount + lightnum2) * ImageLineSize,
-                               ImageLineSize);
-                    } else {
-                        memcpy(Dest_Buffer[lightnum2] + (HeightCount + ImageOffset) * ImageLineSize,
-                               (byte*)pBuffer + (FieldNumberSet * HeightCount + lightnum2) * ImageLineSize,
-                               ImageLineSize);
-                    }
-                }
-                //重叠区域获取
-                if (HeightCount >= data.iHeight / FieldNumberSet - ImageOffset) {
-                    for (int lightnum3 = 0; lightnum3 < FieldNumberSet; lightnum3++) {
-                        memcpy(Last_Buffer[lightnum3] + (HeightCount - (data.iHeight / FieldNumberSet - ImageOffset)) * ImageLineSize,
-                               (byte*)pBuffer + (FieldNumberSet * HeightCount + lightnum3) * ImageLineSize,
-                               ImageLineSize);
-                    }
-                }
-            }
-            // 获取多个光场的图片
-            for (int i = 0; i < FieldNumberSet; ++i) {
-                QImage buf = QImage((uchar*)Dest_Buffer[i], FrameWidth, FrameHeight, QImage::Format_Grayscale8);
-                imageunit.buffers.push_back(buf);
-            }
-            int PicvViewSelect = 0;
-            for (int lightnum4 = 0; lightnum4 < FieldNumberSet; lightnum4++) {
-                if(m_FieldSelectedView > 0 && m_FieldSelectedView <= FieldNumberSet) {
-                    PicvViewSelect = m_FieldSelectedView - 1;
-                }
-                QImage buffer;
-                if (data.format == FORMAT_BGR24) { //其他版本先把BGR数据转成RGB数据，再用RGB数据转QImage
-                    buffer = QImage((uchar*)Dest_Buffer[lightnum4], FrameWidth, FrameHeight, QImage::Format_RGB888);
-                } else { //Dushen非FORMAT_BGR24类型
-                    buffer = QImage((uchar*)Dest_Buffer[lightnum4], FrameWidth, FrameHeight, QImage::Format_Grayscale8);
-                }
+            // for (int HeightCount = 0; HeightCount < data.iHeight / FieldNumberSet; HeightCount++) {
+            //     for (int lightnum2 = 0; lightnum2 < FieldNumberSet; lightnum2++) {
+            //         if (data.uFrameID  == 1) {
+            //             memcpy(Dest_Buffer[lightnum2] + HeightCount * ImageLineSize,
+            //                    (byte*)data.buffer + (FieldNumberSet * HeightCount + lightnum2) * ImageLineSize,
+            //                    ImageLineSize);
+            //         } else {
+            //             memcpy(Dest_Buffer[lightnum2] + (HeightCount + ImageOffset) * ImageLineSize,
+            //                    (byte*)data.buffer + (FieldNumberSet * HeightCount + lightnum2) * ImageLineSize,
+            //                    ImageLineSize);
+            //         }
+            //     }
+            // }
+            //重叠区域获取
+            // for (int i = 0; i < FieldNumberSet; i++) {//提前复制下图像的最后200行，供下一帧图片拼接
+            //     int destLine = (data.iHeight / FieldNumberSet - ImageOffset);
+            //     int destaddr = destLine * ImageLineSize;
+            //     qDebug()<<"i = "<< i <<", destLine ="<<destLine <<", destaddr ="<<destaddr;
+            //     memcpy(Last_Buffer[i],
+            //             (byte*)Dest_Buffer[i] + destaddr,
+            //             ImageOffset * ImageLineSize);
+            // }
 
-                if (lightnum4 == PicvViewSelect) {
-                    m_ShowImage = buffer;
-                }
-                delete[] Dest_Buffer[lightnum4];
-            }
-            delete[] Dest_Buffer;
-            Dest_Buffer = nullptr;
+            // 存储结果
 
+            // for (int i = 0; i < FieldNumberSet; ++i) {
+            //     cv::Mat cvMat = cv::Mat(FrameHeight, FrameWidth, CV_8UC1);
+
+            //     for (int j = 0; j < FrameHeight; ++j) {
+            //         const byte* destBufferScanLine = reinterpret_cast<const byte*>(Dest_Buffer[i] + j * ImageLineSize);
+            //         byte* cvMatScanLine = cvMat.ptr<byte>(j);
+            //         for (int x = 0; x < FrameWidth; ++x) {
+            //             cvMatScanLine[x] = destBufferScanLine[x];
+            //         }
+            //     }
+
+
+            imageunit.buffers.push_back(data.buffer0);
+            imageunit.buffers.push_back(data.buffer1);
+            imageunit.buffers.push_back(data.buffer2);
+            QString path;
+            path = "D:/testopencv/camera/handle"+QString::number(m_handle) +"_Field0_FrameID"+QString::number(data.uFrameID) + ".jpg";
+            DushenBasicFunc::SyncSaveCurrentTimeImage(data.buffer0,path);
+            qDebug() <<"handle:("<<m_handle<<")"<<",Field[0],"
+                            <<"data.uFrameID["<<data.uFrameID
+                            <<"] => { FieldNumberSet = "<<FieldNumberSet
+                            <<",FrameWidth = " <<FrameWidth
+                            <<",FrameHeight = "<<FrameHeight
+                            <<",ImageOffset = "<<ImageOffset
+                            <<",path = "<<path
+                            <<",imageunit.buffers.size() = "<<imageunit.buffers.size()<<"}";
+            path = "D:/testopencv/camera/handle"+QString::number(m_handle) +"_Field1_FrameID"+QString::number(data.uFrameID) + ".jpg";
+            DushenBasicFunc::SyncSaveCurrentTimeImage(data.buffer1,path);
+            qDebug() <<"handle:("<<m_handle<<")"<<",Field[1],"
+                     <<"data.uFrameID["<<data.uFrameID
+                     <<"] => { FieldNumberSet = "<<FieldNumberSet
+                     <<",FrameWidth = " <<FrameWidth
+                     <<",FrameHeight = "<<FrameHeight
+                     <<",ImageOffset = "<<ImageOffset
+                     <<",path = "<<path
+                     <<",imageunit.buffers.size() = "<<imageunit.buffers.size()<<"}";
+            path = "D:/testopencv/camera/handle"+QString::number(m_handle) +"_Field2_FrameID"+QString::number(data.uFrameID) + ".jpg";
+            DushenBasicFunc::SyncSaveCurrentTimeImage(data.buffer2,path);
+            qDebug() <<"handle:("<<m_handle<<")"<<",Field[2],"
+                     <<"data.uFrameID["<<data.uFrameID
+                     <<"] => { FieldNumberSet = "<<FieldNumberSet
+                     <<",FrameWidth = " <<FrameWidth
+                     <<",FrameHeight = "<<FrameHeight
+                     <<",ImageOffset = "<<ImageOffset
+                     <<",path = "<<path
+                     <<",imageunit.buffers.size() = "<<imageunit.buffers.size()<<"}";
         } catch(...) {
             qDebug()<<"catch a unknow exception";
             // 获取当前的异常信息
@@ -676,28 +732,75 @@ CameraNameSpace::HSCameraError DushenBasicFunc::startGetFrameBuffer(FrameImage& 
 
 dvpInt32  DushenBasicFunc::OnGetFrame(dvpHandle handle, dvpStreamEvent event, void* pContext, dvpFrame* pFrame, void* pBuffer)
 {
-    callbackDataStruct data;
-    data.buffer = pBuffer;
+    if (pFrame->iHeight % 3 != 0) {
+        pFrame->iHeight = pFrame->iHeight - (pFrame->iHeight % 3);
+    }
+
+    // callbackDataStruct data;
+    deepCopyStruct data;
     data.format = pFrame->format;
     data.uFrameID = pFrame->uFrameID;
-    m_currentFrameCount = pFrame->uFrameID;
     data.iHeight = pFrame->iHeight;
     data.iWidth = pFrame->iWidth;
     data.uBytes = pFrame->uBytes;
     data.uTimestamp = pFrame->uTimestamp;
-    qDebug()<<"Frame ID:"<<pFrame->uFrameID
-             <<",timestamp:"<<pFrame->uTimestamp
-             <<",iWidt:"<<pFrame->iWidth
-             <<",iHeight:"<<pFrame->iHeight
-             <<",uBytes:"<<pFrame->uBytes
-             <<",format:"<<pFrame->format;
-    DushenBasicFunc::MapSS.push(handle, data);
+
+    qDebug()<<"data.iHeight/3 ="<<data.iHeight/3<<", data.iWidth ="<<data.iWidth;
+    cv::Mat projectionLMat(data.iHeight/3,data.iWidth,CV_8UC1);
+    cv::Mat reflectionLMat(data.iHeight/3,data.iWidth,CV_8UC1);
+    cv::Mat reflectionDMat(data.iHeight/3,data.iWidth,CV_8UC1);
+    // 图片重组
+    for (int HeightCount = 0; HeightCount < data.iHeight; HeightCount++) {
+        const byte* destBufferScanLine = reinterpret_cast<const byte*>((byte*)pBuffer + HeightCount * ImageLineSize);// 原始图像上一行数据
+        byte* cvMatScanLine;
+        if (HeightCount % 3 == 0) {// 投射亮场
+            cvMatScanLine = projectionLMat.ptr<byte>(HeightCount/3);// 透射场图片一行图片
+        }
+        if (HeightCount % 3 == 1) {// 反射亮场
+            cvMatScanLine = reflectionLMat.ptr<byte>(HeightCount/3);// 透射场图片一行图片
+        }
+        if (HeightCount % 3 == 2) {// 反射暗场
+            cvMatScanLine = reflectionDMat.ptr<byte>(HeightCount/3);// 透射场图片一行图片
+        }
+        memcpy(cvMatScanLine, destBufferScanLine, data.iWidth * sizeof(byte));
+    }
+    data.buffer0 = projectionLMat;
+    data.buffer1 = reflectionLMat;
+    data.buffer2 = reflectionDMat;
+
+    DushenBasicFunc::MapDC.push(handle, data);
     return 0;
 }
 
-int DushenBasicFunc::GetCurrentFrameCount()
+
+QString DushenBasicFunc::SyncSaveCurrentTimeImage(cv::Mat& region,QString path/*=""*/)
 {
-    return m_currentFrameCount;
+    try{
+        if (path == "") {
+            int randomNumber = std::rand() % 123567;
+            QString time = QDateTime::currentDateTime().toString("hh-mm-ss");
+            path = "D:/testopencv/camera/"+time +"-"+ QString::number(randomNumber)+".jpg";
+        }
+        std::thread th1(&DushenBasicFunc::saveMatToImage,this,path,region);
+        th1.detach();
+        return path;
+    } catch(...) {
+        qDebug() << " ProcessTile::SyncSaveCurrentTimeImage =>An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+        return "";
+    }
 }
 
-
+void DushenBasicFunc::saveMatToImage(QString fullpath,cv::Mat region )
+{
+    std::string filename = fullpath.toStdString();
+    cv::imwrite(filename, region);
+}

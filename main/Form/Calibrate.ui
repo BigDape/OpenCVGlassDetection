@@ -23,13 +23,13 @@
     </rect>
    </property>
    <property name="text">
-    <string>垂直方向标定</string>
+    <string>相机0图像标定</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera1VPixLE">
+  <widget class="QLineEdit" name="camera0topPixLE">
    <property name="geometry">
     <rect>
-     <x>62</x>
+     <x>100</x>
      <y>50</y>
      <width>90</width>
      <height>20</height>
@@ -41,12 +41,12 @@
     <rect>
      <x>16</x>
      <y>53</y>
-     <width>54</width>
-     <height>12</height>
+     <width>81</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>相机1：</string>
+    <string>图像上边裁剪：</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -54,18 +54,18 @@
     <rect>
      <x>200</x>
      <y>53</y>
-     <width>54</width>
-     <height>12</height>
+     <width>81</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>相机2：</string>
+    <string>图像下边裁剪：</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera2VPixLE">
+  <widget class="QLineEdit" name="camera0bottomPixLE">
    <property name="geometry">
     <rect>
-     <x>247</x>
+     <x>290</x>
      <y>50</y>
      <width>90</width>
      <height>20</height>
@@ -77,19 +77,19 @@
     <rect>
      <x>16</x>
      <y>100</y>
-     <width>54</width>
-     <height>12</height>
+     <width>81</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>相机3：</string>
+    <string>图像左边裁剪：</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera3VPixLE">
+  <widget class="QLineEdit" name="camera0leftPixLE">
    <property name="geometry">
     <rect>
-     <x>62</x>
-     <y>98</y>
+     <x>100</x>
+     <y>100</y>
      <width>90</width>
      <height>20</height>
     </rect>
@@ -100,18 +100,18 @@
     <rect>
      <x>200</x>
      <y>100</y>
-     <width>54</width>
-     <height>12</height>
+     <width>81</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>相机4：</string>
+    <string>图像右边裁剪：</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera4VPixLE">
+  <widget class="QLineEdit" name="camera0rightPixLE">
    <property name="geometry">
     <rect>
-     <x>247</x>
+     <x>290</x>
      <y>98</y>
      <width>90</width>
      <height>20</height>
@@ -121,33 +121,33 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>17</x>
-     <y>150</y>
+     <x>15</x>
+     <y>158</y>
      <width>81</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>水平方向标定</string>
+    <string>相机1图像标定</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>15</x>
      <y>190</y>
      <width>81</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>相机12像素差：</string>
+    <string>图像上边裁剪：</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera12HPixLE">
+  <widget class="QLineEdit" name="camera1topPixLE">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>103</x>
      <y>190</y>
      <width>81</width>
      <height>20</height>
@@ -164,13 +164,13 @@
     </rect>
    </property>
    <property name="text">
-    <string>相机23像素差：</string>
+    <string>图像下边裁剪：</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera23HPixLE">
+  <widget class="QLineEdit" name="camera1bottomPixLE">
    <property name="geometry">
     <rect>
-     <x>283</x>
+     <x>290</x>
      <y>188</y>
      <width>81</width>
      <height>20</height>
@@ -180,21 +180,21 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>8</x>
-     <y>240</y>
+     <x>14</x>
+     <y>229</y>
      <width>91</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>相机34像素差：</string>
+    <string>图像左边裁剪：</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="camera34HPixLE">
+  <widget class="QLineEdit" name="camera1leftPixLE">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>240</y>
+     <x>103</x>
+     <y>228</y>
      <width>81</width>
      <height>20</height>
     </rect>
@@ -237,6 +237,42 @@
    </property>
    <property name="text">
     <string>读取</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>228</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>图像右边裁剪：</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="camera1rightPixLE">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>227</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="aboutBT">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>280</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>关于</string>
    </property>
   </widget>
  </widget>

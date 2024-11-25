@@ -10,6 +10,29 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
+/**
+ * @brief The CV_GLASSPART enum 图片属于玻璃的什么部分
+ */
+enum CV_GLASSPART {
+    UNKNOW = 0,
+    HEAD,
+    MIDDLE,
+    TAIL,
+    EMPTY,
+};
+
+
+/**
+ * @brief The FrameImage class main模块获取camera模块数据
+ */
+struct FrameImage {
+    std::vector<cv::Mat> buffers;   // 每个场对应图片
+    int fieldnumberset;             // 场的数量
+    int framecount;                 // 当前帧
+    FrameImage():fieldnumberset(0),framecount(0){}
+};
+
+
 //系统执行的状态
 enum SYSTEMSTATUS{
     INIT = 0,       // 初始化状态
@@ -359,6 +382,19 @@ struct GlassDefect2{
     double area;            // 缺陷面积大小
     size_t glassid;         // 外键id,玻璃的id
     QString imagePath;      // 缺陷图片的路径
+    GlassDefect2():id(0),
+            defectId(0),
+        time(""),
+        defectType(""),
+        defectLevel(""),
+        x(0),
+        y(0),
+        length(0),
+        width(0),
+        area(0),
+        glassid(0),
+        imagePath(""){}
+
 };
 
 struct GlassSummary{
@@ -732,12 +768,42 @@ struct NewDefectUnitData{
 
 };
 
+enum SizeType{
+    DoorClam = 0,
+    Hole,
+    Silkscreen,
+    Label,
+};
+
+/**
+ * @brief The DoorClamp class Result
+ */
+struct DoorClampAndHole {
+    SizeType type;        // 类型
+    int PixHeight;        // 门夹长度
+    int PixWidth;         // 门夹宽度
+    int MarginsX;         // 门夹边距X
+    int MarginsY;         // 门夹边距Y
+    QString Path;         // 门夹存储路径
+    cv::Mat Region;       // 图片
+};
+
 struct NewGlassResult{
-    int currentFrameCount; //当前是第几帧
-    std::vector<NewDefectUnitData> res;//每帧结果数据
-    double pixGlassLength;  //这一帧长度
-    double pixGlassWidth;   // 这一帧宽度
-    QString FaceQimagePath;  // 图像保存
+    bool isEmpty;
+    int currentFrameCount;                  // 当前是第几帧
+    std::vector<NewDefectUnitData> res;     // 每帧结果数据
+    std::vector<DoorClampAndHole> sizeRes;  // 尺寸信息
+    double pixGlassLength;                  // 这一帧长度
+    double pixGlassWidth;                   // 这一帧宽度
+    QString FaceQimagePath;                 // 图像保存
+    cv::Mat glassRegion;                    // 玻璃图像
+    CV_GLASSPART part;                      // 玻璃的哪一部分
+    NewGlassResult():isEmpty(true),
+                    currentFrameCount(0),
+                    pixGlassLength(0),
+                    pixGlassWidth(0),
+                    FaceQimagePath(""),
+                    part(CV_GLASSPART::UNKNOW){}
 };
 
 
@@ -751,11 +817,25 @@ public:
         vector_.push_back(item);
     }
 
-    bool empty() const {
-        return vector_.empty();
+    T pop() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (vector_.empty()){
+            return T();
+        } else {
+            T t = vector_.back();
+            vector_.pop_back();
+            return t;
+        }
+    }
+
+    bool empty() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        bool res = vector_.empty();
+        return res;
     }
 
     void clear() {
+        std::lock_guard<std::mutex> lock(mutex_);
         vector_.clear();
     }
 public:
@@ -765,17 +845,11 @@ public:
 
 //检出缺陷信息
 struct regionInfor{
-    cv::Mat region;
-    QString path;
+    int id;             // 序列id
+    cv::Mat region;     // 区域
+    QString path;       // 完整路径
 };
 
-// 拼图数据包
-struct JigsawPuzzleDataPack {
-    int cameraNumber;               // 相机个数
-    std::vector<cv::Mat> mat0;      // 相机0的多个光场的照片
-    std::vector<cv::Mat> mat1;      // 相机1的多个光场的照片
-    CropArgPackage packages;        // 拼接相机图片的参数包
-};
 
 
 template<typename Key, typename Value>
@@ -808,6 +882,9 @@ public:
         mapData.erase(key);
     }
 };
+
+
+
 
 class __declspec(dllexport) HSTool
 {

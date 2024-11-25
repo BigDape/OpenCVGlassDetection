@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"socket/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "HSTool::@3475fea270df04150876"
+		}
+	],
+	"id" : "socket_autogen_timestamp_deps::@9527ef4114e0baec7268",
+	"isGeneratorProvided" : true,
+	"name" : "socket_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "socket",
+		"source" : "socket"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

@@ -69,7 +69,10 @@ void HsListener::outputMessage(QListWidget* out,QString message)
     font.setFamily("微软雅黑");
     font.setPointSize(12);
     item->setFont(font);
-    out->insertItem(0, item);
+    _mutex.lock();
+    int index = out->count();
+    out->insertItem(index, item);
+    _mutex.unlock();
     qDebug()<<"outputMessage:" << newMessage;
 }
 

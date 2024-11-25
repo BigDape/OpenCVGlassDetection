@@ -161,7 +161,7 @@ bool DataBase::insertOneData(const GlassDefect2& data)
                 .arg(data.area)
                 .arg(data.glassid)
                 .arg(data.imagePath);
-   qDebug()<<sqlGlassDefect;
+   //qDebug()<<sqlGlassDefect;
    if (!query.exec(sqlGlassDefect)) {
        qDebug() << "Failed to insert data: " << query.lastError().text();
        return false;
@@ -484,6 +484,25 @@ bool DataBase::getCurrentGlassTableMaxID(int64_t& count)
     if (query.next()) {
         count = query.value(0).toInt();
         qDebug() << "glass_table max(id) =" << count;
+        return true;
+    } else {
+        qDebug() << "查询失败";
+    }
+    return false;
+}
+
+bool DataBase::getCurrentSizeTableMaxID(int64_t& count)
+{
+    QString querySql = "SELECT MAX(id) FROM glass_sizeinfo;";
+    QSqlQuery query(db);
+    qDebug()<<querySql;
+    if(!query.exec(querySql)) {
+        qDebug() << "Failed to query data: " << query.lastError().text();
+        return false;
+    }
+    if (query.next()) {
+        count = query.value(0).toInt();
+        qDebug() << "glass_sizeinfo max(id) =" << count;
         return true;
     } else {
         qDebug() << "查询失败";

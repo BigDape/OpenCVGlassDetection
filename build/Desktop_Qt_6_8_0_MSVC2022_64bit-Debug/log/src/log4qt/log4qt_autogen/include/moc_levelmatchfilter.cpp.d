@@ -1,4 +1,4 @@
-D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_levelmatchfilter.cpp: D:/GlassCV1015/hikvision/log/src/log4qt/varia/levelmatchfilter.h \
+D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_levelmatchfilter.cpp: D:/code/hivision/log/src/log4qt/varia/levelmatchfilter.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QMetaType \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QSharedPointer \
@@ -106,8 +106,8 @@ D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qversiontagging.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qyieldcpu.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/level.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qt.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qtshared.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/log4qtsharedptr.h \
-  D:/GlassCV1015/hikvision/log/src/log4qt/spi/filter.h
+  D:/code/hivision/log/src/log4qt/level.h \
+  D:/code/hivision/log/src/log4qt/log4qt.h \
+  D:/code/hivision/log/src/log4qt/log4qtshared.h \
+  D:/code/hivision/log/src/log4qt/log4qtsharedptr.h \
+  D:/code/hivision/log/src/log4qt/spi/filter.h

@@ -16,6 +16,10 @@ public:
     explicit Login(QWidget *parent = nullptr);
     ~Login();
 
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+
+
 private slots:
     void LoginSlot();
 

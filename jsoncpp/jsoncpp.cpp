@@ -455,7 +455,7 @@ void Jsoncpp::writeEmptyRecipeToJson(QString path)
             ofs.close();
         }
     } catch (...) {
-        qDebug() << "An unknown error occurred.";
+        qDebug() << "Jsoncpp::writeEmptyRecipeToJson => An unknown error occurred.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -503,19 +503,19 @@ void Jsoncpp::readRecipeFromJson(QString path, SignalControl& signalCtrl)
         signalCtrl.XCamera1Accuracy = root["DimensionalMeasurementParams"]["XCamera1Accuracy"].asDouble();
         //相机参数
         signalCtrl.Camera0Frame = root["CamareParams"]["Camera0Frame"].asInt();
-        signalCtrl.Camera0PhotoRow = root["CamareParams"]["Camera0Frame"].asInt();
+        signalCtrl.Camera0PhotoRow = root["CamareParams"]["Camera0PhotoRow"].asInt();
         signalCtrl.Camera0ExposureTime = root["CamareParams"]["Camera0ExposureTime"].asInt();
         signalCtrl.Camera0Gain = root["CamareParams"]["Camera0Gain"].asInt();
         signalCtrl.Camera1Frame = root["CamareParams"]["Camera1Frame"].asInt();
-        signalCtrl.Camera1PhotoRow = root["CamareParams"]["Camera1Frame"].asInt();
+        signalCtrl.Camera1PhotoRow = root["CamareParams"]["Camera1PhotoRow"].asInt();
         signalCtrl.Camera1ExposureTime = root["CamareParams"]["Camera1ExposureTime"].asInt();
         signalCtrl.Camera1Gain = root["CamareParams"]["Camera1Gain"].asInt();
         signalCtrl.Camera2Frame = root["CamareParams"]["Camera2Frame"].asInt();
-        signalCtrl.Camera2PhotoRow = root["CamareParams"]["Camera2Frame"].asInt();
+        signalCtrl.Camera2PhotoRow = root["CamareParams"]["Camera2PhotoRow"].asInt();
         signalCtrl.Camera2ExposureTime = root["CamareParams"]["Camera2ExposureTime"].asInt();
         signalCtrl.Camera2Gain = root["CamareParams"]["Camera2Gain"].asInt();
         signalCtrl.Camera3Frame = root["CamareParams"]["Camera3Frame"].asInt();
-        signalCtrl.Camera3PhotoRow = root["CamareParams"]["Camera3Frame"].asInt();
+        signalCtrl.Camera3PhotoRow = root["CamareParams"]["Camera3PhotoRow"].asInt();
         signalCtrl.Camera3ExposureTime = root["CamareParams"]["Camera3ExposureTime"].asInt();
         signalCtrl.Camera3Gain = root["CamareParams"]["Camera3Gain"].asInt();
         //编码器参数
@@ -620,7 +620,7 @@ void Jsoncpp::writeRecipeToJson(QString fullpath, SignalControl signalCtrl)
             ofs.close();
         }
     } catch (...) {
-        qDebug() << "An unknown error occurred.";
+        qDebug() << "Jsoncpp::writeRecipeToJson => An unknown error occurred.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -756,7 +756,7 @@ void Jsoncpp::writeEmptyCalibrateToJson(QString path)
             ofs.close();
         }
     } catch (...) {
-        qDebug() << "An unknown error occurred.";
+        qDebug() << "Jsoncpp::writeEmptyCalibrateToJson = > An unknown error occurred.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -833,22 +833,22 @@ void Jsoncpp::writeCalibrateToJson(QString path, CropArgPackage crop)
             root["Camera0"]["rightPixCrop"] = arg0.rightPixCrop;//图像右侧边缘裁剪多少像元
             //相机1参数
             CameraCropArg arg1 = crop.args[1];
-            root["Camera0"]["topPixCrop"] = arg1.topPixCrop;//图像上边缘裁剪多少像元
-            root["Camera0"]["bottomPixCrop"] = arg1.bottomPixCrop;//图像下边缘裁剪多少像元
-            root["Camera0"]["leftPixCrop"] = arg1.leftPixCrop;//图像左侧边缘裁剪多少像元
-            root["Camera0"]["rightPixCrop"] = arg1.rightPixCrop;//图像右侧边缘裁剪多少像元
+            root["Camera1"]["topPixCrop"] = arg1.topPixCrop;//图像上边缘裁剪多少像元
+            root["Camera1"]["bottomPixCrop"] = arg1.bottomPixCrop;//图像下边缘裁剪多少像元
+            root["Camera1"]["leftPixCrop"] = arg1.leftPixCrop;//图像左侧边缘裁剪多少像元
+            root["Camera1"]["rightPixCrop"] = arg1.rightPixCrop;//图像右侧边缘裁剪多少像元
             //相机2参数
             CameraCropArg arg2= crop.args[2];
-            root["Camera0"]["topPixCrop"] = arg2.topPixCrop;//图像上边缘裁剪多少像元
-            root["Camera0"]["bottomPixCrop"] = arg2.bottomPixCrop;//图像下边缘裁剪多少像元
-            root["Camera0"]["leftPixCrop"] = arg2.leftPixCrop;//图像左侧边缘裁剪多少像元
-            root["Camera0"]["rightPixCrop"] = arg2.rightPixCrop;//图像右侧边缘裁剪多少像元
+            root["Camera2"]["topPixCrop"] = arg2.topPixCrop;//图像上边缘裁剪多少像元
+            root["Camera2"]["bottomPixCrop"] = arg2.bottomPixCrop;//图像下边缘裁剪多少像元
+            root["Camera2"]["leftPixCrop"] = arg2.leftPixCrop;//图像左侧边缘裁剪多少像元
+            root["Camera2"]["rightPixCrop"] = arg2.rightPixCrop;//图像右侧边缘裁剪多少像元
             //相机3参数
             CameraCropArg arg3= crop.args[3];
-            root["Camera0"]["topPixCrop"] = arg3.topPixCrop;//图像上边缘裁剪多少像元
-            root["Camera0"]["bottomPixCrop"] = arg3.bottomPixCrop;//图像下边缘裁剪多少像元
-            root["Camera0"]["leftPixCrop"] = arg3.leftPixCrop;//图像左侧边缘裁剪多少像元
-            root["Camera0"]["rightPixCrop"] = arg3.rightPixCrop;//图像右侧边缘裁剪多少像元
+            root["Camera3"]["topPixCrop"] = arg3.topPixCrop;//图像上边缘裁剪多少像元
+            root["Camera3"]["bottomPixCrop"] = arg3.bottomPixCrop;//图像下边缘裁剪多少像元
+            root["Camera3"]["leftPixCrop"] = arg3.leftPixCrop;//图像左侧边缘裁剪多少像元
+            root["Camera3"]["rightPixCrop"] = arg3.rightPixCrop;//图像右侧边缘裁剪多少像元
         }
 
         Json::StyledWriter writer;
@@ -860,7 +860,7 @@ void Jsoncpp::writeCalibrateToJson(QString path, CropArgPackage crop)
             ofs.close();
         }
     } catch (...) {
-        qDebug() << "An unknown error occurred.";
+        qDebug() << "Jsoncpp::writeCalibrateToJson => An unknown error occurred.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {

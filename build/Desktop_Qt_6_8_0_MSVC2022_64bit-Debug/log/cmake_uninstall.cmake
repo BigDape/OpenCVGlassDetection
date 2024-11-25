@@ -1,8 +1,8 @@
-if(NOT EXISTS "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_manifest.txt")
-  message(FATAL_ERROR "Cannot find install manifest: \"D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_manifest.txt\"")
+if(NOT EXISTS "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_manifest.txt")
+  message(FATAL_ERROR "Cannot find install manifest: \"D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_manifest.txt\"")
 endif()
 
-file(READ "D:/GlassCV1015/hikvision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_manifest.txt" files)
+file(READ "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 foreach(file ${files})
   set(_file_to_remove "$ENV{DESTDIR}${file}")

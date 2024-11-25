@@ -87,7 +87,7 @@ QString GlobalParamter::GetParamterFromIniFile(QString fullpath, QString key)
             }
         }
     } catch (...) {
-        qDebug() << "An unknown error occurred.";
+        qDebug() << "GlobalParamter::GetParamterFromIniFile => An unknown error occurred.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -162,6 +162,9 @@ cv::Mat GlobalParamter::QImage2cvMat(QImage image)
     qDebug() << image.format();
     switch(image.format())
     {
+    case QImage::Format_Grayscale8:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+        break;
     case QImage::Format_ARGB32:
     case QImage::Format_RGB32:
     case QImage::Format_ARGB32_Premultiplied:
