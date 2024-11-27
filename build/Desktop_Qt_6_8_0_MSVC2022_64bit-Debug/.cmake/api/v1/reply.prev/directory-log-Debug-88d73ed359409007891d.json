@@ -1,0 +1,68 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"log/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 149,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 165,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Devel",
+			"destination" : "lib/cmake/Log4Qt",
+			"exportName" : "log4qt_targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "log4qt::@83a533af15ca240e86d6",
+					"index" : 18
+				}
+			],
+			"paths" : 
+			[
+				"log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Devel",
+			"destination" : "lib/cmake/Log4Qt",
+			"paths" : 
+			[
+				"build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/Log4QtConfig.cmake",
+				"build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/Log4QtConfigVersion.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "log",
+		"source" : "log"
+	}
+}

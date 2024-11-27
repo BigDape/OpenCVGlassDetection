@@ -1,4 +1,20 @@
-﻿#include "mainwindow.h"
+﻿/********************************************************************************
+ *  Puspose:
+ *      mainwidnows.cpp
+ *
+ * Author:
+ *      zhang shuanggui
+ *
+ * create time:
+ *      2025/11/25
+ *
+ *******************************************************************************/
+
+/////////////////////////////////////////////////////////////////////////////////
+///
+///  @brief 头文件
+///
+#include "mainwindow.h"
 #include "QLabel"
 #include "math.h"
 #include "ui_mainwindow.h"
@@ -27,13 +43,23 @@
 #include <opencv2/cudawarping.hpp>
 #include <opencv2/cudafilters.hpp>
 #include <opencv2/opencv.hpp>
+#include <QRegularExpression>
 
+/////////////////////////////////////////////////////////////////////////////////
+///
+///  @brief dll函数指针声明
+///
 typedef HSDatabaseNamespace::HSDatabaseInterface* (*CreateDatabaseObjectFunc1)();
 typedef HSAlgorithmNamespace::HSAlgorithmInterface* (*createAlgorithmObjectFunc1)();
 typedef CameraNameSpace::HSCameraInterface* (*createCameraObjectFunc1)();
 typedef SocketNameSpace::HSSocketInterface* (*createSocketObjectFunc1)();
 typedef HSJsoncppNamespace::HSJsoncppInterface* (*createJsoncppObjectFunc)();
 
+
+/////////////////////////////////////////////////////////////////////////////////
+/// \brief MainWindow::MainWindow 构造函数 public
+/// \param parent
+///
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -41,7 +67,6 @@ MainWindow::MainWindow(QWidget* parent)
     , hbox_layout(nullptr)
 {
     ui->setupUi(this);
-
     classes =  std::vector<QString>{tr("JieShi_Min"),
                                     tr("MaoXu_Min"),
                                     tr("QiPao_Min"),
@@ -49,7 +74,6 @@ MainWindow::MainWindow(QWidget* parent)
                                     tr("BoLiXue_Min"),
                                     tr("HeiDian_Min"),
                                     tr("HuaShang_Min")};
-
     //
     // 设置窗口属性
     // Qt::FramelessWindowHint(无窗口边框)
@@ -75,11 +99,15 @@ MainWindow::MainWindow(QWidget* parent)
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief MainWindow::~MainWindow 析构函数
+///
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+///////////////////////////////////////public//////////////////////////////////////////////////////////////
 void MainWindow::InitComponents()
 {
     // 加载共享组件HSTool
@@ -193,98 +221,10 @@ void MainWindow::InitComponents()
     }
 }
 
-void MainWindow::InitDatabaseParam()
-{
-    if (databasePtr!=nullptr) {
-        //启动程序时，获取新的主键
-        int64_t newID = 0;
-        databasePtr->getCurrentDefectTableMaxID(newID);
-        defectPrimaryKey = newID;
-        int64_t newGlassID = 0;
-        databasePtr->getCurrentGlassTableMaxID(newGlassID);
-        glassPrimaryKey = newGlassID;
-        int64_t newSizeID = 0;
-        databasePtr->getCurrentSizeTableMaxID(newSizeID);
-        sizePrimaryKey = newSizeID;
-    } else {
-        qDebug()<<"InitDatabaseParam fail";
-    }
-    // PARAM赋值读取
-    if (jsoncppPtr!= nullptr) {
-        QString iniPath = QDir::currentPath() + QString("/") + SYSTEMNAME;
-        qDebug()<<"iniPath ="<<iniPath;
-        QFile inifile(iniPath);
-        if (!inifile.exists()) {
-            qDebug()<<"iniPath is not exist.=>"<<iniPath;
-        }
-        QString needLoadJsonFile = PARAM.GetParamterFromIniFile(iniPath,"system/recipe");//需要加载的工单名称system模块的recipe配置文件
-        QString neddLoadJsonFileName = QDir::currentPath() + QString("/Recipes/") + needLoadJsonFile + QString(".json");
-        qDebug()<<"neddLoadJsonFileName = "<<neddLoadJsonFileName;
-        SignalControl signalctrl;
-        jsoncppPtr->readRecipeFromJson(neddLoadJsonFileName, signalctrl);
-        // 初始化全局变量
-        PARAM.SystemName = signalctrl.systemName;
-        PARAM.camDefineNum = signalctrl.CamareNumber;
-        PARAM.Camera0Name = signalctrl.Camare0Name;
-        PARAM.Camera1Name = signalctrl.Camare1Name;
-        PARAM.Camera2Name = signalctrl.Camare2Name;
-        PARAM.Camera3Name = signalctrl.Camare3Name;
-        PARAM.serverIp = signalctrl.ServerIP;
-        PARAM.serverPort = signalctrl.ServerPort;
-        PARAM.YAccuracy = signalctrl.YAccuracy;
-        PARAM.XCamera0Accuracy = signalctrl.XCamera0Accuracy;
-        PARAM.XCamera1Accuracy = signalctrl.XCamera1Accuracy;
-        PARAM.Camera0Frame = signalctrl.Camera0Frame;
-        PARAM.Camera0PhotoRow = signalctrl.Camera0PhotoRow;
-        PARAM.Camera0ExposureTime = signalctrl.Camera0ExposureTime;
-        PARAM.Camera0Gain = signalctrl.Camera0Gain;
-        PARAM.Camera1Frame = signalctrl.Camera1Frame;
-        PARAM.Camera1PhotoRow = signalctrl.Camera1PhotoRow;
-        PARAM.Camera1ExposureTime = signalctrl.Camera1ExposureTime;
-        PARAM.Camera1Gain = signalctrl.Camera1Gain;
-        PARAM.Camera2Frame = signalctrl.Camera2Frame;
-        PARAM.Camera2PhotoRow = signalctrl.Camera2PhotoRow;
-        PARAM.Camera2ExposureTime = signalctrl.Camera2ExposureTime;
-        PARAM.Camera2Gain = signalctrl.Camera2Gain;
-        PARAM.Camera3Frame = signalctrl.Camera3Frame;
-        PARAM.Camera3PhotoRow = signalctrl.Camera3PhotoRow;
-        PARAM.Camera3ExposureTime = signalctrl.Camera3ExposureTime;
-        PARAM.Camera3Gain = signalctrl.Camera3Gain;
-        // 控制器参数
-        PARAM.EncodePulseFilterUs = signalctrl.EncodePulseFilterUs;
-        PARAM.PhotoelectricSensorFiltering = signalctrl.PhotoelectricSensorFiltering;
-        PARAM.WheelEncoderPhotoPulse = signalctrl.WheelEncoderPhotoPulse;
-        PARAM.EncoderMode = signalctrl.EncoderMode;
-        PARAM.SolenoidValve1DownDelay = signalctrl.SolenoidValve1DownDelay;
-        PARAM.SolenoidValve1UpDelay = signalctrl.SolenoidValve1UpDelay;
-        PARAM.SolenoidValve2DownDelay = signalctrl.SolenoidValve2DownDelay;
-        PARAM.SolenoidValve2UpDelay = signalctrl.SolenoidValve2UpDelay;
-        PARAM.WheelAEncoder = signalctrl.WheelAEncoder;
-        PARAM.WheelBEncoder = signalctrl.WheelBEncoder;
-        PARAM.ErrorPhotoCount = signalctrl.ErrorPhotoCount;
-        // 光源控制器参数
-        PARAM.LightField1GlowTime = signalctrl.LightField1GlowTime;
-        PARAM.LightField2GlowTime = signalctrl.LightField2GlowTime;
-        PARAM.LightField3GlowTime = signalctrl.LightField3GlowTime;
-        PARAM.LightField4GlowTime = signalctrl.LightField4GlowTime;
-        PARAM.LightSignalSynchronizationDelayRegister = signalctrl.LightSignalSynchronizationDelayRegister;
-        PARAM.PhotoMode = signalctrl.PhotoMode;
-        PARAM.LightCameraEnable = signalctrl.LightCameraEnable;
-        PARAM.WorkMode = signalctrl.WorkMode;
-        PARAM.LightSourcePulseEndPointRegister = signalctrl.LightSourcePulseEndPointRegister;
-        PARAM.SyncPulsePeriodRegister = signalctrl.SyncPulsePeriodRegister;
-        PARAM.CameraFrameSignalTriggerDelay = signalctrl.CameraFrameSignalTriggerDelay;
-        PARAM.TimelapseAfterPhotoShootEnd = signalctrl.TimelapseAfterPhotoShootEnd;
-        PARAM.SelectedLightFieldNumber = signalctrl.SelectedLightFieldNumber;
-        PARAM.FrameSignalOutput = signalctrl.FrameSignalOutput;
-    }
-}
-
 void MainWindow::InitRegisterMetaType()
 {
     //注册自定义类型，供connect调用
     qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
-
 }
 
 void MainWindow::InitToolBar()
@@ -345,245 +285,6 @@ void MainWindow::InitToolBar()
     connect(m_calibrate, SIGNAL(triggered()), this, SLOT(slot_Calibrate()));                //点击标定响应时间
 }
 
-
-void MainWindow::slot_CloseSystem()
-{
-    if (databasePtr != nullptr) {
-        databasePtr->closeDataBase();
-        FreeLibrary(databaseDllHandle);
-    }
-    if (algorithmPtr!= nullptr) {
-        FreeLibrary(algorithmDllHandle);
-    }
-    if (cameraPtr0!=nullptr&&cameraPtr1) {
-        FreeLibrary(cameraDllHandle);
-    }
-    close();
-    qApp->exit(0);
-}
-
-void MainWindow::slot_ShowSystemSettingForm()
-{
-    if(m_lightControl == nullptr) {
-        m_lightControl = std::make_shared<LightControl>(this);//设置窗口
-    }
-    m_lightControl->setHidden(false);
-    m_lightControl->setWindowFlags(Qt::Window);
-    m_lightControl->setWindowModality(Qt::ApplicationModal); //点击之后不可对其它窗体操作
-    m_lightControl->setWindowFlags(m_lightControl->windowFlags() & ~Qt::WindowMinMaxButtonsHint);//设置窗口无最小化按钮
-    m_lightControl->setWindowFlags(m_lightControl->windowFlags() & ~Qt::WindowMaximizeButtonHint);//设置窗口无全屏按钮
-    m_lightControl->setWindowIcon(QIcon(":/toolbar/icons/setup.ico"));
-    m_lightControl->setWindowTitle("系统设置");
-    m_lightControl->show();
-}
-
-void MainWindow::slot_ActionStart()
-{
-    qDebug()<<"slot_ActionStart";
-    //
-    // 进行开始流程，打开相机
-    // 设置界面上相关按钮的亮和灰
-    //
-    m_pStart->setEnabled(false);
-    m_pExit->setEnabled(false);
-    m_pStop->setEnabled(true);
-    m_pSettings->setEnabled(false);
-    m_offline->setEnabled(false);
-
-    if (cameraPtr0!=nullptr && cameraPtr1 != nullptr) {
-        bool res = true;
-        if (!cameraPtr0->IsStarted(m_args[0].camName)){
-            res = false;
-            QString message = m_args[0].camName + tr("camera is not started.");
-            INFOMATION.criticalMessageBox(this,message);
-        }
-        if (!cameraPtr1->IsStarted(m_args[1].camName)){
-            res = false;
-            QString message = m_args[1].camName + tr("camera is not started.");
-            INFOMATION.criticalMessageBox(this,message);
-        }
-    }
-    PARAM.currentsystem = SYSTEMSTATUS::RUNNING;
-    //
-    // 根据信号平台帧信号获取图片
-    //
-    m_startThread = std::make_shared<std::thread>(&MainWindow::ProcessThreadCV, this);
-}
-
-void MainWindow::ProcessThreadCV()
-{
-    //
-    // 根据信号平台帧信号获取图片
-    //
-    unsigned int nowFrameSignal = PARAM.FrameSignalOutput;//当前帧信号状态
-    m_databaseThread = std::make_shared<std::thread>(&MainWindow::SyncInsertDatabase, this);
-LOOPGET:
-    if ( nowFrameSignal > 0 && nowFrameSignal == PARAM.FrameSignalOutput) {         //帧信号持续拉高，玻璃中部
-        qDebug()<<"1";
-        MainWindow::slot_GetCameraBuffer();
-        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
-    } else if(nowFrameSignal > 0 && nowFrameSignal != PARAM.FrameSignalOutput) {    //帧信号从高到低，玻璃尾部
-        qDebug()<<"2";
-        MainWindow::slot_GetCameraBuffer();
-        nowFrameSignal = PARAM.FrameSignalOutput; //临时帧信号拉低
-        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
-    } else if(nowFrameSignal <= 0 && nowFrameSignal != PARAM.FrameSignalOutput) {   //帧信号从低到高，玻璃开始
-         qDebug()<<"3";
-        ++glassPrimaryKey;
-        nowFrameSignal = PARAM.FrameSignalOutput;                                   //临时帧信号拉高
-        MainWindow::slot_GetCameraBuffer();                        //获取图片并处理
-        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
-    } else {                                                                        //没有帧信号
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        qDebug()<<"No frame signal";
-    }
-    if (PARAM.currentsystem != SYSTEMSTATUS::STOP) {
-        goto LOOPGET;
-    }
-}
-
-void MainWindow::slot_ActionStop()
-{
-    PARAM.currentsystem = SYSTEMSTATUS::STOP;
-    m_pStart->setEnabled(true);
-    m_pExit->setEnabled(true);
-    m_pStop->setEnabled(false);
-    m_pSettings->setEnabled(true);
-    m_offline->setEnabled(true);
-
-    if (m_databaseThread != nullptr) {
-        if(m_databaseThread->joinable()) {
-            m_databaseThread->join();
-        }
-    }
-    if (m_startThread != nullptr) {
-        if(m_startThread->joinable()) {
-            m_startThread->join();
-        }
-    }
-
-}
-
-
-void MainWindow::slot_DataSearch()
-{
-    //
-    // 进行数据查询
-    //
-    if (dataanalysisPtr == nullptr) {
-        dataanalysisPtr = std::make_shared<DataAnalysis>(this);
-    }
-    dataanalysisPtr->setWindowFlags(Qt::Window);
-    dataanalysisPtr->setWindowModality(Qt::ApplicationModal); //点击之后不可对其它窗体操作
-    dataanalysisPtr->setWindowFlags(dataanalysisPtr->windowFlags() & ~Qt::WindowMinMaxButtonsHint);//设置窗口无最小化按钮
-    dataanalysisPtr->setWindowFlags(dataanalysisPtr->windowFlags() & ~Qt::WindowMaximizeButtonHint);//设置窗口无全屏按钮
-    dataanalysisPtr->setWindowTitle("数据查询");
-    dataanalysisPtr->show();
-}
-
-void MainWindow::slot_Offline()
-{
-    auto start = std::chrono::high_resolution_clock::now();// 开始时间
-    NewGlassResult result;
-    result.isEmpty = false;
-    result.currentFrameCount = 1;
-    ++glassPrimaryKey;
-    std::vector<NewDefectUnitData> res;     // 每帧结果数据
-    NewDefectUnitData data1;
-    data1.time = QDateTime::currentDateTime().toString();
-    data1.id = 1;              // 缺陷id
-    data1.type = 1;            // 缺陷种类
-    data1.pixLength = 1200;   // 长度像元数
-    data1.pixWidth = 600;    // 宽度像元数
-    data1.pixX = 100;        // 像元X
-    data1.pixY = 100;        // 像元Y
-    data1.pixArea = 720;     // 面积
-    data1.imagePath = "D:/testopencv/defect/17-11-28-29314.jpg";  // 小图存储的地址
-    NewDefectUnitData data2;
-    data2.id = 2;              // 缺陷id
-    data2.time = QDateTime::currentDateTime().toString();
-    data2.type = 2;            // 缺陷种类
-    data2.pixLength = 1200;   // 长度像元数
-    data2.pixWidth = 600;    // 宽度像元数
-    data2.pixX = 200;        // 像元X
-    data2.pixY = 200;        // 像元Y
-    data2.pixArea = 820;     // 面积
-    data2.imagePath = "D:/testopencv/defect/17-11-28-19796.jpg";  // 小图存储的地址
-    res.push_back(data1);
-    res.push_back(data2);
-
-    std::vector<DoorClampAndHole> sizeRes;  // 尺寸信息
-    DoorClampAndHole door1;
-    door1.type = SizeType::DoorClam;        // 类型
-    door1.PixHeight = 300;        // 门夹长度
-    door1.PixWidth = 200;         // 门夹宽度
-    door1.MarginsX = 100;         // 门夹边距X
-    door1.MarginsY = 100;         // 门夹边距Y
-    door1.Path = "D:/testopencv/defect/17-10-27-21726.jpg";         // 门夹存储路径
-    DoorClampAndHole hole1;
-    hole1.type = SizeType::Hole;        // 类型
-    hole1.PixHeight = 300;        // 门夹长度
-    hole1.PixWidth = 200;         // 门夹宽度
-    hole1.MarginsX = 100;         // 门夹边距X
-    hole1.MarginsY = 100;         // 门夹边距Y
-    hole1.Path = "D:/testopencv/defect/17-10-27-21726.jpg";         // 门夹存储路径
-    sizeRes.push_back(door1);
-    sizeRes.push_back(hole1);
-
-    result.sizeRes = sizeRes;
-    result.res = res;
-    result.pixGlassLength = 1200;                  // 这一帧长度
-    result.pixGlassWidth = 600;                   // 这一帧宽度
-    result.FaceQimagePath = "D:/testopencv/croppedImageMain1.jpg";                 // 图像保存
-    cv::Mat glass1 = cv::imread(result.FaceQimagePath.toStdString());
-    result.glassRegion = glass1;
-    result.part = CV_GLASSPART::HEAD;
-    MainWindow::MainWindowsDisplay(result);
-
-
-    NewGlassResult result2;
-    result2 = result;
-    result2.FaceQimagePath = "D:/testopencv/croppedImageMain2.jpg";
-    cv::Mat glass2 = cv::imread(result2.FaceQimagePath.toStdString());
-    result2.glassRegion = glass2;
-    result2.part = CV_GLASSPART::MIDDLE;
-    MainWindow::MainWindowsDisplay(result2);
-
-    NewGlassResult result3;
-    result3 = result;
-    result3.FaceQimagePath = "D:/testopencv/croppedImageMain3.jpg";
-    cv::Mat glass3 = cv::imread(result3.FaceQimagePath.toStdString());
-    result3.glassRegion = glass3;
-    result3.part = CV_GLASSPART::TAIL;
-    MainWindow::MainWindowsDisplay(result3);
-
-    auto endf = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> durationf = endf - start;
-    qDebug() << "Finished 1 time：" << durationf.count() << " ms";
-
-    ++glassPrimaryKey;
-    MainWindow::MainWindowsDisplay(result);
-    MainWindow::MainWindowsDisplay(result2);
-    MainWindow::MainWindowsDisplay(result3);
-
-    auto endf1 = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> durationf1 = endf1 - start;
-    qDebug() << "Finished 2 time：" << durationf1.count() << " ms";
-}
-
-void MainWindow::slot_Calibrate()
-{
-    if (calibratePtr == nullptr) {
-        calibratePtr = std::make_shared<Calibrate>(nullptr);
-    }
-    calibratePtr->setWindowFlags(Qt::Window);
-    calibratePtr->setWindowModality(Qt::ApplicationModal); //点击之后不可对其它窗体操作
-    calibratePtr->setWindowFlags(calibratePtr->windowFlags() & ~Qt::WindowMinMaxButtonsHint);//设置窗口无最小化按钮
-    calibratePtr->setWindowFlags(calibratePtr->windowFlags() & ~Qt::WindowMaximizeButtonHint);//设置窗口无全屏按钮
-    calibratePtr->setWindowTitle("图片标定");
-    calibratePtr->show();
-}
-
 void MainWindow::InitGlassStaticTableWidget()
 {
     //
@@ -626,8 +327,6 @@ void MainWindow::InitGlassStaticTableWidget()
     ui->glassstatictablewidget->setColumnWidth(14, 100);
     ui->glassstatictablewidget->setColumnWidth(15, 100);
     ui->glassstatictablewidget->setColumnWidth(16, 100);
-    // 声明回调函数
-    connect(this,SIGNAL(sign_GlassStaticTableInsertRowData(GlassDataBaseInfo)), this, SLOT(slot_GlassStaticTableInsertRowData(GlassDataBaseInfo)));
     //
     // 读取数据库信息，插入数据统计表格中
     //
@@ -729,6 +428,910 @@ void MainWindow::InitGlassStaticTableWidget()
         }
         ui->glassstatictablewidget->verticalHeader()->setVisible(false); // 隐藏行号
     }
+}
+
+void MainWindow::InitSingleFlawTableWidget()
+{
+    //
+    // 初始化单个缺陷界面
+    //
+    QGraphicsScene* scene = new QGraphicsScene();
+    loadedPixmapItem = new MyGraphicsItem();
+    scene->addItem(loadedPixmapItem);
+    ui->graphicsView->setScene(scene);
+
+    QGraphicsScene* scene2 = new QGraphicsScene();
+    loadedPixmapItem2 = new MyGraphicsItem();
+    scene2->addItem(loadedPixmapItem2);
+    ui->graphicsView_2->setScene(scene2);
+
+    QGraphicsScene* scene3 = new QGraphicsScene();
+    loadedPixmapItem3 = new MyGraphicsItem();
+    scene3->addItem(loadedPixmapItem3);
+    ui->graphicsView_3->setScene(scene3);
+
+    ui->SingleFlawtableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->SingleFlawtableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->SingleFlawtableWidget->verticalHeader()->setVisible(false);
+    ui->SingleFlawtableWidget->setColumnWidth(0, 90);
+
+    for (int row = 0; row < ui->SingleFlawtableWidget->rowCount(); ++row) {
+        for (int col = 0; col < ui->SingleFlawtableWidget->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->SingleFlawtableWidget->item(row, col);
+            if (item) {
+                item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            }
+        }
+    }
+    //
+    // 若数据统计界面不为空，则显示第一行玻璃的缺陷信息
+    //
+    QTableWidgetItem *itemID = ui->glassstatictablewidget->item(0, 0);
+    if (itemID != NULL) {
+        int glassid = itemID->text().toInt();
+        QString sql = QString("SELECT * FROM glass_defect WHERE glassid = %1;").arg(glassid);
+        std::vector<GlassDefect2> datas;
+        databasePtr->queryTableData(datas, sql);
+        if (datas.size() > 0) {
+            ui->SingleFlawtableWidget->setRowCount(datas.size());
+            ui->SingleFlawtableWidget->setColumnCount(9);
+            //
+            // 更新缺陷小图
+            //
+            QImage img1(datas[0].imagePath);
+            QImage img2(datas[0].imagePath);
+            QImage img3(datas[0].imagePath);
+
+            loadedPixmapItem->loadImage(img1);
+            int nwidth = ui->graphicsView->width();
+            int nheight = ui->graphicsView->height();
+            loadedPixmapItem->setQGraphicsViewWH(nwidth, nheight);
+            ui->graphicsView->setSceneRect((QRectF(-(nwidth / 2), -(nheight / 2), nwidth, nheight)));
+
+            loadedPixmapItem2->loadImage(img2);
+            int nwidth2 = ui->graphicsView_2->width();
+            int nheight2 = ui->graphicsView_2->height();
+            loadedPixmapItem2->setQGraphicsViewWH(nwidth, nheight);
+            ui->graphicsView_2->setSceneRect((QRectF(-(nwidth2 / 2), -(nheight2 / 2), nwidth2, nheight2)));
+
+            loadedPixmapItem3->loadImage(img3);
+            int nwidth3 = ui->graphicsView_3->width();
+            int nheight3 = ui->graphicsView_3->height();
+            loadedPixmapItem3->setQGraphicsViewWH(nwidth, nheight);
+            ui->graphicsView_3->setSceneRect((QRectF(-(nwidth3 / 2), -(nheight3 / 2), nwidth3, nheight3)));
+            for (int i = 0; i < (int)datas.size(); ++i) {
+                GlassDefect2 data = datas[i];
+                //序号
+                QTableWidgetItem* item0 = new QTableWidgetItem(QString::number(data.defectId));
+                item0->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 0, item0);
+                //时间
+                QTableWidgetItem* item1 = new QTableWidgetItem(data.time);
+                item1->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 1, item1);
+                //类型
+                QTableWidgetItem* item2 = new QTableWidgetItem(data.defectType);
+                item2->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i , 2, item2);
+                //等级
+                QTableWidgetItem* item3 = new QTableWidgetItem(data.defectLevel);
+                item3->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 3, item3);
+                //坐标X
+                QTableWidgetItem* item4 = new QTableWidgetItem(QString::number(data.x,'f', 2));
+                item4->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 4, item4);
+                //坐标Y
+                QTableWidgetItem* item5 = new QTableWidgetItem(QString::number(data.y,'f', 2));
+                item5->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 5, item5);
+                //长
+                QTableWidgetItem* item6 = new QTableWidgetItem(QString::number(data.length,'f', 2));
+                item6->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 6, item6);
+                //宽
+                QTableWidgetItem* item7 = new QTableWidgetItem(QString::number(data.width,'f', 2));
+                item7->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 7, item7);
+                //区域
+                QTableWidgetItem* item8 = new QTableWidgetItem(QString::number(data.area,'f', 2));
+                item8->setTextAlignment(Qt::AlignCenter);
+                ui->SingleFlawtableWidget->setItem(i, 8, item8);
+            }
+        }
+    }
+}
+
+void MainWindow::InitSingleSizeTableWidget()
+{
+    //
+    // 初始化尺寸信息界面
+    //
+    QGraphicsScene* scene = new QGraphicsScene();
+    loadedPixmapItem4 = new MyGraphicsItem();
+    ui->graphicsView_outLine->setScene(scene);
+    scene->addItem(loadedPixmapItem);
+
+    QGraphicsScene* scene2=new QGraphicsScene();
+    loadedPixmapItem5 = new MyGraphicsItem();
+    ui->graphicsView_Field->setScene(scene2);
+    scene2->addItem(loadedPixmapItem2);
+
+    ui->singleSizeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->singleSizeTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->singleSizeTableWidget->verticalHeader()->setVisible(false);
+    ui->singleSizeTableWidget->setColumnWidth(0, 90);
+
+    for (int row = 0; row < ui->singleSizeTableWidget->rowCount(); ++row) {
+        for (int col = 0; col < ui->singleSizeTableWidget->columnCount(); ++col) {
+            QTableWidgetItem* item = ui->singleSizeTableWidget->item(row, col);
+            if (item) {
+                item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            }
+        }
+    }
+    //
+    // todo:
+    //
+}
+
+void MainWindow::InitCameraSettingTableWidget()
+{
+    hbox_layout = new QHBoxLayout(ui->tab_6);
+    DushenCameraArgs arg0;
+    arg0.camName = PARAM.Camera0Name;
+    arg0.camNumber = PARAM.camDefineNum;
+    arg0.fieldnumberset = PARAM.SelectedLightFieldNumber;
+    arg0.expo = PARAM.Camera0ExposureTime;
+    arg0.framecount = PARAM.Camera0Frame;
+    arg0.height = PARAM.Camera0PhotoRow;
+    arg0.gain = PARAM.Camera0Gain;
+    qDebug()<<"arg0.camName = "<<arg0.camName
+             <<",arg0.camNumber="<<arg0.camNumber
+             <<",arg0.fieldnumberset="<<arg0.fieldnumberset
+             <<",arg0.expo="<<arg0.expo
+             <<",arg0.framecount="<<arg0.framecount
+             <<",arg0.height="<<arg0.height
+             <<",arg0.gain ="<<arg0.gain;
+    m_args.push_back(arg0);
+    DushenCameraArgs arg1;
+    arg1.camName = PARAM.Camera1Name;
+    arg1.camNumber = PARAM.camDefineNum;
+    arg1.fieldnumberset = PARAM.SelectedLightFieldNumber;
+    arg1.expo = PARAM.Camera1ExposureTime;
+    arg1.framecount = PARAM.Camera1Frame;
+    arg1.height = PARAM.Camera1PhotoRow;
+    arg1.gain = PARAM.Camera1Gain;
+    qDebug()<<"arg1.camName = "<<arg1.camName
+             <<",arg1.camNumber="<<arg1.camNumber
+             <<",arg1.fieldnumberset="<<arg1.fieldnumberset
+             <<",arg1.expo="<<arg1.expo
+             <<",arg1.framecount="<<arg1.framecount
+             <<",arg1.height="<<arg1.height
+             <<",arg1.gain ="<<arg1.gain;
+    m_args.push_back(arg1);
+    DushenCameraWidget * camerawid = new DushenCameraWidget(nullptr);
+    camerawid->InitDushenCameraWidget(cameraPtr0,m_args[0]);
+    hbox_layout->addWidget(camerawid);
+    DushenCameraWidget * camerawid1 = new DushenCameraWidget(nullptr);
+    camerawid1->InitDushenCameraWidget(cameraPtr1,m_args[1]);
+    hbox_layout->addWidget(camerawid1);
+    //启动相机
+    camerawid->StartCamera();
+    camerawid1->StartCamera();
+}
+
+void MainWindow::InitRealTimeFlawTableWidget()
+{
+    QGraphicsScene* scene=new QGraphicsScene();
+    loadedPixmapItem6 = new MyGraphicsItem();
+    scene->addItem(loadedPixmapItem6);
+    ui->graphicsView_Field1->setScene(scene);
+
+    QGraphicsScene* scene2=new QGraphicsScene();
+    loadedPixmapItem7= new MyGraphicsItem();
+    scene2->addItem(loadedPixmapItem7);
+    ui->graphicsView_Field2->setScene(scene2);
+
+    QGraphicsScene* scene3=new QGraphicsScene();
+    loadedPixmapItem8 = new MyGraphicsItem();
+    scene3->addItem(loadedPixmapItem8);
+    ui->graphicsView_Field3->setScene(scene3);
+}
+
+void MainWindow::InitFlawShowWidget()
+{
+    //
+    // todo：缺陷主界面显示，显示opencv已经处理好的图片
+    //
+}
+
+void MainWindow::InitSummaryTableWidget()
+{
+    //
+    // 时间定时刷新
+    //
+    _timer = new QTimer();
+    connect(_timer, &QTimer::timeout, this, &MainWindow::slot_RefreshSystemTime);
+    _timer->start(1000);
+    //
+    // 读取数据库获取初始化值
+    //
+
+    QString sql = "SELECT * FROM glass_summary ORDER BY time DESC LIMIT 1;";
+    std::vector<GlassSummary> datas;
+    databasePtr->queryTableData(datas, sql);
+    if (datas.size()  > 0){
+        m_summary = datas[0];
+    }
+    ui->glassTotalCountLB->setText(QString::number(m_summary.glasstotalcount));
+    ui->glassTotalCountLB->setAlignment(Qt::AlignCenter);
+
+    ui->currentGlassStatus->setText(QString(m_summary.currentglassstatus));
+    ui->currentGlassStatus->setAlignment(Qt::AlignCenter);
+
+    ui->glassOKCountLB->setText(QString::number(m_summary.OKcount));
+    ui->glassOKCountLB->setAlignment(Qt::AlignCenter);
+
+    ui->glassNGCountLB->setText(QString::number(m_summary.NGcount));
+    ui->glassNGCountLB->setAlignment(Qt::AlignCenter);
+
+    ui->qualicaficationRateLB->setText(QString::number(m_summary.passrate));
+    ui->qualicaficationRateLB->setAlignment(Qt::AlignCenter);
+
+    ui->ExceptionCountLB->setText(QString::number(m_summary.exceptioncount));
+    ui->ExceptionCountLB->setAlignment(Qt::AlignCenter);
+}
+
+void MainWindow::InitDatabaseParam()
+{
+    if (databasePtr!=nullptr) {
+        //启动程序时，获取新的主键
+        int64_t newID = 0;
+        databasePtr->getCurrentDefectTableMaxID(newID);
+        defectPrimaryKey = newID;
+        int64_t newGlassID = 0;
+        databasePtr->getCurrentGlassTableMaxID(newGlassID);
+        glassPrimaryKey = newGlassID;
+        int64_t newSizeID = 0;
+        databasePtr->getCurrentSizeTableMaxID(newSizeID);
+        sizePrimaryKey = newSizeID;
+    } else {
+        qDebug()<<"InitDatabaseParam fail";
+    }
+    // PARAM赋值读取
+    if (jsoncppPtr!= nullptr) {
+        QString iniPath = QDir::currentPath() + QString("/") + SYSTEMNAME;
+        qDebug()<<"iniPath ="<<iniPath;
+        QFile inifile(iniPath);
+        if (!inifile.exists()) {
+            qDebug()<<"iniPath is not exist.=>"<<iniPath;
+        }
+        QString needLoadJsonFile = PARAM.GetParamterFromIniFile(iniPath,"system/recipe");//需要加载的工单名称system模块的recipe配置文件
+        QString neddLoadJsonFileName = QDir::currentPath() + QString("/Recipes/") + needLoadJsonFile + QString(".json");
+        qDebug()<<"neddLoadJsonFileName = "<<neddLoadJsonFileName;
+        SignalControl signalctrl;
+        jsoncppPtr->readRecipeFromJson(neddLoadJsonFileName, signalctrl);
+        // 初始化全局变量
+        PARAM.SystemName = signalctrl.systemName;
+        PARAM.camDefineNum = signalctrl.CamareNumber;
+        PARAM.Camera0Name = signalctrl.Camare0Name;
+        PARAM.Camera1Name = signalctrl.Camare1Name;
+        PARAM.Camera2Name = signalctrl.Camare2Name;
+        PARAM.Camera3Name = signalctrl.Camare3Name;
+        PARAM.serverIp = signalctrl.ServerIP;
+        PARAM.serverPort = signalctrl.ServerPort;
+        PARAM.YAccuracy = signalctrl.YAccuracy;
+        PARAM.XCamera0Accuracy = signalctrl.XCamera0Accuracy;
+        PARAM.XCamera1Accuracy = signalctrl.XCamera1Accuracy;
+        PARAM.Camera0Frame = signalctrl.Camera0Frame;
+        PARAM.Camera0PhotoRow = signalctrl.Camera0PhotoRow;
+        PARAM.Camera0ExposureTime = signalctrl.Camera0ExposureTime;
+        PARAM.Camera0Gain = signalctrl.Camera0Gain;
+        PARAM.Camera1Frame = signalctrl.Camera1Frame;
+        PARAM.Camera1PhotoRow = signalctrl.Camera1PhotoRow;
+        PARAM.Camera1ExposureTime = signalctrl.Camera1ExposureTime;
+        PARAM.Camera1Gain = signalctrl.Camera1Gain;
+        PARAM.Camera2Frame = signalctrl.Camera2Frame;
+        PARAM.Camera2PhotoRow = signalctrl.Camera2PhotoRow;
+        PARAM.Camera2ExposureTime = signalctrl.Camera2ExposureTime;
+        PARAM.Camera2Gain = signalctrl.Camera2Gain;
+        PARAM.Camera3Frame = signalctrl.Camera3Frame;
+        PARAM.Camera3PhotoRow = signalctrl.Camera3PhotoRow;
+        PARAM.Camera3ExposureTime = signalctrl.Camera3ExposureTime;
+        PARAM.Camera3Gain = signalctrl.Camera3Gain;
+        // 控制器参数
+        PARAM.EncodePulseFilterUs = signalctrl.EncodePulseFilterUs;
+        PARAM.PhotoelectricSensorFiltering = signalctrl.PhotoelectricSensorFiltering;
+        PARAM.WheelEncoderPhotoPulse = signalctrl.WheelEncoderPhotoPulse;
+        PARAM.EncoderMode = signalctrl.EncoderMode;
+        PARAM.SolenoidValve1DownDelay = signalctrl.SolenoidValve1DownDelay;
+        PARAM.SolenoidValve1UpDelay = signalctrl.SolenoidValve1UpDelay;
+        PARAM.SolenoidValve2DownDelay = signalctrl.SolenoidValve2DownDelay;
+        PARAM.SolenoidValve2UpDelay = signalctrl.SolenoidValve2UpDelay;
+        PARAM.WheelAEncoder = signalctrl.WheelAEncoder;
+        PARAM.WheelBEncoder = signalctrl.WheelBEncoder;
+        PARAM.ErrorPhotoCount = signalctrl.ErrorPhotoCount;
+        // 光源控制器参数
+        PARAM.LightField1GlowTime = signalctrl.LightField1GlowTime;
+        PARAM.LightField2GlowTime = signalctrl.LightField2GlowTime;
+        PARAM.LightField3GlowTime = signalctrl.LightField3GlowTime;
+        PARAM.LightField4GlowTime = signalctrl.LightField4GlowTime;
+        PARAM.LightSignalSynchronizationDelayRegister = signalctrl.LightSignalSynchronizationDelayRegister;
+        PARAM.PhotoMode = signalctrl.PhotoMode;
+        PARAM.LightCameraEnable = signalctrl.LightCameraEnable;
+        PARAM.WorkMode = signalctrl.WorkMode;
+        PARAM.LightSourcePulseEndPointRegister = signalctrl.LightSourcePulseEndPointRegister;
+        PARAM.SyncPulsePeriodRegister = signalctrl.SyncPulsePeriodRegister;
+        PARAM.CameraFrameSignalTriggerDelay = signalctrl.CameraFrameSignalTriggerDelay;
+        PARAM.TimelapseAfterPhotoShootEnd = signalctrl.TimelapseAfterPhotoShootEnd;
+        PARAM.SelectedLightFieldNumber = signalctrl.SelectedLightFieldNumber;
+        PARAM.FrameSignalOutput = signalctrl.FrameSignalOutput;
+    }
+}
+
+void MainWindow::ProcessThreadCV()
+{
+    //
+    // 根据信号平台帧信号获取图片
+    //
+    unsigned int nowFrameSignal = PARAM.FrameSignalOutput;//当前帧信号状态
+    m_databaseThread = std::make_shared<std::thread>(&MainWindow::SyncInsertDatabase, this);
+LOOPGET:
+    if ( nowFrameSignal > 0 && nowFrameSignal == PARAM.FrameSignalOutput) {         //帧信号持续拉高，玻璃中部
+        qDebug()<<"1";
+        MainWindow::slot_GetCameraBuffer();
+        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
+    } else if(nowFrameSignal > 0 && nowFrameSignal != PARAM.FrameSignalOutput) {    //帧信号从高到低，玻璃尾部
+        qDebug()<<"2";
+        MainWindow::slot_GetCameraBuffer();
+        nowFrameSignal = PARAM.FrameSignalOutput; //临时帧信号拉低
+        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
+    } else if(nowFrameSignal <= 0 && nowFrameSignal != PARAM.FrameSignalOutput) {   //帧信号从低到高，玻璃开始
+        qDebug()<<"3";
+        ++glassPrimaryKey;
+        nowFrameSignal = PARAM.FrameSignalOutput;                                   //临时帧信号拉高
+        MainWindow::slot_GetCameraBuffer();                        //获取图片并处理
+        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
+    } else {                                                                        //没有帧信号
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        qDebug()<<"No frame signal";
+    }
+    if (PARAM.currentsystem != SYSTEMSTATUS::STOP) {
+        goto LOOPGET;
+    }
+}
+
+void MainWindow::MainWindowsDisplay(NewGlassResult result)
+{
+    auto start = std::chrono::high_resolution_clock::now();// 开始时间
+    try{
+        if (!result.isEmpty) {
+            std::vector<GlassDefect2> glassDefectDatas;
+            MainWindow::realUpdateDatabase(result, glassDefectDatas);// 存储入数据库
+            MainWindow::upDateOverView(result.part);// 汇总信息
+            MainWindow::imageDisplay(result.part, result.currentFrameCount, result.glassRegion);// 投射场图像显示
+            MainWindow::UpdateStatisticsTable(result);// 统计数据
+            MainWindow::realUpdateDefectTable(result.part, glassDefectDatas);// 缺陷数据更新
+            MainWindow::realUpdateDefectDisplay(result);// 实时缺陷小图
+            MainWindow::updateSizeInfoTable(result.sizeRes);// 缺陷尺寸数据
+            MainWindow::clearGlassDisplay(result.part);//玻璃结束，清理
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> duration = end - start;
+            qDebug() << "Display ["<<result.currentFrameCount <<"] time：" << duration.count() << " ms";
+        } else {
+            qDebug()<<"result.isEmpty == true;";
+        }
+    } catch (...) {
+        qDebug() << "MainWindow::MainWindowsDisplay => An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////private///////////////////////////////////////////////////////////////////
+///
+///
+
+void MainWindow::upDateOverView(CV_GLASSPART status)
+{
+    if (status == CV_GLASSPART::TAIL) {//玻璃结束写入界面
+        m_summary.glasstotalcount = m_summary.glasstotalcount + 1;
+        m_summary.currentglassstatus = m_currentSatus;
+        if (m_currentSatus == "OK") {
+            m_summary.OKcount = m_summary.OKcount + 1;
+        } else {
+            m_summary.NGcount = m_summary.NGcount + 1;
+        }
+        m_summary.passrate = (double) m_summary.OKcount / m_summary.glasstotalcount;
+        m_summary.exceptioncount = 0;//todo:异常结束玻璃
+        ui->glassTotalCountLB->setText(QString::number(m_summary.glasstotalcount));
+        ui->currentGlassStatus->setText(QString(m_summary.currentglassstatus));
+        ui->glassOKCountLB->setText(QString::number(m_summary.OKcount));
+        ui->glassNGCountLB->setText(QString::number(m_summary.NGcount));
+        ui->qualicaficationRateLB->setText(QString::number(m_summary.passrate));
+        ui->ExceptionCountLB->setText(QString::number(m_summary.exceptioncount));
+
+        QString mes1 = "玻璃["+QString::number(glassPrimaryKey) + "] 玻璃结束状态更新成功。";
+        INFOMATION.outputMessage(ui->loglistWidget,mes1);
+    }
+}
+
+void MainWindow::imageDisplay(CV_GLASSPART part, int currentFrameCount, cv::Mat image)
+{
+    try{
+        if (image.rows <= 0) {
+            qDebug()<<"imageDisplay in param image.rows == 0";
+            return;
+        }
+        //将不同帧图片拼接起来，注意非第一帧图片有重复区域
+        if (part == CV_GLASSPART::HEAD) {
+            if (!m_glassRegion.empty())
+                m_glassRegion.release();
+            if (currentFrameCount > 1){
+                /* 删除掉重复的行数 */
+                CameraCropArg arg0 = PARAM.crops.args[0];
+                int hasDeletePix = 200 - arg0.topPixCrop - arg0.bottomPixCrop;//重复的200行需要减去的行数
+                cv::Rect rect(hasDeletePix,0,image.cols - hasDeletePix, image.rows);//image已经被转置90度
+                image = image(rect);//裁剪若干列重复行数
+            }
+            m_glassRegion = image;
+        } else {
+            /* 删除掉重复的行数 */
+            CameraCropArg arg0 = PARAM.crops.args[0];
+            int hasDeletePix = 200 - arg0.topPixCrop - arg0.bottomPixCrop;//重复的200行需要减去的行数
+            cv::Rect rect(hasDeletePix,0,image.cols - hasDeletePix, image.rows);//image已经被转置90度
+            image = image(rect);//裁剪若干列重复行数
+            if (image.rows != m_glassRegion.rows && m_glassRegion.rows != 0 ) {
+                /* 每帧图像的行数因为仿射有变化，现在缩放统一大小 */
+                double scaleFactor = (double)m_glassRegion.rows / (double)image.rows;// 计算缩放因子
+                double newWidth1 = static_cast<int>((double)image.cols * scaleFactor);// 计算缩放后的宽
+                qDebug()<<"(double)image.cols = "<<(double)image.cols <<", scaleFactor ="<<scaleFactor<<", m_glassRegion.rows ="<<m_glassRegion.rows;
+                auto start = std::chrono::high_resolution_clock::now();// 开始时间
+                cv::resize(image, image, cv::Size(newWidth1, m_glassRegion.rows));
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double, std::milli> duration0 = end - start;
+                qDebug() << "++++++++++++ cv::resize time：" << duration0.count() << " ms";
+            }
+            if (m_glassRegion.rows == 0 || m_glassRegion.cols == 0) {//算法误判头部
+                qDebug()<<"算法误判头部:m_glassRegion.rows ="<<m_glassRegion.rows<<", m_glassRegion.cols ="<<m_glassRegion.cols;
+                m_glassRegion = image;
+            } else  {
+                auto start = std::chrono::high_resolution_clock::now();// 开始时间
+                cv::hconcat(m_glassRegion,image,m_glassRegion);
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double, std::milli> duration0 = end - start;
+                qDebug() << "++++++++++++ cv::hconcat time：" << duration0.count() << " ms";
+            }
+        }
+    } catch(...) {
+        qDebug() << "MainWindow::imageDisplay => An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+    }
+    // QString path = "D:/testopencv/image"+ QString::number(part) + ".jpg";
+    // cv::imwrite(path.toStdString(),m_glassRegion);
+
+    bool success = QMetaObject::invokeMethod(this,
+                                             "slot_DisplayMain",
+                                             Qt::QueuedConnection,
+                                             Q_ARG(CV_GLASSPART, part),
+                                             Q_ARG(cv::Mat, m_glassRegion));
+    if (success) {
+        qDebug() << "MainWindow::imageDisplay Method invocation slot_DisplayMain successful.";
+
+    } else {
+        qDebug() << "MainWindow::imageDisplay Method invocation slot_DisplayMain failed.";
+    }
+}
+
+void MainWindow::UpdateStatisticsTable(NewGlassResult& result)
+{
+    GlassDataBaseInfo baseinfo;
+    baseinfo.id = glassPrimaryKey;                                                          // 玻璃的id，唯一的主键
+    baseinfo.time = QDateTime::currentDateTime().toString().toStdString().data();           // 时间
+    baseinfo.OKorNG = m_currentSatus;         // 整体情况OK或者NG
+    baseinfo.sizeOKorNG = m_sizeOKorNG;     //尺寸OK或者NG
+    m_glassLength = m_glassLength + result.pixGlassLength;
+    baseinfo.length = m_glassLength;          // 玻璃的长度
+    baseinfo.width = result.pixGlassWidth;           // 玻璃的宽度
+    baseinfo.duijiaoxian1 = std::sqrt(m_glassLength*m_glassLength + result.pixGlassWidth* result.pixGlassWidth);    // 玻璃的对角线1
+    baseinfo.duijiaoxian2 = std::sqrt(m_glassLength*m_glassLength + result.pixGlassWidth* result.pixGlassWidth);    // 玻璃的对角线2
+    baseinfo.defectNumber = m_defectNumber;       // 玻璃的缺陷数量
+    baseinfo.defectOKorNG = m_defectNumber==0?"OK":"NG";   // 缺陷OK或者NG
+    baseinfo.huashanNumber = m_huashanNumber;      // 划伤数量
+    baseinfo.qipaoNumber = m_qipaoNumber;        // 气泡数量
+    baseinfo.jieshiNumber = m_jieshiNumber;       // 结石数量
+    baseinfo.benbianNumber = m_benbianNumber;      // 崩边数量
+    baseinfo.zanwuNumber = m_zanwuNumber;        // 脏污数量
+    baseinfo.liewenNumber = m_liewenNumber;       // 裂纹数量
+    baseinfo.qitaNumber = m_qitaNumber;         // 其它数量
+    bool success = QMetaObject::invokeMethod(this,
+                                             "slot_GlassStaticTableInsertRowData",
+                                             Qt::AutoConnection,
+                                             Q_ARG(GlassDataBaseInfo, baseinfo));
+    if (success) {
+        qDebug() << "Method invocation slot_GlassStaticTableInsertRowData successful.";
+        QString mes2 = "玻璃 帧["+QString::number(result.currentFrameCount) + "] 玻璃统计数据更新成功。";
+        INFOMATION.outputMessage(ui->loglistWidget,mes2);
+    } else {
+        qDebug() << "Method invocation slot_GlassStaticTableInsertRowData failed.";
+    }
+}
+
+void MainWindow::realUpdateDatabase(NewGlassResult result,std::vector<GlassDefect2>& glassDefectDatas)
+{
+    m_defectNumber = m_defectNumber + result.res.size();//缺陷总数量
+    for (int i =0; i < (int)result.res.size(); ++i) {
+        GlassDefect2 tmp;
+        tmp.id = ++defectPrimaryKey;                                    // 主键id,在所有缺陷中的顺序
+        tmp.defectId = m_defectNumber + i - result.res.size();          // 缺陷id，在一块玻璃中缺陷的顺序
+        tmp.time = result.res[i].time;                                  // 缺陷检测时间
+        tmp.defectType = classes[result.res[i].type];                   // 缺陷类型
+        if (tmp.defectType == tr("JieShi_Min")) {
+            ++m_jieshiNumber;
+        } else if(tmp.defectType == tr("MaoXu_Min")) {
+            ++m_zanwuNumber;
+        } else if (tmp.defectType == tr("QiPao_Min")) {
+            ++m_qipaoNumber;
+        } else if (tmp.defectType == tr("ShuiDi_Min")) {
+            ++m_qitaNumber;
+        } else if (tmp.defectType == tr("BoLiXue_Min")) {
+            ++m_qitaNumber;
+        } else if (tmp.defectType == tr("HeiDian_Min")) {
+            ++m_qitaNumber;
+        } else if (tmp.defectType == tr("HuaShang_Min")) {
+            ++m_huashanNumber;
+        }
+        tmp.defectLevel = "NG";                          // 缺陷等级，OK NG
+        m_currentSatus = "NG";
+
+        tmp.x = result.res[i].pixX * PARAM.XCamera0Accuracy;                   // 缺陷在玻璃上的X坐标
+        tmp.y = result.res[i].pixY * PARAM.YAccuracy;                          // 缺陷在玻璃上的Y坐标
+        tmp.length = result.res[i].pixLength * PARAM.YAccuracy;                // 缺陷的长度
+        tmp.width = result.res[i].pixWidth * PARAM.XCamera0Accuracy;           // 缺陷的宽度
+        tmp.area = result.res[i].pixArea * PARAM.XCamera0Accuracy;             // 缺陷面积大小
+        tmp.glassid = glassPrimaryKey;                                         // 外键id,玻璃的id
+        tmp.imagePath = result.res[i].imagePath;                               // 缺陷图片的路径
+        VecDefect.push(tmp);
+        glassDefectDatas.push_back(tmp);
+    }
+    QString mes1 = "帧["+QString::number(result.currentFrameCount) + "] 玻璃缺陷存入数据库成功。";
+    INFOMATION.outputMessage(ui->loglistWidget,mes1);
+}
+
+void MainWindow::realUpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2>& glassDefectDatas)
+{
+    if (glassDefectDatas.size() <= 0)
+        return;
+
+    bool success = QMetaObject::invokeMethod(this,
+                                             "slot_UpdateDefectTable",
+                                             Qt::AutoConnection,
+                                             Q_ARG(CV_GLASSPART, part),
+                                             Q_ARG(std::vector<GlassDefect2>, glassDefectDatas));
+    if (success) {
+        qDebug() << "Method invocation successful.";
+        QString mes3 = "玻璃缺陷数据表格更新成功。";
+        INFOMATION.outputMessage(ui->loglistWidget,mes3);
+    } else {
+        qDebug() << "Method invocation failed.";
+    }
+}
+
+void MainWindow::realUpdateDefectDisplay(NewGlassResult& result)
+{
+    if ((int)result.res.size() <= 0) return;
+    bool success = QMetaObject::invokeMethod(this,
+                                             "slot_UpdateDefectDisplay",
+                                             Qt::AutoConnection,
+                                             Q_ARG(NewGlassResult, result));
+    if (success) {
+        qDebug() << "Method invocation successful.";
+        QString mes4 = "玻璃实时缺陷小图更新成功。";
+        INFOMATION.outputMessage(ui->loglistWidget,mes4);
+    } else {
+        qDebug() << "Method invocation failed.";
+    }
+}
+
+void MainWindow::updateSizeInfoTable(std::vector<DoorClampAndHole>& sizeRes)
+{
+    GlassSizeInfo info;
+    for (int i = 0; i < (int)sizeRes.size(); ++i ) {
+        GlassSize size;
+        size.id = ++sizePrimaryKey;
+        size.sizeID = m_sizeid++;
+        size.time = QDateTime::currentDateTime().toString();
+        if (sizeRes[i].type == SizeType::DoorClam) {
+            size.sizeType = tr("DoorClam");
+        } else if (sizeRes[i].type == SizeType::Hole ) {
+            size.sizeType = tr("Hole");
+        }
+        size.sizeLevel = "OK";
+        size.lengthX = sizeRes[i].PixHeight * PARAM.YAccuracy;
+        size.widthY = sizeRes[i].PixWidth * PARAM.XCamera0Accuracy;
+        size.marginsX = sizeRes[i].MarginsX * PARAM.YAccuracy;
+        size.marginsY = sizeRes[i].MarginsY * PARAM.XCamera0Accuracy;
+        size.glassid = glassPrimaryKey;
+        size.imagePath = sizeRes[i].Path;
+        m_mutex.lock();
+        m_sizedatas.push_back(size);
+        m_mutex.unlock();
+
+        GlassSizeInfo2 data;//数据库结构体
+        data.id = size.id;
+        data.sizeno = size.sizeID;
+        data.time = size.time;
+        data.sizeType = size.sizeType;
+        data.sizeLevel = size.sizeLevel;
+        data.lengthX = size.lengthX;
+        data.widthY = size.widthY;
+        data.marginsX = size.marginsX;
+        data.marginsY = size.marginsY;
+        data.glassid = size.glassid;
+        data.imagePath = size.imagePath;
+        m_mutex.lock();
+        if (databasePtr!=nullptr) {
+            databasePtr->insertOneData(data);
+        }
+        m_mutex.unlock();
+    }
+    m_mutex.lock();
+    info.sizedatas = m_sizedatas;
+    m_mutex.unlock();
+    info.sizeCount = sizeRes.size();
+    //info.OutLinePath = //todo：轮廓图
+    bool success = QMetaObject::invokeMethod(this,
+                                             "slot_SingleSizeUpdataTableData",
+                                             Qt::AutoConnection,
+                                             Q_ARG(GlassSizeInfo, info));
+    if (success) {
+        qDebug() << "MainWindow::updateSizeInfoTable Method invocation successful.";
+        QString mes5 = "玻璃缺陷尺寸数据更新成功。";
+        INFOMATION.outputMessage(ui->loglistWidget,mes5);
+    } else {
+        qDebug() << "MainWindow::updateSizeInfoTable Method invocation failed.";
+    }
+}
+
+bool MainWindow::checkFrameParam(FrameImage& imageunit)
+{
+    if (imageunit.buffers.size() <= 0) {
+        return false;
+    }
+    if (imageunit.fieldnumberset <= 0) {
+        return false;
+    }
+    return true;
+}
+
+void MainWindow::clearGlassDisplay(CV_GLASSPART part)
+{
+    if (part == CV_GLASSPART::TAIL) {// 重新初始化一些变量
+        m_currentSatus = "OK";
+        m_glassLength = 0;
+        m_sizeOKorNG = "OK";
+        m_defectNumber = 0;
+        m_jieshiNumber = 0;
+        m_zanwuNumber = 0;
+        m_qipaoNumber = 0;
+        m_qitaNumber = 0;
+        m_huashanNumber = 0;
+        m_glassLength = 0;
+        m_currentRow = 0;
+        m_sizedatas.clear();
+        m_sizeid = 0 ;
+    }
+}
+
+void MainWindow::saveMatToImage(QString fullpath,cv::Mat region )
+{
+    std::string filename = fullpath.toStdString();
+    cv::imwrite(filename, region);
+}
+
+QString MainWindow::SyncSaveCurrentTimeImage(cv::Mat& region,QString path/*=""*/)
+{
+    try{
+        if (path == "") {
+            int randomNumber = std::rand() % 123567;
+            QString time = QDateTime::currentDateTime().toString("hh-mm-ss");
+            path = "D:/testopencv/camera/"+time +"-"+ QString::number(randomNumber)+".jpg";
+        }
+        std::thread th1(&MainWindow::saveMatToImage,this,path,region);
+        th1.detach();
+        return path;
+    } catch(...) {
+        qDebug() << " ProcessTile::SyncSaveCurrentTimeImage =>An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+        return "";
+    }
+}
+
+void MainWindow::SyncInsertDatabase()
+{
+DATABASE:
+    if ( VecDefect.empty() ){
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
+        goto DATABASE;
+    } else {
+        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
+        GlassDefect2 tmp = VecDefect.pop();
+        if (tmp.id != 0) {
+            if (databasePtr != nullptr) {
+                databasePtr->insertOneData(tmp);
+            }
+        }
+        goto DATABASE;
+    }
+}
+
+/////////////////////////////////public slot///////////////////////////////////////////////////////////////
+
+void MainWindow::slot_CloseSystem()
+{
+    if (databasePtr != nullptr) {
+        databasePtr->closeDataBase();
+        FreeLibrary(databaseDllHandle);
+    }
+    if (algorithmPtr!= nullptr) {
+        FreeLibrary(algorithmDllHandle);
+    }
+    if (cameraPtr0!=nullptr&&cameraPtr1) {
+        FreeLibrary(cameraDllHandle);
+    }
+    close();
+    qApp->exit(0);
+}
+
+void MainWindow::slot_ShowSystemSettingForm()
+{
+    if(m_lightControl == nullptr) {
+        m_lightControl = std::make_shared<LightControl>(this);//设置窗口
+    }
+    m_lightControl->setHidden(false);
+    m_lightControl->setWindowFlags(Qt::Window);
+    m_lightControl->setWindowModality(Qt::ApplicationModal); //点击之后不可对其它窗体操作
+    m_lightControl->setWindowFlags(m_lightControl->windowFlags() & ~Qt::WindowMinMaxButtonsHint);//设置窗口无最小化按钮
+    m_lightControl->setWindowFlags(m_lightControl->windowFlags() & ~Qt::WindowMaximizeButtonHint);//设置窗口无全屏按钮
+    m_lightControl->setWindowIcon(QIcon(":/toolbar/icons/setup.ico"));
+    m_lightControl->setWindowTitle("系统设置");
+    m_lightControl->show();
+}
+
+void MainWindow::slot_ActionStart()
+{
+    qDebug()<<"slot_ActionStart";
+    //
+    // 进行开始流程，打开相机
+    // 设置界面上相关按钮的亮和灰
+    //
+    m_pStart->setEnabled(false);
+    m_pExit->setEnabled(false);
+    m_pStop->setEnabled(true);
+    m_pSettings->setEnabled(false);
+    m_offline->setEnabled(false);
+
+    if (cameraPtr0!=nullptr && cameraPtr1 != nullptr) {
+        if (!cameraPtr0->IsStarted(m_args[0].camName)){
+            QString message = m_args[0].camName + tr("camera is not started.");
+            INFOMATION.criticalMessageBox(this,message);
+        }
+        if (!cameraPtr1->IsStarted(m_args[1].camName)){
+            QString message = m_args[1].camName + tr("camera is not started.");
+            INFOMATION.criticalMessageBox(this,message);
+        }
+    }
+    PARAM.currentsystem = SYSTEMSTATUS::RUNNING;
+    //
+    // 根据信号平台帧信号获取图片
+    //
+    m_startThread = std::make_shared<std::thread>(&MainWindow::ProcessThreadCV, this);
+}
+
+void MainWindow::slot_ActionStop()
+{
+    PARAM.currentsystem = SYSTEMSTATUS::STOP;
+    m_pStart->setEnabled(true);
+    m_pExit->setEnabled(true);
+    m_pStop->setEnabled(false);
+    m_pSettings->setEnabled(true);
+    m_offline->setEnabled(true);
+
+    if (m_databaseThread != nullptr) {
+        if(m_databaseThread->joinable()) {
+            m_databaseThread->join();
+        }
+    }
+    if (m_startThread != nullptr) {
+        if(m_startThread->joinable()) {
+            m_startThread->join();
+        }
+    }
+}
+
+void MainWindow::slot_DataSearch()
+{
+    //
+    // 进行数据查询
+    //
+    if (dataanalysisPtr == nullptr) {
+        dataanalysisPtr = std::make_shared<DataAnalysis>(this);
+    }
+    dataanalysisPtr->setWindowFlags(Qt::Window);
+    dataanalysisPtr->setWindowModality(Qt::ApplicationModal); //点击之后不可对其它窗体操作
+    dataanalysisPtr->setWindowFlags(dataanalysisPtr->windowFlags() & ~Qt::WindowMinMaxButtonsHint);//设置窗口无最小化按钮
+    dataanalysisPtr->setWindowFlags(dataanalysisPtr->windowFlags() & ~Qt::WindowMaximizeButtonHint);//设置窗口无全屏按钮
+    dataanalysisPtr->setWindowTitle("数据查询");
+    dataanalysisPtr->show();
+}
+
+void MainWindow::slot_Offline()
+{
+    try {
+        //获取选择的目录路径
+        QStringList offlineSelectedFiles =  QFileDialog::getOpenFileNames( this, "选择文件或目录", "D:/", "All Files (*);;Directories (*/)", nullptr, QFileDialog::ReadOnly);
+        //若目录路径不为空
+        if (!offlineSelectedFiles.isEmpty()) {
+            auto start = std::chrono::high_resolution_clock::now();// 开始时间
+            if (algorithmPtr != nullptr) {
+                algorithmPtr->RegisterResultCallback(std::bind(&MainWindow::MainWindowsDisplay, this, std::placeholders::_1));
+                //遍历容器
+                for(int i = 0; i < (int)offlineSelectedFiles.size(); ++i) {
+                    qDebug() << offlineSelectedFiles[i];//输出文件的完整路径名
+                    cv::Mat projectionImage,reflectionLightImage,reflectionDarkImage;
+                    projectionImage = cv::imread(offlineSelectedFiles[i].toStdString());
+                    algorithmPtr->SyncExecu(i, projectionImage,reflectionLightImage,reflectionDarkImage);
+                }
+            } else {
+                qDebug()<<"algorithmPtr == nullptr";
+            }
+            auto endf1 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> durationf1 = endf1 - start;
+            qDebug() << "Finished 2 time：" << durationf1.count() << " ms";
+        } else {
+            return;
+        }
+    } catch(...) {
+        qDebug()<<"slot_ButtonExportClicked() error";
+    }
+}
+
+void MainWindow::slot_Calibrate()
+{
+    if (calibratePtr == nullptr) {
+        calibratePtr = std::make_shared<Calibrate>(nullptr);
+    }
+    calibratePtr->setWindowFlags(Qt::Window);
+    calibratePtr->setWindowModality(Qt::ApplicationModal); //点击之后不可对其它窗体操作
+    calibratePtr->setWindowFlags(calibratePtr->windowFlags() & ~Qt::WindowMinMaxButtonsHint);//设置窗口无最小化按钮
+    calibratePtr->setWindowFlags(calibratePtr->windowFlags() & ~Qt::WindowMaximizeButtonHint);//设置窗口无全屏按钮
+    calibratePtr->setWindowTitle("图片标定");
+    calibratePtr->show();
 }
 
 void MainWindow::slot_GlassStaticTableInsertRowData(GlassDataBaseInfo info)
@@ -834,119 +1437,6 @@ void MainWindow::slot_GlassStaticTableInsertRowData(GlassDataBaseInfo info)
         ui->glassstatictablewidget->horizontalHeaderItem(i)->setTextAlignment(Qt::AlignCenter);
     }
     ui->glassstatictablewidget->verticalHeader()->setVisible(false); // 隐藏行号
-}
-
-void MainWindow::InitSingleFlawTableWidget()
-{
-    //
-    // 初始化单个缺陷界面
-    //
-    QGraphicsScene* scene = new QGraphicsScene();
-    loadedPixmapItem = new MyGraphicsItem();
-    scene->addItem(loadedPixmapItem);
-    ui->graphicsView->setScene(scene);
-
-    QGraphicsScene* scene2 = new QGraphicsScene();
-    loadedPixmapItem2 = new MyGraphicsItem();
-    scene2->addItem(loadedPixmapItem2);
-    ui->graphicsView_2->setScene(scene2);
-
-    QGraphicsScene* scene3 = new QGraphicsScene();
-    loadedPixmapItem3 = new MyGraphicsItem();
-    scene3->addItem(loadedPixmapItem3);
-    ui->graphicsView_3->setScene(scene3);
-
-    ui->SingleFlawtableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->SingleFlawtableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->SingleFlawtableWidget->verticalHeader()->setVisible(false);
-    ui->SingleFlawtableWidget->setColumnWidth(0, 90);
-
-    for (int row = 0; row < ui->SingleFlawtableWidget->rowCount(); ++row) {
-      for (int col = 0; col < ui->SingleFlawtableWidget->columnCount(); ++col) {
-        QTableWidgetItem* item = ui->SingleFlawtableWidget->item(row, col);
-        if (item) {
-            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-        }
-      }
-    }
-    //
-    // 若数据统计界面不为空，则显示第一行玻璃的缺陷信息
-    //
-    QTableWidgetItem *itemID = ui->glassstatictablewidget->item(0, 0);
-    if (itemID != NULL) {
-        int glassid = itemID->text().toInt();
-        QString sql = QString("SELECT * FROM glass_defect WHERE glassid = %1;").arg(glassid);
-        std::vector<GlassDefect2> datas;
-        databasePtr->queryTableData(datas, sql);
-        if (datas.size() > 0) {
-            ui->SingleFlawtableWidget->setRowCount(datas.size());
-            ui->SingleFlawtableWidget->setColumnCount(9);
-            //
-            // 更新缺陷小图
-            //
-            QImage img1(datas[0].imagePath);
-            QImage img2(datas[0].imagePath);
-            QImage img3(datas[0].imagePath);
-
-            loadedPixmapItem->loadImage(img1);
-            int nwidth = ui->graphicsView->width();
-            int nheight = ui->graphicsView->height();
-            loadedPixmapItem->setQGraphicsViewWH(nwidth, nheight);
-            ui->graphicsView->setSceneRect((QRectF(-(nwidth / 2), -(nheight / 2), nwidth, nheight)));
-
-            loadedPixmapItem2->loadImage(img2);
-            int nwidth2 = ui->graphicsView_2->width();
-            int nheight2 = ui->graphicsView_2->height();
-            loadedPixmapItem2->setQGraphicsViewWH(nwidth, nheight);
-            ui->graphicsView_2->setSceneRect((QRectF(-(nwidth2 / 2), -(nheight2 / 2), nwidth2, nheight2)));
-
-            loadedPixmapItem3->loadImage(img3);
-            int nwidth3 = ui->graphicsView_3->width();
-            int nheight3 = ui->graphicsView_3->height();
-            loadedPixmapItem3->setQGraphicsViewWH(nwidth, nheight);
-            ui->graphicsView_3->setSceneRect((QRectF(-(nwidth3 / 2), -(nheight3 / 2), nwidth3, nheight3)));
-            for (int i = 0; i < (int)datas.size(); ++i) {
-                GlassDefect2 data = datas[i];
-                //序号
-                QTableWidgetItem* item0 = new QTableWidgetItem(QString::number(data.defectId));
-                item0->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 0, item0);
-                //时间
-                QTableWidgetItem* item1 = new QTableWidgetItem(data.time);
-                item1->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 1, item1);
-                //类型
-                QTableWidgetItem* item2 = new QTableWidgetItem(data.defectType);
-                item2->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i , 2, item2);
-                //等级
-                QTableWidgetItem* item3 = new QTableWidgetItem(data.defectLevel);
-                item3->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 3, item3);
-                //坐标X
-                QTableWidgetItem* item4 = new QTableWidgetItem(QString::number(data.x,'f', 2));
-                item4->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 4, item4);
-                //坐标Y
-                QTableWidgetItem* item5 = new QTableWidgetItem(QString::number(data.y,'f', 2));
-                item5->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 5, item5);
-                //长
-                QTableWidgetItem* item6 = new QTableWidgetItem(QString::number(data.length,'f', 2));
-                item6->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 6, item6);
-                //宽
-                QTableWidgetItem* item7 = new QTableWidgetItem(QString::number(data.width,'f', 2));
-                item7->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 7, item7);
-                //区域
-                QTableWidgetItem* item8 = new QTableWidgetItem(QString::number(data.area,'f', 2));
-                item8->setTextAlignment(Qt::AlignCenter);
-                ui->SingleFlawtableWidget->setItem(i, 8, item8);
-            }
-        }
-
-    }
 }
 
 void MainWindow::slot_SingleFlawUpdateTableData(GlassDefectInfo info)
@@ -1101,148 +1591,6 @@ void MainWindow::slot_SingleSizeUpdataTableData(GlassSizeInfo info)
     }
 }
 
-void MainWindow::InitSingleSizeTableWidget()
-{
-    //
-    // 初始化尺寸信息界面
-    //
-    QGraphicsScene* scene = new QGraphicsScene();
-    loadedPixmapItem4 = new MyGraphicsItem();
-    ui->graphicsView_outLine->setScene(scene);
-    scene->addItem(loadedPixmapItem);
-
-    QGraphicsScene* scene2=new QGraphicsScene();
-    loadedPixmapItem5 = new MyGraphicsItem();
-    ui->graphicsView_Field->setScene(scene2);
-    scene2->addItem(loadedPixmapItem2);
-
-    ui->singleSizeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->singleSizeTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->singleSizeTableWidget->verticalHeader()->setVisible(false);
-    ui->singleSizeTableWidget->setColumnWidth(0, 90);
-
-    for (int row = 0; row < ui->singleSizeTableWidget->rowCount(); ++row) {
-      for (int col = 0; col < ui->singleSizeTableWidget->columnCount(); ++col) {
-        QTableWidgetItem* item = ui->singleSizeTableWidget->item(row, col);
-        if (item) {
-          item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-        }
-      }
-    }
-    //
-    // todo:
-    //
-}
-
-void MainWindow::InitCameraSettingTableWidget()
-{
-    hbox_layout = new QHBoxLayout(ui->tab_6);
-    //给参数赋值
-    DushenCameraArgs arg0;
-    arg0.camName = PARAM.Camera0Name;
-    arg0.camNumber = PARAM.camDefineNum;
-    arg0.fieldnumberset = PARAM.SelectedLightFieldNumber;
-    arg0.expo = PARAM.Camera0ExposureTime;
-    arg0.framecount = PARAM.Camera0Frame;
-    arg0.height = PARAM.Camera0PhotoRow;
-    arg0.gain = PARAM.Camera0Gain;
-    qDebug()<<"arg0.camName = "<<arg0.camName
-            <<",arg0.camNumber="<<arg0.camNumber
-             <<",arg0.fieldnumberset="<<arg0.fieldnumberset
-             <<",arg0.expo="<<arg0.expo
-             <<",arg0.framecount="<<arg0.framecount
-             <<",arg0.height="<<arg0.height
-             <<",arg0.gain ="<<arg0.gain;
-    m_args.push_back(arg0);
-    DushenCameraArgs arg1;
-    arg1.camName = PARAM.Camera1Name;
-    arg1.camNumber = PARAM.camDefineNum;
-    arg1.fieldnumberset = PARAM.SelectedLightFieldNumber;
-    arg1.expo = PARAM.Camera1ExposureTime;
-    arg1.framecount = PARAM.Camera1Frame;
-    arg1.height = PARAM.Camera1PhotoRow;
-    arg1.gain = PARAM.Camera1Gain;
-    qDebug()<<"arg1.camName = "<<arg1.camName
-             <<",arg1.camNumber="<<arg1.camNumber
-             <<",arg1.fieldnumberset="<<arg1.fieldnumberset
-             <<",arg1.expo="<<arg1.expo
-             <<",arg1.framecount="<<arg1.framecount
-             <<",arg1.height="<<arg1.height
-             <<",arg1.gain ="<<arg1.gain;
-    m_args.push_back(arg1);
-    DushenCameraWidget * camerawid = new DushenCameraWidget(nullptr);
-    camerawid->InitDushenCameraWidget(cameraPtr0,m_args[0]);
-    hbox_layout->addWidget(camerawid);
-    DushenCameraWidget * camerawid1 = new DushenCameraWidget(nullptr);
-    camerawid1->InitDushenCameraWidget(cameraPtr1,m_args[1]);
-    hbox_layout->addWidget(camerawid1);
-    //启动相机
-    camerawid->StartCamera();
-    camerawid1->StartCamera();
-}
-
-void MainWindow::InitRealTimeFlawTableWidget()
-{
-    QGraphicsScene* scene=new QGraphicsScene();
-    loadedPixmapItem6 = new MyGraphicsItem();
-    scene->addItem(loadedPixmapItem6);
-    ui->graphicsView_Field1->setScene(scene);
-
-    QGraphicsScene* scene2=new QGraphicsScene();
-    loadedPixmapItem7= new MyGraphicsItem();
-    scene2->addItem(loadedPixmapItem7);
-    ui->graphicsView_Field2->setScene(scene2);
-
-    QGraphicsScene* scene3=new QGraphicsScene();
-    loadedPixmapItem8 = new MyGraphicsItem();
-    scene3->addItem(loadedPixmapItem8);
-    ui->graphicsView_Field3->setScene(scene3);
-}
-
-void MainWindow::InitFlawShowWidget()
-{
-    //
-    // todo：缺陷主界面显示，显示opencv已经处理好的图片
-    //
-}
-
-void MainWindow::InitSummaryTableWidget()
-{
-    //
-    // 时间定时刷新
-    //
-    _timer = new QTimer();
-    connect(_timer, &QTimer::timeout, this, &MainWindow::slot_RefreshSystemTime);
-    _timer->start(1000);
-    //
-    // 读取数据库获取初始化值
-    //
-
-    QString sql = "SELECT * FROM glass_summary ORDER BY time DESC LIMIT 1;";
-    std::vector<GlassSummary> datas;
-    databasePtr->queryTableData(datas, sql);
-    if (datas.size()  > 0){
-        m_summary = datas[0];
-    }
-    ui->glassTotalCountLB->setText(QString::number(m_summary.glasstotalcount));
-    ui->glassTotalCountLB->setAlignment(Qt::AlignCenter);
-
-    ui->currentGlassStatus->setText(QString(m_summary.currentglassstatus));
-    ui->currentGlassStatus->setAlignment(Qt::AlignCenter);
-
-    ui->glassOKCountLB->setText(QString::number(m_summary.OKcount));
-    ui->glassOKCountLB->setAlignment(Qt::AlignCenter);
-
-    ui->glassNGCountLB->setText(QString::number(m_summary.NGcount));
-    ui->glassNGCountLB->setAlignment(Qt::AlignCenter);
-
-    ui->qualicaficationRateLB->setText(QString::number(m_summary.passrate));
-    ui->qualicaficationRateLB->setAlignment(Qt::AlignCenter);
-
-    ui->ExceptionCountLB->setText(QString::number(m_summary.exceptioncount));
-    ui->ExceptionCountLB->setAlignment(Qt::AlignCenter);
-}
-
 void MainWindow::slot_RefreshSystemTime()
 {
     QDate currentDate = QDate::currentDate();
@@ -1311,8 +1659,8 @@ CAMERA1:
         if (projectionImage.rows != 0 && reflectionLightImage.rows != 0 && reflectionDarkImage.rows != 0){
             QString ID = QString::number(imageunit0.framecount);
             MainWindow::SyncSaveCurrentTimeImage(projectionImage,"D:/testopencv/projectionImage"+ID+".jpg");
-            // MainWindow::SyncSaveCurrentTimeImage(reflectionLightImage,"D:/testopencv/reflectionLightImage"+ID+".jpg");
-            // MainWindow::SyncSaveCurrentTimeImage(reflectionDarkImage,"D:/testopencv/reflectionDarkImage"+ID+".jpg");
+            MainWindow::SyncSaveCurrentTimeImage(reflectionLightImage,"D:/testopencv/reflectionLightImage"+ID+".jpg");
+            MainWindow::SyncSaveCurrentTimeImage(reflectionDarkImage,"D:/testopencv/reflectionDarkImage"+ID+".jpg");
         } else {
             qDebug()<<"拼图出现错误";
         }
@@ -1324,369 +1672,6 @@ CAMERA1:
     } else {
         qDebug()<<"algorithmPtr == nullptr";
         return;
-    }
-}
-
-bool MainWindow::checkFrameParam(FrameImage& imageunit)
-{
-    if (imageunit.buffers.size() <= 0) {
-        return false;
-    }
-    if (imageunit.fieldnumberset <= 0) {
-        return false;
-    }
-    return true;
-}
-
-void MainWindow::MainWindowsDisplay(NewGlassResult result)
-{
-    auto start = std::chrono::high_resolution_clock::now();// 开始时间
-    try{
-        if (!result.isEmpty) {
-            std::vector<GlassDefect2> glassDefectDatas;
-            MainWindow::realUpdateDatabase(result, glassDefectDatas);// 存储入数据库
-            auto end2 = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> duration2 = end2 - start;
-            qDebug() << "------------------realUpdateDatabase ["<<result.currentFrameCount <<"] time：" << duration2.count() << " ms";
-            MainWindow::upDateOverView(result.part);// 汇总信息
-            auto end1 = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> duration1 = end1 - start;
-            qDebug() << "------------------upDateOverView ["<<result.currentFrameCount <<"] time：" << duration1.count() << " ms";
-            MainWindow::imageDisplay(result.part, result.currentFrameCount, result.glassRegion);// 投射场图像显示
-            auto end0 = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> duration0 = end0 - start;
-            qDebug() << "------------------imageDisplay ["<<result.currentFrameCount <<"] time：" << duration0.count() << " ms";
-            MainWindow::UpdateStatisticsTable(result);// 统计数据
-            MainWindow::realUpdateDefectTable(result.part, glassDefectDatas);// 缺陷数据更新
-            MainWindow::realUpdateDefectDisplay(result);// 实时缺陷小图
-            MainWindow::updateSizeInfoTable(result.sizeRes);// 缺陷尺寸数据
-            MainWindow::clearGlassDisplay(result.part);//玻璃结束，清理
-            auto end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> duration = end - start;
-            qDebug() << "Display ["<<result.currentFrameCount <<"] time：" << duration.count() << " ms";
-        } else {
-            qDebug()<<"result.isEmpty == true;";
-        }
-    } catch (...) {
-        qDebug() << "MainWindow::MainWindowsDisplay => An unknown error occurred.";
-        // 获取当前的异常信息
-        std::exception_ptr eptr = std::current_exception();
-        if (eptr) {
-            try {
-                std::rethrow_exception(eptr);
-            } catch (const std::exception& ex) {
-                qDebug() << "Exception: " << ex.what();
-            }
-        }
-    }
-
-}
-
-void MainWindow::upDateOverView(CV_GLASSPART status)
-{
-     if (status == CV_GLASSPART::TAIL) {//玻璃结束写入界面
-        m_summary.glasstotalcount = m_summary.glasstotalcount + 1;
-        m_summary.currentglassstatus = m_currentSatus;
-        if (m_currentSatus == "OK") {
-            m_summary.OKcount = m_summary.OKcount + 1;
-        } else {
-            m_summary.NGcount = m_summary.NGcount + 1;
-        }
-        m_summary.passrate = (double) m_summary.OKcount / m_summary.glasstotalcount;
-        m_summary.exceptioncount = 0;//todo:异常结束玻璃
-        ui->glassTotalCountLB->setText(QString::number(m_summary.glasstotalcount));
-        ui->currentGlassStatus->setText(QString(m_summary.currentglassstatus));
-        ui->glassOKCountLB->setText(QString::number(m_summary.OKcount));
-        ui->glassNGCountLB->setText(QString::number(m_summary.NGcount));
-        ui->qualicaficationRateLB->setText(QString::number(m_summary.passrate));
-        ui->ExceptionCountLB->setText(QString::number(m_summary.exceptioncount));
-
-        QString mes1 = "玻璃["+QString::number(glassPrimaryKey) + "] 玻璃结束状态更新成功。";
-        INFOMATION.outputMessage(ui->loglistWidget,mes1);
-     }
-}
-
-
-void MainWindow::imageDisplay(CV_GLASSPART part, int currentFrameCount, cv::Mat image)
-{
-    try{
-        if (image.rows <= 0) {
-            qDebug()<<"imageDisplay in param image.rows == 0";
-            return;
-        }
-        //将不同帧图片拼接起来，注意非第一帧图片有重复区域
-        if (part == CV_GLASSPART::HEAD) {
-            if (!m_glassRegion.empty())
-                m_glassRegion.release();
-            if (currentFrameCount > 1){
-                /* 删除掉重复的行数 */
-                CameraCropArg arg0 = PARAM.crops.args[0];
-                int hasDeletePix = 200 - arg0.topPixCrop - arg0.bottomPixCrop;//重复的200行需要减去的行数
-                cv::Rect rect(hasDeletePix,0,image.cols - hasDeletePix, image.rows);//image已经被转置90度
-                image = image(rect);//裁剪若干列重复行数
-            }
-           m_glassRegion = image;
-        } else {
-            /* 删除掉重复的行数 */
-            CameraCropArg arg0 = PARAM.crops.args[0];
-            int hasDeletePix = 200 - arg0.topPixCrop - arg0.bottomPixCrop;//重复的200行需要减去的行数
-            cv::Rect rect(hasDeletePix,0,image.cols - hasDeletePix, image.rows);//image已经被转置90度
-            image = image(rect);//裁剪若干列重复行数
-            if (image.rows != m_glassRegion.rows && m_glassRegion.rows != 0 ) {
-                /* 每帧图像的行数因为仿射有变化，现在缩放统一大小 */
-                double scaleFactor = (double)m_glassRegion.rows / (double)image.rows;// 计算缩放因子
-                double newWidth1 = static_cast<int>((double)image.cols * scaleFactor);// 计算缩放后的宽
-                qDebug()<<"(double)image.cols = "<<(double)image.cols <<", scaleFactor ="<<scaleFactor<<", m_glassRegion.rows ="<<m_glassRegion.rows;
-                auto start = std::chrono::high_resolution_clock::now();// 开始时间
-                cv::resize(image, image, cv::Size(newWidth1, m_glassRegion.rows));
-                auto end = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double, std::milli> duration0 = end - start;
-                qDebug() << "++++++++++++ cv::resize time：" << duration0.count() << " ms";
-            }
-            if (m_glassRegion.rows == 0 || m_glassRegion.cols == 0) {//算法误判头部
-                qDebug()<<"算法误判头部:m_glassRegion.rows ="<<m_glassRegion.rows<<", m_glassRegion.cols ="<<m_glassRegion.cols;
-                m_glassRegion = image;
-            } else  {
-                auto start = std::chrono::high_resolution_clock::now();// 开始时间
-                cv::hconcat(m_glassRegion,image,m_glassRegion);
-                auto end = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double, std::milli> duration0 = end - start;
-                qDebug() << "++++++++++++ cv::hconcat time：" << duration0.count() << " ms";
-            }
-        }
-    } catch(...) {
-        qDebug() << "MainWindow::imageDisplay => An unknown error occurred.";
-        // 获取当前的异常信息
-        std::exception_ptr eptr = std::current_exception();
-        if (eptr) {
-            try {
-                std::rethrow_exception(eptr);
-            } catch (const std::exception& ex) {
-                qDebug() << "Exception: " << ex.what();
-            }
-        }
-    }
-    // QString path = "D:/testopencv/image"+ QString::number(part) + ".jpg";
-    // cv::imwrite(path.toStdString(),m_glassRegion);
-
-    bool success = QMetaObject::invokeMethod(this,
-                                             "slot_DisplayMain",
-                                             Qt::QueuedConnection,
-                                             Q_ARG(CV_GLASSPART, part),
-                                             Q_ARG(cv::Mat, m_glassRegion));
-    if (success) {
-        qDebug() << "MainWindow::imageDisplay Method invocation slot_DisplayMain successful.";
-
-    } else {
-        qDebug() << "MainWindow::imageDisplay Method invocation slot_DisplayMain failed.";
-    }
-
-}
-
-void MainWindow::UpdateStatisticsTable(NewGlassResult& result)
-{
-    GlassDataBaseInfo baseinfo;
-    baseinfo.id = glassPrimaryKey;                                                          // 玻璃的id，唯一的主键
-    baseinfo.time = QDateTime::currentDateTime().toString().toStdString().data();           // 时间
-    baseinfo.OKorNG = m_currentSatus;         // 整体情况OK或者NG
-    baseinfo.sizeOKorNG = m_sizeOKorNG;     //尺寸OK或者NG
-    m_glassLength = m_glassLength + result.pixGlassLength;
-    baseinfo.length = m_glassLength;          // 玻璃的长度
-    baseinfo.width = result.pixGlassWidth;           // 玻璃的宽度
-    baseinfo.duijiaoxian1 = std::sqrt(m_glassLength*m_glassLength + result.pixGlassWidth* result.pixGlassWidth);    // 玻璃的对角线1
-    baseinfo.duijiaoxian2 = std::sqrt(m_glassLength*m_glassLength + result.pixGlassWidth* result.pixGlassWidth);    // 玻璃的对角线2
-    baseinfo.defectNumber = m_defectNumber;       // 玻璃的缺陷数量
-    baseinfo.defectOKorNG = m_defectNumber==0?"OK":"NG";   // 缺陷OK或者NG
-    baseinfo.huashanNumber = m_huashanNumber;      // 划伤数量
-    baseinfo.qipaoNumber = m_qipaoNumber;        // 气泡数量
-    baseinfo.jieshiNumber = m_jieshiNumber;       // 结石数量
-    baseinfo.benbianNumber = m_benbianNumber;      // 崩边数量
-    baseinfo.zanwuNumber = m_zanwuNumber;        // 脏污数量
-    baseinfo.liewenNumber = m_liewenNumber;       // 裂纹数量
-    baseinfo.qitaNumber = m_qitaNumber;         // 其它数量
-    bool success = QMetaObject::invokeMethod(this,
-                                             "slot_GlassStaticTableInsertRowData",
-                                             Qt::AutoConnection,
-                                             Q_ARG(GlassDataBaseInfo, baseinfo));
-    if (success) {
-        qDebug() << "Method invocation slot_GlassStaticTableInsertRowData successful.";
-        QString mes2 = "玻璃 帧["+QString::number(result.currentFrameCount) + "] 玻璃统计数据更新成功。";
-        INFOMATION.outputMessage(ui->loglistWidget,mes2);
-    } else {
-        qDebug() << "Method invocation slot_GlassStaticTableInsertRowData failed.";
-    }
-}
-
-void MainWindow::realUpdateDatabase(NewGlassResult result,std::vector<GlassDefect2>& glassDefectDatas)
-{
-    m_defectNumber = m_defectNumber + result.res.size();//缺陷总数量
-    for (int i =0; i < (int)result.res.size(); ++i) {
-        GlassDefect2 tmp;
-        tmp.id = ++defectPrimaryKey;                                    // 主键id,在所有缺陷中的顺序
-        tmp.defectId = m_defectNumber + i - result.res.size();          // 缺陷id，在一块玻璃中缺陷的顺序
-        tmp.time = result.res[i].time;                                  // 缺陷检测时间
-        // m_mutex.lock();
-        tmp.defectType = classes[result.res[i].type];                   // 缺陷类型
-        // m_mutex.unlock();
-        if (tmp.defectType == tr("JieShi_Min")) {
-            ++m_jieshiNumber;
-        } else if(tmp.defectType == tr("MaoXu_Min")) {
-            ++m_zanwuNumber;
-        } else if (tmp.defectType == tr("QiPao_Min")) {
-            ++m_qipaoNumber;
-        } else if (tmp.defectType == tr("ShuiDi_Min")) {
-            ++m_qitaNumber;
-        } else if (tmp.defectType == tr("BoLiXue_Min")) {
-            ++m_qitaNumber;
-        } else if (tmp.defectType == tr("HeiDian_Min")) {
-            ++m_qitaNumber;
-        } else if (tmp.defectType == tr("HuaShang_Min")) {
-            ++m_huashanNumber;
-        }
-        tmp.defectLevel = "NG";                          // 缺陷等级，OK NG
-        // m_mutex.lock();
-        m_currentSatus = "NG";
-        // m_mutex.unlock();
-
-        tmp.x = result.res[i].pixX * PARAM.XCamera0Accuracy;                   // 缺陷在玻璃上的X坐标
-        tmp.y = result.res[i].pixY * PARAM.YAccuracy;                          // 缺陷在玻璃上的Y坐标
-        tmp.length = result.res[i].pixLength * PARAM.YAccuracy;                // 缺陷的长度
-        tmp.width = result.res[i].pixWidth * PARAM.XCamera0Accuracy;           // 缺陷的宽度
-        tmp.area = result.res[i].pixArea * PARAM.XCamera0Accuracy;             // 缺陷面积大小
-        tmp.glassid = glassPrimaryKey;                                         // 外键id,玻璃的id
-        tmp.imagePath = result.res[i].imagePath;                               // 缺陷图片的路径
-        // m_mutex.lock();
-        // if (databasePtr != nullptr) {
-        //     databasePtr->insertOneData(tmp);
-        // }
-        VecDefect.push(tmp);
-        glassDefectDatas.push_back(tmp);
-        // m_mutex.unlock();
-    }
-    QString mes1 = "帧["+QString::number(result.currentFrameCount) + "] 玻璃缺陷存入数据库成功。";
-    INFOMATION.outputMessage(ui->loglistWidget,mes1);
-}
-
-void MainWindow::realUpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2>& glassDefectDatas)
-{
-    if (glassDefectDatas.size() <= 0)
-        return;
-
-    bool success = QMetaObject::invokeMethod(this,
-                                    "slot_UpdateDefectTable",
-                                    Qt::AutoConnection,
-                                    Q_ARG(CV_GLASSPART, part),
-                                    Q_ARG(std::vector<GlassDefect2>, glassDefectDatas));
-    if (success) {
-        qDebug() << "Method invocation successful.";
-        QString mes3 = "玻璃缺陷数据表格更新成功。";
-        INFOMATION.outputMessage(ui->loglistWidget,mes3);
-    } else {
-        qDebug() << "Method invocation failed.";
-    }
-}
-
-void MainWindow::realUpdateDefectDisplay(NewGlassResult& result)
-{
-    if ((int)result.res.size() <= 0) return;
-    bool success = QMetaObject::invokeMethod(this,
-                                             "slot_UpdateDefectDisplay",
-                                             Qt::AutoConnection,
-                                             Q_ARG(NewGlassResult, result));
-    if (success) {
-        qDebug() << "Method invocation successful.";
-        QString mes4 = "玻璃实时缺陷小图更新成功。";
-        INFOMATION.outputMessage(ui->loglistWidget,mes4);
-    } else {
-        qDebug() << "Method invocation failed.";
-    }
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (ui->qWidget != nullptr && ui->qWidget->underMouse()) {
-        QPoint pos = event->pos();
-        qDebug() << "Mouse clicked at position: (" << pos.x() << ", " << pos.y() << ")";
-        QWidget::mousePressEvent(event);
-    }
-}
-
-void MainWindow::updateSizeInfoTable(std::vector<DoorClampAndHole>& sizeRes)
-{
-    GlassSizeInfo info;
-    for (int i = 0; i < (int)sizeRes.size(); ++i ) {
-        GlassSize size;
-        size.id = ++sizePrimaryKey;
-        size.sizeID = m_sizeid++;
-        size.time = QDateTime::currentDateTime().toString();
-        if (sizeRes[i].type == SizeType::DoorClam) {
-            size.sizeType = tr("DoorClam");
-        } else if (sizeRes[i].type == SizeType::Hole ) {
-            size.sizeType = tr("Hole");
-        }
-        size.sizeLevel = "OK";
-        size.lengthX = sizeRes[i].PixHeight * PARAM.YAccuracy;
-        size.widthY = sizeRes[i].PixWidth * PARAM.XCamera0Accuracy;
-        size.marginsX = sizeRes[i].MarginsX * PARAM.YAccuracy;
-        size.marginsY = sizeRes[i].MarginsY * PARAM.XCamera0Accuracy;
-        size.glassid = glassPrimaryKey;
-        size.imagePath = sizeRes[i].Path;
-        m_mutex.lock();
-        m_sizedatas.push_back(size);
-        m_mutex.unlock();
-
-        GlassSizeInfo2 data;//数据库结构体
-        data.id = size.id;
-        data.sizeno = size.sizeID;
-        data.time = size.time;
-        data.sizeType = size.sizeType;
-        data.sizeLevel = size.sizeLevel;
-        data.lengthX = size.lengthX;
-        data.widthY = size.widthY;
-        data.marginsX = size.marginsX;
-        data.marginsY = size.marginsY;
-        data.glassid = size.glassid;
-        data.imagePath = size.imagePath;
-        m_mutex.lock();
-        if (databasePtr!=nullptr) {
-            databasePtr->insertOneData(data);
-        }
-        m_mutex.unlock();
-    }
-    m_mutex.lock();
-    info.sizedatas = m_sizedatas;
-    m_mutex.unlock();
-    info.sizeCount = sizeRes.size();
-    //info.OutLinePath = //todo：轮廓图
-    bool success = QMetaObject::invokeMethod(this,
-                                             "slot_SingleSizeUpdataTableData",
-                                             Qt::AutoConnection,
-                                             Q_ARG(GlassSizeInfo, info));
-    if (success) {
-        qDebug() << "MainWindow::updateSizeInfoTable Method invocation successful.";
-        QString mes5 = "玻璃缺陷尺寸数据更新成功。";
-        INFOMATION.outputMessage(ui->loglistWidget,mes5);
-    } else {
-        qDebug() << "MainWindow::updateSizeInfoTable Method invocation failed.";
-    }
-}
-
-void MainWindow::clearGlassDisplay(CV_GLASSPART part)
-{
-    if (part == CV_GLASSPART::TAIL) {// 重新初始化一些变量
-        m_currentSatus = "OK";
-        m_glassLength = 0;
-        m_sizeOKorNG = "OK";
-        m_defectNumber = 0;
-        m_jieshiNumber = 0;
-        m_zanwuNumber = 0;
-        m_qipaoNumber = 0;
-        m_qitaNumber = 0;
-        m_huashanNumber = 0;
-        m_glassLength = 0;
-        m_currentRow = 0;
-        m_sizedatas.clear();
-        m_sizeid = 0 ;
     }
 }
 
@@ -1730,7 +1715,6 @@ void MainWindow::slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefe
     ui->SingleFlawtableWidget->setRowCount(ui->SingleFlawtableWidget->rowCount() + glassDefectDatas.size());
     ui->SingleFlawtableWidget->setColumnCount(9);
     // 更新缺陷小图
-    qDebug()<<"glassDefectDatas[0].imagePath = "<<glassDefectDatas[0].imagePath;
     QImage img1(glassDefectDatas[0].imagePath);
     QImage img2(glassDefectDatas[0].imagePath);
     QImage img3(glassDefectDatas[0].imagePath);
@@ -1876,59 +1860,14 @@ void MainWindow::slot_UpdateDefectDisplay(NewGlassResult result)
     ui->defectArea3LB->setText(QString::number(info.area));
 }
 
-QString MainWindow::SyncSaveCurrentTimeImage(cv::Mat& region,QString path/*=""*/)
+/////////////////////////////////////protected/////////////////////////////////////////////////////////////
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    try{
-        if (path == "") {
-            int randomNumber = std::rand() % 123567;
-            QString time = QDateTime::currentDateTime().toString("hh-mm-ss");
-            path = "D:/testopencv/camera/"+time +"-"+ QString::number(randomNumber)+".jpg";
-        }
-        std::thread th1(&MainWindow::saveMatToImage,this,path,region);
-        th1.detach();
-        return path;
-    } catch(...) {
-        qDebug() << " ProcessTile::SyncSaveCurrentTimeImage =>An unknown error occurred.";
-        // 获取当前的异常信息
-        std::exception_ptr eptr = std::current_exception();
-        if (eptr) {
-            try {
-                std::rethrow_exception(eptr);
-            } catch (const std::exception& ex) {
-                qDebug() << "Exception: " << ex.what();
-            }
-        }
-        return "";
+    if (ui->qWidget != nullptr && ui->qWidget->underMouse()) {
+        QPoint pos = event->pos();
+        qDebug() << "Mouse clicked at position: (" << pos.x() << ", " << pos.y() << ")";
+        QWidget::mousePressEvent(event);
     }
 }
-
-void MainWindow::saveMatToImage(QString fullpath,cv::Mat region )
-{
-    std::string filename = fullpath.toStdString();
-    cv::imwrite(filename, region);
-}
-
-void MainWindow::SyncInsertDatabase()
-{
-DATABASE:
-    if ( VecDefect.empty() ){
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
-        goto DATABASE;
-    } else {
-        if (PARAM.currentsystem == SYSTEMSTATUS::STOP) return;
-        GlassDefect2 tmp = VecDefect.pop();
-        if (tmp.id != 0) {
-            if (databasePtr != nullptr) {
-                databasePtr->insertOneData(tmp);
-            }
-        }
-        goto DATABASE;
-    }
-}
-
-
-
-
-
 

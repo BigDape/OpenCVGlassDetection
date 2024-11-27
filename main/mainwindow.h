@@ -6,6 +6,10 @@
 #include <QSettings>
 #include <QThread>
 #include <QTableWidgetItem>
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/core.hpp>
+#include <atomic>
 #include "Form/LightControl.h"
 #include "Form/MyGraphicsitem.h"
 #include "Form/Calibrate.h"
@@ -13,10 +17,6 @@
 #include "HSDatabaseInterface.h"
 #include "HSCameraInterface.h"
 #include "Form/DataAnalysis.h"
-#include <opencv2/opencv.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/core.hpp>
-#include <atomic>
 #include "HSTool.h"
 
 
@@ -26,7 +26,9 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-
+/**
+ * @brief The MainWindow class 用户主界面类
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -186,7 +188,9 @@ private:
      */
     QString SyncSaveCurrentTimeImage(cv::Mat& region,QString path="");
 
-
+    /**
+     * @brief SyncInsertDatabase 异步插入数据库
+     */
     void SyncInsertDatabase();
 
 public slots:
@@ -255,92 +259,96 @@ public slots:
 
     /**
      * @brief slot_DisplayMain 槽函数，在主界面上显示图片
-     * @param part
-     * @param image
+     * @param [in] part 图片属于玻璃的什么位置
+     * @param [in] image 玻璃cv::Mat图像
      */
-    void slot_DisplayMain(CV_GLASSPART part, cv::Mat image);                                // 槽函数显示缺陷整图
-    void slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2> glassDefectDatas);                 // 槽函数显示缺线表格
-    void slot_UpdateDefectDisplay(NewGlassResult result);                                    // 槽函数显示实时缺陷
-signals:
+    void slot_DisplayMain(CV_GLASSPART part, cv::Mat image);
+
     /**
-     * @brief sign_GlassStaticTableInsertRowData 在玻璃统计表中插入一行数据
-     * @param info
+     * @brief slot_UpdateDefectTable 显示缺陷表格上的信息
+     * @param [in] part 图像是玻璃的哪一部分
+     * @param [in] glassDefectDatas 玻璃的缺陷数据
      */
-    void sign_GlassStaticTableInsertRowData(GlassDataBaseInfo info);
-    void sign_DisplayMain(QString imageUrl);
+    void slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2> glassDefectDatas);
+
+    /**
+     * @brief slot_UpdateDefectDisplay 槽函数, 显示实时缺陷
+     * @param [in] result 数据参数
+     */
+    void slot_UpdateDefectDisplay(NewGlassResult result);
 
 protected:
+    /**
+     * @brief mousePressEvent 捕获在主界面显示界面上的鼠标坐标
+     * @param event
+     */
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    Ui::MainWindow* ui;
-    QAction* m_pExit;               // 退出
-    QAction* m_pSettings;           // 设置
-    QAction* m_pStart;              // 开始
-    QAction* m_pStop;               // 停止
-    QAction* m_pDB;                 // 数据查询
-    QAction* m_offline;             // 离线模式
-    QAction* m_calibrate;           // 标定
+    Ui::MainWindow* ui;                     /* 主界面ui对象 */
+    QAction* m_pExit;                       /* 退出按钮对象 */
+    QAction* m_pSettings;                   /* 设置按钮对象 */
+    QAction* m_pStart;                      /* 开始按钮对象 */
+    QAction* m_pStop;                       /* 停止按钮对象 */
+    QAction* m_pDB;                         /* 数据查询按钮对象 */
+    QAction* m_offline;                     /* 离线模式按钮对象 */
+    QAction* m_calibrate;                   /* 标定模式按钮对象 */
 
-    MyGraphicsItem* loadedPixmapItem = nullptr; // 缺陷小图光场1
-    MyGraphicsItem* loadedPixmapItem2 = nullptr;// 缺陷小图光场2
-    MyGraphicsItem* loadedPixmapItem3 = nullptr;// 缺陷小图光场3
-
-    MyGraphicsItem* loadedPixmapItem4 = nullptr; //尺寸轮廓图展示
-    MyGraphicsItem* loadedPixmapItem5 = nullptr; //尺寸小图
-
-    MyGraphicsItem* loadedPixmapItem6 = nullptr; //实时缺陷光场1
-    MyGraphicsItem* loadedPixmapItem7 = nullptr; //实时缺陷光场2
-    MyGraphicsItem* loadedPixmapItem8 = nullptr; //实时缺陷光场3
-
+    MyGraphicsItem* loadedPixmapItem = nullptr;         /* 缺陷小图光场1 */
+    MyGraphicsItem* loadedPixmapItem2 = nullptr;        /* 缺陷小图光场2 */
+    MyGraphicsItem* loadedPixmapItem3 = nullptr;        /* 缺陷小图光场3 */
+    MyGraphicsItem* loadedPixmapItem4 = nullptr;        /* 尺寸轮廓图展示 */
+    MyGraphicsItem* loadedPixmapItem5 = nullptr;        /* 尺寸小图 */
+    MyGraphicsItem* loadedPixmapItem6 = nullptr;        /* 实时缺陷光场1 */
+    MyGraphicsItem* loadedPixmapItem7 = nullptr;        /* 实时缺陷光场2 */
+    MyGraphicsItem* loadedPixmapItem8 = nullptr;        /* 实时缺陷光场3 */
     MyGraphicsItem* myloadedPixmapItem = nullptr;
 
-    std::shared_ptr<LightControl> m_lightControl;             // 设置界面
-    QString _offlineSelectedDir;                              // 离线模式下选择的路径
-    QTimer* _timer;                                           // 时钟用于更新系统时间
-    QTimer* _timer1;                                          // 时钟用于获取相机图像
-    std::shared_ptr<Calibrate> calibratePtr = nullptr;        // 标定界面
-    std::shared_ptr<DataAnalysis> dataanalysisPtr;            // 数据查询界面
+    std::shared_ptr<LightControl> m_lightControl;             /* 设置界面 */
+    QTimer* _timer;                                           /* 时钟用于更新系统时间 */
+    QTimer* _timer1;                                          /* 时钟用于获取相机图像 */
+    std::shared_ptr<Calibrate> calibratePtr = nullptr;        /* 标定界面 */
+    std::shared_ptr<DataAnalysis> dataanalysisPtr;            /* 数据查询界面 */
 
-    HSDatabaseNamespace::HSDatabaseInterface* databasePtr = nullptr;                 // 数据库指针
-    HSAlgorithmNamespace::HSAlgorithmInterface* algorithmPtr = nullptr;              // 算法指针
-    HSJsoncppNamespace::HSJsoncppInterface* jsoncppPtr = nullptr;                    // jsoncpp指针
+    HSDatabaseNamespace::HSDatabaseInterface* databasePtr = nullptr;        /* 数据库指针 */
+    HSAlgorithmNamespace::HSAlgorithmInterface* algorithmPtr = nullptr;     /* 算法指针 */
+    HSJsoncppNamespace::HSJsoncppInterface* jsoncppPtr = nullptr;           /* jsoncpp指针 */
 
-    CameraNameSpace::HSCameraInterface* cameraPtr0 = nullptr;              // 相机0指针
-    CameraNameSpace::HSCameraInterface* cameraPtr1 = nullptr;              // 相机1指针
-    HMODULE databaseDllHandle;      //databse动态库句柄
-    HMODULE algorithmDllHandle;
-    HMODULE cameraDllHandle;
-    HMODULE jsoncppDllHandle;
+    CameraNameSpace::HSCameraInterface* cameraPtr0 = nullptr;               /* 相机0指针 */
+    CameraNameSpace::HSCameraInterface* cameraPtr1 = nullptr;               /* 相机1指针 */
+    HMODULE databaseDllHandle;                                              /* databse动态库句柄 */
+    HMODULE algorithmDllHandle;                                             /* algorithm动态库句柄 */
+    HMODULE cameraDllHandle;                                                /* camera动态库句柄 */
+    HMODULE jsoncppDllHandle;                                               /* jsoncpp动态库句柄 */
 
-    QHBoxLayout* hbox_layout;  //多个相机界面布局
-    std::vector<DushenCameraArgs> m_args; //相机参数
-    std::vector<QString> classes;//缺陷种类
-    GlassSummary m_summary;//汇总信息
-    QString m_currentSatus = "OK";  //当前玻璃状态
-    QString m_sizeOKorNG = "OK";  // 当前玻璃尺寸状态
-    std::atomic<double> m_glassLength = 0;       //当前玻璃长度
-    std::atomic<int>    m_defectNumber = 0;         // 当前缺陷的数量
-    std::atomic<int>    m_huashanNumber = 0;        // 当前划伤数量
-    std::atomic<int>    m_qipaoNumber = 0;        // 气泡数量
-    std::atomic<int>    m_jieshiNumber = 0;       // 结石数量
-    std::atomic<int>    m_benbianNumber = 0;      // 崩边数量
-    std::atomic<int>    m_zanwuNumber = 0;        // 脏污数量
-    std::atomic<int>    m_liewenNumber = 0;       // 裂纹数量
-    std::atomic<int>    m_qitaNumber = 0;         // 其它数量
+    QHBoxLayout* hbox_layout;                                               /* 多个相机界面布局 */
+    std::vector<DushenCameraArgs> m_args;                                   /* 相机参数 */
+    std::vector<QString> classes;                                           /* 缺陷种类 */
+    GlassSummary m_summary;                                                 /* 汇总信息 */
+    QString m_currentSatus = "OK";                                          /* 当前玻璃状态 */
+    QString m_sizeOKorNG = "OK";                                            /* 当前玻璃尺寸状态 */
+    std::atomic<double> m_glassLength = 0;                                  /* 当前玻璃长度 */
+    std::atomic<int>    m_defectNumber = 0;                                 /* 当前缺陷的数量 */
+    std::atomic<int>    m_huashanNumber = 0;                                /* 当前划伤数量 */
+    std::atomic<int>    m_qipaoNumber = 0;                                  /* 气泡数量 */
+    std::atomic<int>    m_jieshiNumber = 0;                                 /* 结石数量 */
+    std::atomic<int>    m_benbianNumber = 0;                                /* 崩边数量 */
+    std::atomic<int>    m_zanwuNumber = 0;                                  /* 脏污数量 */
+    std::atomic<int>    m_liewenNumber = 0;                                 /* 裂纹数量 */
+    std::atomic<int>    m_qitaNumber = 0;                                   /* 其它数量 */
 
-    std::atomic<int> defectPrimaryKey;  //缺陷数据库主键
-    std::atomic<int> glassPrimaryKey;   //glass_table表主键
-    std::atomic<int> sizePrimaryKey;    // 尺寸数据库主键
+    std::atomic<int> defectPrimaryKey;                                      /* 缺陷数据库主键 */
+    std::atomic<int> glassPrimaryKey;                                       /* glass_table表主键 */
+    std::atomic<int> sizePrimaryKey;                                        /* 尺寸数据库主键 */
 
-    QHBoxLayout* ImageLayout = nullptr;   //显示图片的布局
-    std::shared_ptr<std::thread> m_startThread = nullptr;
-    std::vector<GlassSize> m_sizedatas;//存储尺寸数据
-    std::mutex m_mutex; //全局锁
-    std::atomic<int> m_sizeid = 0;//在每片玻璃上的排列顺序
-    std::atomic<int> m_currentRow = 0 ; //每片玻璃的行数
-    cv::Mat m_glassRegion;   // 显示玻璃的区域
-    SafeDefinitionThreadSafeVector<GlassDefect2> VecDefect;
-    std::shared_ptr<std::thread> m_databaseThread = nullptr;
+    QHBoxLayout* ImageLayout = nullptr;                                     /* 显示图片的布局 */
+    std::shared_ptr<std::thread> m_startThread = nullptr;                   /* 开始线程指针 */
+    std::vector<GlassSize> m_sizedatas;                                     /* 存储尺寸数据 */
+    std::mutex m_mutex;                                                     /* 全局锁 */
+    std::atomic<int> m_sizeid = 0;                                          /* 在每片玻璃上的排列顺序 */
+    std::atomic<int> m_currentRow = 0 ;                                     /* 每片玻璃的行数 */
+    cv::Mat m_glassRegion;                                                  /* 显示玻璃的区域 */
+    SafeDefinitionThreadSafeVector<GlassDefect2> VecDefect;                 /* 线程安全的缺陷数组 */
+    std::shared_ptr<std::thread> m_databaseThread = nullptr;                /* 数据库线程指针 */
 };
 #endif // MAINWINDOW_H

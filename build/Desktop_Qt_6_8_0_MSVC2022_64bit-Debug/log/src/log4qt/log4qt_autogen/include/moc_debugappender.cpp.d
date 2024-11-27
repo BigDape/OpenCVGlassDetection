@@ -1,4 +1,4 @@
-D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_debugappender.cpp: D:/code/hivision/log/src/log4qt/varia/debugappender.h \
+D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_debugappender.cpp: D:/v0.0.2/hivision/log/src/log4qt/varia/debugappender.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QAtomicPointer \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QEvent \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash \
@@ -134,18 +134,18 @@ D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qversiontagging.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qyieldcpu.h \
-  D:/code/hivision/log/src/log4qt/appender.h \
-  D:/code/hivision/log/src/log4qt/appenderskeleton.h \
-  D:/code/hivision/log/src/log4qt/helpers/appenderattachable.h \
-  D:/code/hivision/log/src/log4qt/helpers/classlogger.h \
-  D:/code/hivision/log/src/log4qt/helpers/logerror.h \
-  D:/code/hivision/log/src/log4qt/layout.h \
-  D:/code/hivision/log/src/log4qt/level.h \
-  D:/code/hivision/log/src/log4qt/log4qt.h \
-  D:/code/hivision/log/src/log4qt/log4qtdefs.h \
-  D:/code/hivision/log/src/log4qt/log4qtshared.h \
-  D:/code/hivision/log/src/log4qt/log4qtsharedptr.h \
-  D:/code/hivision/log/src/log4qt/logger.h \
-  D:/code/hivision/log/src/log4qt/loggingevent.h \
-  D:/code/hivision/log/src/log4qt/logstream.h \
-  D:/code/hivision/log/src/log4qt/spi/filter.h
+  D:/v0.0.2/hivision/log/src/log4qt/appender.h \
+  D:/v0.0.2/hivision/log/src/log4qt/appenderskeleton.h \
+  D:/v0.0.2/hivision/log/src/log4qt/helpers/appenderattachable.h \
+  D:/v0.0.2/hivision/log/src/log4qt/helpers/classlogger.h \
+  D:/v0.0.2/hivision/log/src/log4qt/helpers/logerror.h \
+  D:/v0.0.2/hivision/log/src/log4qt/layout.h \
+  D:/v0.0.2/hivision/log/src/log4qt/level.h \
+  D:/v0.0.2/hivision/log/src/log4qt/log4qt.h \
+  D:/v0.0.2/hivision/log/src/log4qt/log4qtdefs.h \
+  D:/v0.0.2/hivision/log/src/log4qt/log4qtshared.h \
+  D:/v0.0.2/hivision/log/src/log4qt/log4qtsharedptr.h \
+  D:/v0.0.2/hivision/log/src/log4qt/logger.h \
+  D:/v0.0.2/hivision/log/src/log4qt/loggingevent.h \
+  D:/v0.0.2/hivision/log/src/log4qt/logstream.h \
+  D:/v0.0.2/hivision/log/src/log4qt/spi/filter.h

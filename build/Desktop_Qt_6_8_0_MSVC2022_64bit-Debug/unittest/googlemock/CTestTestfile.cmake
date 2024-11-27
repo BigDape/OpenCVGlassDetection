@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: D:/code/hivision/unittest/googlemock
-# Build directory: D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/unittest/googlemock
+# Source directory: D:/v0.0.2/hivision/unittest/googlemock
+# Build directory: D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/unittest/googlemock
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

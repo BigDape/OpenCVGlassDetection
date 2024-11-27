@@ -56,7 +56,7 @@ int main() {
         algorithmPtr = createFunc();
     }
     std::cout<<"test 1233"<<std::endl;
-    cv::Mat image1 = cv::imread("D:/testopencv/projectionImage4.jpg");
+    cv::Mat image1 = cv::imread("D:/testopencv/part1.jpg");
     qDebug()<<"image1 sucess";
     cv::Mat grayImage;
     cv::cvtColor(image1, grayImage, cv::COLOR_BGR2GRAY);

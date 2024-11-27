@@ -1,4 +1,4 @@
-D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_dispatcher.cpp: D:/code/hivision/log/src/log4qt/helpers/dispatcher.h \
+D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/log4qt_autogen/include/moc_dispatcher.cpp: D:/v0.0.2/hivision/log/src/log4qt/helpers/dispatcher.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20functional.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20memory.h \

@@ -1,4 +1,14 @@
 HSTool_autogen/timestamp: \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXCompilerFlag.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindCUDA.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindCUDA/select_compute_arch.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/FindWrapAtomic.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/Qt6Config.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake \
@@ -57,23 +67,12 @@ HSTool_autogen/timestamp: \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessAliasTargets.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindCUDA.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindCUDA/select_compute_arch.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake \
-	C:/opencv/OpenCVConfig-version.cmake \
-	C:/opencv/OpenCVConfig.cmake \
-	C:/opencv/x64/vc17/lib/OpenCVConfig.cmake \
-	C:/opencv/x64/vc17/lib/OpenCVModules-debug.cmake \
-	C:/opencv/x64/vc17/lib/OpenCVModules.cmake \
-	D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
-	D:/code/hivision/tool/CMakeLists.txt \
-	D:/code/hivision/tool/HSTool.cpp \
-	D:/code/hivision/tool/HSTool.h \
-	C:/Qt/Tools/CMake_64/bin/cmake.exe
+	C:/opencv/install/x64/vc17/lib/OpenCVConfig-version.cmake \
+	C:/opencv/install/x64/vc17/lib/OpenCVConfig.cmake \
+	C:/opencv/install/x64/vc17/lib/OpenCVModules-debug.cmake \
+	C:/opencv/install/x64/vc17/lib/OpenCVModules.cmake \
+	D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	D:/v0.0.2/hivision/tool/CMakeLists.txt \
+	D:/v0.0.2/hivision/tool/HSTool.cpp \
+	D:/v0.0.2/hivision/tool/HSTool.h \
+	C:/Program\ Files/CMake/bin/cmake.exe

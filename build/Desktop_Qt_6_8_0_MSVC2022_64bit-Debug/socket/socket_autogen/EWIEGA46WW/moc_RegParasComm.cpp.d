@@ -1,4 +1,4 @@
-D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/socket/socket_autogen/EWIEGA46WW/moc_RegParasComm.cpp: D:/code/hivision/socket/RegParasComm.h \
+D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/socket/socket_autogen/EWIEGA46WW/moc_RegParasComm.cpp: D:/v0.0.2/hivision/socket/RegParasComm.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList \
@@ -284,6 +284,6 @@ D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/socket/socket_autog
   C:/Qt/6.8.0/msvc2022_64/include/QtNetwork/qtnetwork-config.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtNetwork/qtnetworkexports.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtNetwork/qtnetworkglobal.h \
-  D:/code/hivision/socket/ParamComm.h \
-  D:/code/hivision/socket/Tcp.h \
-  D:/code/hivision/socket/TcpPackComm.h
+  D:/v0.0.2/hivision/socket/ParamComm.h \
+  D:/v0.0.2/hivision/socket/Tcp.h \
+  D:/v0.0.2/hivision/socket/TcpPackComm.h

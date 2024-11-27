@@ -36,14 +36,12 @@ class ProcessTile
 {
 public:
     ProcessTile();
-    void OfflineTileImageProcess(QString fullpath);
 
     void CV_DefectsDetected(cv::Mat image1,
                             cv::Mat image2,
                             cv::Mat image3,
-                            int currentFrame);
-
-    bool getDefectResult(int currentFrame, NewGlassResult& glassResult);//获取每一帧图片
+                            int currentFrame,
+                            std::function<void (NewGlassResult result)> mainFunc);
 private:
     void saveMatToImage(QString fullpath,cv::Mat region);
     void cropRectangleMat(const cv::Mat image, cv::Mat &dst, int row1y, int Column1x, int row2y, int Column2x);
@@ -62,7 +60,9 @@ private:
      * @param [out] frameGlassResult 每帧图片结果
      */
     void YoloDefectClassification(std::vector<regionInfor>& Regions, std::vector<NewDefectUnitData>& unitVec);
-    void image1DefectsDetected(cv::Mat& image, int currentframe);
+    void image1DefectsDetected(cv::Mat& image,
+                               int currentframe,
+                               std::function<void (NewGlassResult result)> mainFunc);
     void image2DefectsDetected(cv::Mat& image);
     void image3DefectsDetected(cv::Mat& image);
     bool isClose(ConnectedComponent c1, ConnectedComponent c2, int threshold);
@@ -117,6 +117,7 @@ private:
     std::mutex mut;   //锁
     std::atomic<int> defectid = 0;     // 缺陷id（每块玻璃的id）
     ThreadSafeUnorderedMap<int,NewGlassResult> frameResultMap; // 每帧结果数据
+    std::atomic<bool> isGPU = false;
 };
 
 

@@ -1,4 +1,4 @@
-# Install script for directory: D:/code/hivision/log
+# Install script for directory: D:/v0.0.2/hivision/log
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -36,7 +36,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt/Log4QtTargets.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt/Log4QtTargets.cmake"
-         "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets.cmake")
+         "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt/Log4QtTargets-*.cmake")
       if(_cmake_old_config_files)
@@ -49,22 +49,28 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt" TYPE FILE FILES "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt" TYPE FILE FILES "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt" TYPE FILE FILES "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt" TYPE FILE FILES "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/CMakeFiles/Export/dfa2b6665875004c740ea885cb599aee/Log4QtTargets-debug.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Log4Qt" TYPE FILE FILES
-    "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/Log4QtConfig.cmake"
-    "D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/Log4QtConfigVersion.cmake"
+    "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/Log4QtConfig.cmake"
+    "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/Log4QtConfigVersion.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/cmake_install.cmake")
+  include("D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/src/log4qt/cmake_install.cmake")
 
 endif()
 
+string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
+       "${CMAKE_INSTALL_MANIFEST_FILES}")
+if(CMAKE_INSTALL_LOCAL_ONLY)
+  file(WRITE "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/log/install_local_manifest.txt"
+     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
+endif()

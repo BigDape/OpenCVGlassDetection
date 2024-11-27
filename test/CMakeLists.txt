@@ -7,7 +7,7 @@ set(SRC_FILES
         main.cpp)
 
 # 设置宏变量 DEBUG_MODE
-add_definitions(-TEST_ALGORITHM)
+add_definitions(-DTEST_ALGORITHM=1)
 
 if(POLICY CMP0146)
     cmake_policy(SET CMP0146 OLD)

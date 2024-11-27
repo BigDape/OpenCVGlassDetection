@@ -53,24 +53,14 @@ void Algorithm::SyncExecu(int& currentFrameCount,
                       cv::Mat& image2,
                       cv::Mat& image3)
 {
-    proPtr->CV_DefectsDetected(image1,image2,image3,currentFrameCount);
-    NewGlassResult result;
-    proPtr->getDefectResult(currentFrameCount, result);
-    if (!result.isEmpty){
-        mainFunction(result); //结果数据不为空，在界面上显示
-        qDebug()<<"帧["<<result.currentFrameCount<<"]执行完毕";
-    }
+    std::thread t1 = std::thread(&ProcessTile::CV_DefectsDetected, proPtr.get(), image1,image2,image3,currentFrameCount,mainFunction);
+    t1.detach();
+    //proPtr->CV_DefectsDetected(image1,image2,image3,currentFrameCount,mainFunction);
 }
 
 void Algorithm::TestExecu(cv::Mat& image)
 {
-    double length = 0;
-    double width = 0;
-    QString Path;
-    std::vector<std::shared_ptr<NewDefectUnitData>> frameGlassResult;
-    proPtr->CV_DefectsDetected(image,image,image,777);
-    NewGlassResult result;
-    proPtr->getDefectResult(777, result);
+    proPtr->CV_DefectsDetected(image,image,image,777,mainFunction);
 }
 
 void Algorithm::Stop()

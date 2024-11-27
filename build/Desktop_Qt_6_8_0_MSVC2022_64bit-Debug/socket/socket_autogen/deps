@@ -1,4 +1,13 @@
 socket_autogen/timestamp: \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CMakeFindDependencyMacro.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXCompilerFlag.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckCXXSourceCompiles.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckIncludeFileCXX.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/CheckLibraryExists.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake \
+	C:/Program\ Files/CMake/share/cmake-3.31/Modules/FindVulkan.cmake \
 	C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer \
 	C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash \
 	C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList \
@@ -503,28 +512,19 @@ socket_autogen/timestamp: \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
 	C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessAliasTargets.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeFindDependencyMacro.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXCompilerFlag.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckCXXSourceCompiles.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckIncludeFileCXX.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CheckLibraryExists.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageHandleStandardArgs.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindPackageMessage.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindThreads.cmake \
-	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/FindVulkan.cmake \
-	D:/code/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
-	D:/code/hivision/socket/CMakeLists.txt \
-	D:/code/hivision/socket/ElemMatch.h \
-	D:/code/hivision/socket/HSSocketInterface.cpp \
-	D:/code/hivision/socket/HSSocketInterface.h \
-	D:/code/hivision/socket/ParamComm.cpp \
-	D:/code/hivision/socket/ParamComm.h \
-	D:/code/hivision/socket/RegParasComm.cpp \
-	D:/code/hivision/socket/RegParasComm.h \
-	D:/code/hivision/socket/SignalControlData.cpp \
-	D:/code/hivision/socket/SignalControlData.h \
-	D:/code/hivision/socket/Tcp.cpp \
-	D:/code/hivision/socket/Tcp.h \
-	D:/code/hivision/socket/TcpPackComm.cpp \
-	D:/code/hivision/socket/TcpPackComm.h \
-	C:/Qt/Tools/CMake_64/bin/cmake.exe
+	D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/.qtc/package-manager/auto-setup.cmake \
+	D:/v0.0.2/hivision/socket/CMakeLists.txt \
+	D:/v0.0.2/hivision/socket/ElemMatch.h \
+	D:/v0.0.2/hivision/socket/HSSocketInterface.cpp \
+	D:/v0.0.2/hivision/socket/HSSocketInterface.h \
+	D:/v0.0.2/hivision/socket/ParamComm.cpp \
+	D:/v0.0.2/hivision/socket/ParamComm.h \
+	D:/v0.0.2/hivision/socket/RegParasComm.cpp \
+	D:/v0.0.2/hivision/socket/RegParasComm.h \
+	D:/v0.0.2/hivision/socket/SignalControlData.cpp \
+	D:/v0.0.2/hivision/socket/SignalControlData.h \
+	D:/v0.0.2/hivision/socket/Tcp.cpp \
+	D:/v0.0.2/hivision/socket/Tcp.h \
+	D:/v0.0.2/hivision/socket/TcpPackComm.cpp \
+	D:/v0.0.2/hivision/socket/TcpPackComm.h \
+	C:/Program\ Files/CMake/bin/cmake.exe
