@@ -20,6 +20,7 @@ namespace HSAlgorithmNamespace
         typedef std::function<void (NewGlassResult result)> CallbackFun; //回调函数
         virtual ~HSAlgorithmInterface(){}
         virtual void Puzzle(int cameraNumber,
+                            int currentframe,
                             std::vector<cv::Mat> mat0,
                             std::vector<cv::Mat> mat1,
                             std::vector<CameraCropArg> args,

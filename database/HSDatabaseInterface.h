@@ -16,6 +16,9 @@ namespace HSDatabaseNamespace{
         virtual bool insertOneData(const GlassDefect2& data) = 0;         //插入数据库
         virtual bool insertOneData(const GlassSummary& data) = 0;         //插入数据库
 
+        virtual bool batchInsertData(std::vector<GlassDefect2>& datas) = 0; //批量插入缺陷数据
+        virtual bool batchInsertData(std::vector<GlassSizeInfo2>& datas) = 0; //批量插入数据
+
         virtual bool updateData(const GlassDataBaseInfo2& data) = 0;      //更新数据库
         virtual bool updateData(const GlassSizeInfo2& data) = 0;      //更新数据库
         virtual bool updateData(const GlassDefect2& data) = 0;      //更新数据库

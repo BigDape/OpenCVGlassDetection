@@ -1,0 +1,34 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"jsoncpp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "HSTool::@3475fea270df04150876"
+		}
+	],
+	"id" : "jsoncpp_autogen_timestamp_deps::@8d13317d076c1318cd2a",
+	"isGeneratorProvided" : true,
+	"name" : "jsoncpp_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "jsoncpp",
+		"source" : "jsoncpp"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

@@ -158,7 +158,7 @@ private:
      * @brief updateSizeInfoTable 更新尺寸表格
      * @param [in] sizeRes 尺寸信息
      */
-    void updateSizeInfoTable(std::vector<DoorClampAndHole>& sizeRes);
+    void updateSizeInfoTable(CV_GLASSPART part, std::vector<DoorClampAndHole>& sizeRes);
 
     /**
      * @brief checkFrameParam 检查相机获取的图像是否符合要求
@@ -188,10 +188,8 @@ private:
      */
     QString SyncSaveCurrentTimeImage(cv::Mat& region,QString path="");
 
-    /**
-     * @brief SyncInsertDatabase 异步插入数据库
-     */
-    void SyncInsertDatabase();
+
+
 
 public slots:
     /**
@@ -236,16 +234,10 @@ public slots:
     void slot_GlassStaticTableInsertRowData(GlassDataBaseInfo info);
 
     /**
-     * @brief slot_SingleFlawUpdateTableData 在缺陷界面中更新表格和图片
-     * @param info
-     */
-    void slot_SingleFlawUpdateTableData(GlassDefectInfo info);
-
-    /**
      * @brief slot_SingleSizeUpdataTableData 在尺寸统计表插入数据
      * @param info
      */
-    void slot_SingleSizeUpdataTableData(GlassSizeInfo info);
+    void slot_SingleSizeUpdataTableData(CV_GLASSPART part, GlassSizeInfo info);
 
     /**
      * @brief slot_RefreshSystemTime 在概述界面实时更新系统时间
@@ -277,6 +269,14 @@ public slots:
      */
     void slot_UpdateDefectDisplay(NewGlassResult result);
 
+    void slot_UpdateDefectImages(QTableWidgetItem* item);//更新缺陷小图
+
+    void slot_UpdateSizeImage(QTableWidgetItem* item);//更新尺寸小图
+
+    void slot_InsertDefectDatabase(std::vector<GlassDefect2> Datas);
+
+    void slot_InsertSizeDatabase(std::vector<GlassSizeInfo2> datas);
+
 protected:
     /**
      * @brief mousePressEvent 捕获在主界面显示界面上的鼠标坐标
@@ -298,7 +298,9 @@ private:
     MyGraphicsItem* loadedPixmapItem2 = nullptr;        /* 缺陷小图光场2 */
     MyGraphicsItem* loadedPixmapItem3 = nullptr;        /* 缺陷小图光场3 */
     MyGraphicsItem* loadedPixmapItem4 = nullptr;        /* 尺寸轮廓图展示 */
-    MyGraphicsItem* loadedPixmapItem5 = nullptr;        /* 尺寸小图 */
+    MyGraphicsItem* loadedPixmapItem50 = nullptr;       /* 透射亮场尺寸小图 */
+    MyGraphicsItem* loadedPixmapItem51 = nullptr;       /* 反射亮场尺寸小图 */
+    MyGraphicsItem* loadedPixmapItem52 = nullptr;       /* 反射暗场尺寸小图 */
     MyGraphicsItem* loadedPixmapItem6 = nullptr;        /* 实时缺陷光场1 */
     MyGraphicsItem* loadedPixmapItem7 = nullptr;        /* 实时缺陷光场2 */
     MyGraphicsItem* loadedPixmapItem8 = nullptr;        /* 实时缺陷光场3 */
@@ -346,9 +348,6 @@ private:
     std::vector<GlassSize> m_sizedatas;                                     /* 存储尺寸数据 */
     std::mutex m_mutex;                                                     /* 全局锁 */
     std::atomic<int> m_sizeid = 0;                                          /* 在每片玻璃上的排列顺序 */
-    std::atomic<int> m_currentRow = 0 ;                                     /* 每片玻璃的行数 */
     cv::Mat m_glassRegion;                                                  /* 显示玻璃的区域 */
-    SafeDefinitionThreadSafeVector<GlassDefect2> VecDefect;                 /* 线程安全的缺陷数组 */
-    std::shared_ptr<std::thread> m_databaseThread = nullptr;                /* 数据库线程指针 */
 };
 #endif // MAINWINDOW_H

@@ -66,8 +66,8 @@
      <widget class="QLabel" name="label_15">
       <property name="geometry">
        <rect>
-        <x>790</x>
-        <y>60</y>
+        <x>730</x>
+        <y>70</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -79,8 +79,8 @@
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>480</x>
-        <y>60</y>
+        <x>430</x>
+        <y>70</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -92,7 +92,7 @@
      <widget class="QGraphicsView" name="graphicsView_2">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>310</x>
         <y>100</y>
         <width>281</width>
         <height>251</height>
@@ -102,7 +102,7 @@
      <widget class="QGraphicsView" name="graphicsView_3">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>610</x>
         <y>100</y>
         <width>281</width>
         <height>251</height>
@@ -112,8 +112,8 @@
      <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>60</y>
+        <x>130</x>
+        <y>70</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -125,7 +125,7 @@
      <widget class="QGraphicsView" name="graphicsView">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>10</x>
         <y>100</y>
         <width>281</width>
         <height>251</height>
@@ -135,9 +135,9 @@
      <widget class="QTableWidget" name="SingleFlawtableWidget">
       <property name="geometry">
        <rect>
-        <x>990</x>
+        <x>910</x>
         <y>40</y>
-        <width>901</width>
+        <width>981</width>
         <height>391</height>
        </rect>
       </property>
@@ -186,6 +186,11 @@
         <string>面积</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>缺陷ID</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
@@ -195,9 +200,9 @@
      <widget class="QTableWidget" name="singleSizeTableWidget">
       <property name="geometry">
        <rect>
-        <x>1190</x>
+        <x>1080</x>
         <y>50</y>
-        <width>701</width>
+        <width>801</width>
         <height>381</height>
        </rect>
       </property>
@@ -236,25 +241,79 @@
         <string>边距Y(mm)</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>尺寸ID</string>
+       </property>
+      </column>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView_outLine">
+     <widget class="QGraphicsView" name="graphicsView_Field_3">
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>80</y>
-        <width>611</width>
-        <height>301</height>
+        <x>710</x>
+        <y>100</y>
+        <width>331</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView_Field">
+     <widget class="QGraphicsView" name="graphicsView_Field_1">
       <property name="geometry">
        <rect>
-        <x>790</x>
-        <y>80</y>
-        <width>361</width>
-        <height>301</height>
+        <x>10</x>
+        <y>100</y>
+        <width>331</width>
+        <height>261</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="graphicsView_Field_2">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>100</y>
+        <width>331</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>70</y>
+        <width>53</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>光场1</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>70</y>
+        <width>53</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>光场2</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>850</x>
+        <y>70</y>
+        <width>53</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>光场3</string>
       </property>
      </widget>
     </widget>

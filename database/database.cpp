@@ -39,13 +39,13 @@ bool DataBase::openDataBase()
                                         "(id INTEGER PRIMARY KEY AUTOINCREMENT, \
                                          defectid INTEGER, time TEXT, defectype INTEGER, \
                                          defectlevel INTEGER, X REAL, Y REAL, \
-                                         length REAL,width REAL, area REAL, glassid INTEGER, ImagePath TEXT)";
+                                         length REAL,width REAL, area REAL, glassid INTEGER, ImagePath0 TEXT, ImagePath1 TEXT, ImagePath2 TEXT)";
 
         //创建glass_sizeinfo，孔洞、丝印、门夹
         QString createGlassSizeInfo = "CREATE TABLE IF NOT EXISTS glass_sizeinfo"
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, \
                  sizeno INTEGER, time TEXT, sizeType TEXT, sizeLevel TEXT, \
-                 lengthX REAL, widthY REAL, marginsX REAL, marginsY REAL, glassid INTEGER, ImagePath TEXT)";
+                 lengthX REAL, widthY REAL, marginsX REAL, marginsY REAL, glassid INTEGER, ImagePath0 TEXT, ImagePath1 TEXT, ImagePath2 TEXT)";
         //创建汇总信息
         QString createSummaryTable = "CREATE TABLE IF NOT EXISTS glass_summary"
                                      "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -123,8 +123,8 @@ bool DataBase::insertOneData(const GlassDataBaseInfo2& data)
 bool DataBase::insertOneData(const GlassSizeInfo2& data)
 {
     QSqlQuery query(db);
-    QString sqlGlassSizeInfo = QString("INSERT INTO glass_sizeinfo (id, sizeno, time, sizeType, sizeLevel, lengthX, widthY, marginsX, marginsY, glassid, ImagePath)"
-                                  "VALUES (%1, %2, '%3', '%4', '%5', %6, %7, %8, %9, %10, '%11')")
+    QString sqlGlassSizeInfo = QString("INSERT INTO glass_sizeinfo (id, sizeno, time, sizeType, sizeLevel, lengthX, widthY, marginsX, marginsY, glassid, ImagePath0, ImagePath1, ImagePath2)"
+                                  "VALUES (%1, %2, '%3', '%4', '%5', %6, %7, %8, %9, %10, '%11', '%12', '%13')")
                                   .arg(data.id)
                                   .arg(data.sizeno)
                                   .arg(data.time)
@@ -135,7 +135,9 @@ bool DataBase::insertOneData(const GlassSizeInfo2& data)
                                   .arg(data.marginsX)
                                   .arg(data.marginsY)
                                   .arg(data.glassid)
-                                  .arg(data.imagePath);
+                                  .arg(data.imagePath0)
+                                  .arg(data.imagePath1)
+                                  .arg(data.imagePath2);
     qDebug()<<sqlGlassSizeInfo;
     if (!query.exec(sqlGlassSizeInfo)) {
         qDebug() << "Failed to insert data: " << query.lastError().text();
@@ -147,8 +149,8 @@ bool DataBase::insertOneData(const GlassSizeInfo2& data)
 bool DataBase::insertOneData(const GlassDefect2& data)
 {
     QSqlQuery query(db);
-    QString sqlGlassDefect=QString("INSERT INTO glass_defect(id, defectid, time, defectype, defectlevel, X, Y, length, width,area, glassid, ImagePath)"
-                                "VALUES (%1, %2, '%3', '%4', '%5', %6, %7, %8, %9, %10, %11, '%12')")
+    QString sqlGlassDefect=QString("INSERT INTO glass_defect(id, defectid, time, defectype, defectlevel, X, Y, length, width,area, glassid, ImagePath0, ImagePath1, ImagePath2)"
+                                "VALUES (%1, %2, '%3', '%4', '%5', %6, %7, %8, %9, %10, %11, '%12', '%13', '%14')")
                 .arg(data.id)
                 .arg(data.defectId)
                 .arg(data.time)
@@ -160,7 +162,9 @@ bool DataBase::insertOneData(const GlassDefect2& data)
                 .arg(data.width)
                 .arg(data.area)
                 .arg(data.glassid)
-                .arg(data.imagePath);
+                .arg(data.imagePath0)
+                .arg(data.imagePath1)
+                .arg(data.imagePath2);
    //qDebug()<<sqlGlassDefect;
    if (!query.exec(sqlGlassDefect)) {
        qDebug() << "Failed to insert data: " << query.lastError().text();
@@ -191,6 +195,88 @@ bool DataBase::insertOneData(const GlassSummary& data)
     }
     return true;
 }
+
+bool DataBase::batchInsertData(std::vector<GlassDefect2>& datas)
+{
+    // 开启事务
+    QSqlQuery query;
+    if (!query.exec("BEGIN;")) {
+        qDebug() << "开启事务失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 循环插入数据
+    for (int i = 0; i < datas.size(); i++) {
+        QString sqlGlassDefect=QString("INSERT INTO glass_defect(id, defectid, time, defectype, defectlevel, X, Y, length, width,area, glassid, ImagePath0, ImagePath1, ImagePath2)"
+                                         "VALUES (%1, %2, '%3', '%4', '%5', %6, %7, %8, %9, %10, %11, '%12', '%13', '%14')")
+                                     .arg(datas[i].id)
+                                     .arg(datas[i].defectId)
+                                     .arg(datas[i].time)
+                                     .arg(datas[i].defectType)
+                                     .arg(datas[i].defectLevel)
+                                     .arg(datas[i].x)
+                                     .arg(datas[i].y)
+                                     .arg(datas[i].length)
+                                     .arg(datas[i].width)
+                                     .arg(datas[i].area)
+                                     .arg(datas[i].glassid)
+                                     .arg(datas[i].imagePath0)
+                                     .arg(datas[i].imagePath1)
+                                     .arg(datas[i].imagePath2);
+        if (!query.exec(sqlGlassDefect)) {
+            qDebug() << "插入数据失败（第 " << i + 1 << " 次）：" << query.lastError().text();
+            continue;
+        }
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT;")) {
+        qDebug() << "提交事务失败：" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DataBase::batchInsertData(std::vector<GlassSizeInfo2>& datas)
+{
+    // 开启事务
+    QSqlQuery query;
+    if (!query.exec("BEGIN;")) {
+        qDebug() << "开启事务失败：" << query.lastError().text();
+        return false;
+    }
+
+    // 循环插入数据
+    for (int i = 0; i < datas.size(); i++) {
+        QString sqlGlassSizeInfo = QString("INSERT INTO glass_sizeinfo (id, sizeno, time, sizeType, sizeLevel, lengthX, widthY, marginsX, marginsY, glassid, ImagePath0, ImagePath1, ImagePath2)"
+                                           "VALUES (%1, %2, '%3', '%4', '%5', %6, %7, %8, %9, %10, '%11', '%12', '%13')")
+                                       .arg(datas[i].id)
+                                       .arg(datas[i].sizeno)
+                                       .arg(datas[i].time)
+                                       .arg(datas[i].sizeType)
+                                       .arg(datas[i].sizeLevel)
+                                       .arg(datas[i].lengthX)
+                                       .arg(datas[i].widthY)
+                                       .arg(datas[i].marginsX)
+                                       .arg(datas[i].marginsY)
+                                       .arg(datas[i].glassid)
+                                       .arg(datas[i].imagePath0)
+                                       .arg(datas[i].imagePath1)
+                                       .arg(datas[i].imagePath2);
+        if (!query.exec(sqlGlassSizeInfo)) {
+            qDebug() << "插入数据失败（第 " << i + 1 << " 次）：" << query.lastError().text();
+            continue;
+        }
+    }
+
+    // 提交事务
+    if (!query.exec("COMMIT;")) {
+        qDebug() << "提交事务失败：" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
 
 
 bool DataBase::updateData(const GlassDataBaseInfo2& data)
@@ -227,7 +313,7 @@ bool DataBase::updateData(const GlassSizeInfo2& data)
 {
     QSqlQuery query(db);
     QString sql = QString("UPDATE glass_sizeinfo SET sizeno=%1, time='%2', sizeType='%3', sizeLevel='%4', lengthX=%5, widthY=%6, "
-                          "marginsX=%7, marginsY=%8, glassid=%9, ImagePath='%10'  WHERE id=%11")
+                          "marginsX=%7, marginsY=%8, glassid=%9, ImagePath0='%10', ImagePath1='%11', ImagePath0='%12'  WHERE id=%13")
             .arg(data.sizeno)
             .arg(data.time)
             .arg(data.sizeType)
@@ -237,7 +323,9 @@ bool DataBase::updateData(const GlassSizeInfo2& data)
             .arg(data.marginsX)
             .arg(data.marginsY)
             .arg(data.glassid)
-            .arg(data.imagePath)
+            .arg(data.imagePath0)
+            .arg(data.imagePath1)
+            .arg(data.imagePath2)
             .arg(data.id);
     qDebug()<< sql;
     if (!query.exec(sql)) {
@@ -251,7 +339,7 @@ bool DataBase::updateData(const GlassDefect2& data)
 {
     QSqlQuery query(db);
     QString sql = QString("UPDATE glass_defect SET defectid=%1, time='%2', defectype='%3', defectlevel='%4', X=%5, Y=%6, length=%7, width=%8, area=%9,"
-                          "glassid=%10, ImagePath='%11' WHERE id=%12")
+                          "glassid=%10, ImagePath0='%11', ImagePath1='%12', ImagePath2='%13' WHERE id=%14")
             .arg(data.defectId)
             .arg(data.time)
             .arg(data.defectType)
@@ -262,7 +350,9 @@ bool DataBase::updateData(const GlassDefect2& data)
             .arg(data.width)
             .arg(data.area)
             .arg(data.glassid)
-            .arg(data.imagePath)
+            .arg(data.imagePath0)
+            .arg(data.imagePath1)
+            .arg(data.imagePath2)
             .arg(data.id);
     qDebug()<< sql;
     if (!query.exec(sql)) {
@@ -395,7 +485,9 @@ bool DataBase::queryTableData(std::vector<GlassSizeInfo2>& datas, QString queryS
         data.marginsX = query.value(7).toDouble();
         data.marginsY = query.value(8).toDouble();
         data.glassid = query.value(9).toInt();
-        data.imagePath = query.value(10).toString();
+        data.imagePath0 = query.value(10).toString();
+        data.imagePath1 = query.value(11).toString();
+        data.imagePath2 = query.value(12).toString();
         datas.push_back(data);
     }
     return true;
@@ -422,7 +514,9 @@ bool DataBase::queryTableData(std::vector<GlassDefect2>& datas, QString querySql
         data.width = query.value(8).toDouble();
         data.area = query.value(9).toDouble();
         data.glassid = query.value(10).toInt();
-        data.imagePath = query.value(11).toString();
+        data.imagePath0 = query.value(11).toString();
+        data.imagePath1 = query.value(12).toString();
+        data.imagePath2 = query.value(13).toString();
         datas.push_back(data);
     }
     return true;

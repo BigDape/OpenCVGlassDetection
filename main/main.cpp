@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
     // 登录成功后加载主界面
     Login w;
     MainForm AppForm;
-    QObject::connect(&w,SIGNAL(LoginSuccessSignal()),&AppForm, SLOT(showWindows()));
-    w.show();
+    //QObject::connect(&w,SIGNAL(LoginSuccessSignal()),&AppForm, SLOT(showWindows()));
+    //w.show();
+    AppForm.showWindows();
     return a.exec();
 }

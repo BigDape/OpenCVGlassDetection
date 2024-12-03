@@ -424,7 +424,7 @@ void DataAnalysis::slotDisplayDefect(QTableWidgetItem* item)
                 ui->tableWidget_2->verticalHeader()->setVisible(false); // 隐藏行
                 //显示图片
                 if(i ==0){
-                    QString ImagePath = data.imagePath;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
+                    QString ImagePath = data.imagePath0;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
                     qDebug() << "imagepath = " << ImagePath;
                     QImage img1=QImage(ImagePath+"/1.jpg");
                     QImage img2=QImage(ImagePath+"/2.jpg");
@@ -465,7 +465,7 @@ void DataAnalysis::slotDisplayImage(QTableWidgetItem* item)
         std::vector<GlassDefect2> datas;
         databasePtr->queryTableData(datas,sql);
         if(datas.size()>0){
-            QString ImagePath = datas[0].imagePath;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
+            QString ImagePath = datas[0].imagePath0;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
             qDebug() << "imagepath = " << ImagePath;
             QImage img1=QImage(ImagePath+"/1.jpg");
             QImage img2=QImage(ImagePath+"/2.jpg");

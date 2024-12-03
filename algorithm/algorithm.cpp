@@ -14,6 +14,7 @@ Algorithm::~Algorithm()
 
 //拼图
 void Algorithm::Puzzle(int cameraNumber,
+                       int currentframe,
                     std::vector<cv::Mat> mat0,
                     std::vector<cv::Mat> mat1,
                     std::vector<CameraCropArg> args,
@@ -22,17 +23,20 @@ void Algorithm::Puzzle(int cameraNumber,
                     cv::Mat& image3)
 {
     if (args.size() >= 2 && mat0.size() == 3 && mat1.size() == 3) {//检查参数，两个相机和图像光场数量一致
-        Algorithm::stitchFieldImages(args[0],
+        Algorithm::stitchFieldImages(currentframe,
+                                     args[0],
                                      mat0[0],
                                      args[1],
                                      mat1[0],
                                      image1); // 拼接投射亮场图像
-        Algorithm::stitchFieldImages(args[0],
+        Algorithm::stitchFieldImages(currentframe,
+                                     args[0],
                                      mat0[1],
                                      args[1],
                                      mat1[1],
                                      image2);// 拼接反射亮场图像
-        Algorithm::stitchFieldImages(args[0],
+        Algorithm::stitchFieldImages(currentframe,
+                                     args[0],
                                      mat0[2],
                                      args[1],
                                      mat1[2],
@@ -53,9 +57,12 @@ void Algorithm::SyncExecu(int& currentFrameCount,
                       cv::Mat& image2,
                       cv::Mat& image3)
 {
+    auto start = std::chrono::high_resolution_clock::now();// 开始时间
     std::thread t1 = std::thread(&ProcessTile::CV_DefectsDetected, proPtr.get(), image1,image2,image3,currentFrameCount,mainFunction);
-    t1.detach();
-    //proPtr->CV_DefectsDetected(image1,image2,image3,currentFrameCount,mainFunction);
+    t1.join();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    qDebug() << "Algorithm Finish time：" << duration.count() << " ms";
 }
 
 void Algorithm::TestExecu(cv::Mat& image)
@@ -73,7 +80,8 @@ void Algorithm::Exit()
 
 }
 
-void Algorithm::stitchFieldImages(CameraCropArg arg0,
+void Algorithm::stitchFieldImages(int currentframe,
+                                  CameraCropArg arg0,
                                   cv::Mat mat00,
                                   CameraCropArg arg1,
                                   cv::Mat mat10,
@@ -100,6 +108,12 @@ void Algorithm::stitchFieldImages(CameraCropArg arg0,
         qDebug()<<"mat00_crop.rows ="<<mat00_crop.rows<<", mat10_crop.rows ="<<mat10_crop.rows;
         if (mat00_crop.cols >0 && mat10_crop.cols > 0 &&  mat00_crop.rows == mat10_crop.rows && mat00_crop.rows > 0 && mat10_crop.rows > 0) {
             cv::hconcat(mat00_crop,mat10_crop,concatImage);
+            // 最后减掉200行剩余行数
+            int hasDeletePix = 200 - arg0.topPixCrop - arg0.bottomPixCrop;//重复的200行需要减去的行数
+            if (hasDeletePix > 0) {
+                cv::Rect rect(0,hasDeletePix,concatImage.cols, concatImage.rows-hasDeletePix);//image已经被转置90度
+                concatImage = concatImage(rect);//裁剪若干列重复行数
+            }
         } else {
             qDebug()<<"mat00_crop.cols ="<<mat00_crop.cols
                     <<", mat10_crop.cols ="<<mat10_crop.cols

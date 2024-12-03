@@ -14,6 +14,7 @@ public:
     Algorithm();
     virtual ~Algorithm();
     virtual void Puzzle(int cameraNumber,
+                        int currentframe,
                         std::vector<cv::Mat> mat0,
                         std::vector<cv::Mat> mat1,
                         std::vector<CameraCropArg> args,
@@ -38,7 +39,8 @@ private:
      * @param [in] mat10 相机1拍摄的原始图片
      * @param [out] concatImage 结果数据，一帧拼接好的单个光场的图片
      */
-    void stitchFieldImages(CameraCropArg arg0,
+    void stitchFieldImages(int currentframe,
+                            CameraCropArg arg0,
                            cv::Mat mat00,
                            CameraCropArg arg1,
                            cv::Mat mat10,

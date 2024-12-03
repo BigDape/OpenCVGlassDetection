@@ -64,7 +64,11 @@ private:
                                int currentframe,
                                std::function<void (NewGlassResult result)> mainFunc);
     void image2DefectsDetected(cv::Mat& image);
-    void image3DefectsDetected(cv::Mat& image);
+    void image3DefectsDetected(cv::Mat image0,
+                               cv::Mat image1,
+                               cv::Mat image2,
+                               int currentframe,
+                               std::function<void (NewGlassResult result)> mainFunc);
     bool isClose(ConnectedComponent c1, ConnectedComponent c2, int threshold);
     void swap(ConnectedComponent& c1, ConnectedComponent& c2);
     void HoughCircleRadius(cv::Mat image, double& diameter);
@@ -112,12 +116,25 @@ private:
     void DoorClampResultData(std::vector<EdgeElement> Y1Y2X1X2,
                              std::vector<regionInfor> edgeRegionInfos,
                              std::vector<DoorClampAndHole>& results); // 门夹数据处理
+
+    void EdgeDetectionFunction(cv::Mat src, cv::Mat& dst);//边缘检测
+
+    void onMatchSiyin(cv::Mat image1,
+                      cv::Mat image2,
+                      cv::Mat targetImage,
+                      std::vector<cv::Mat> templateImages,
+                      std::vector<DoorClampAndHole>& sizeRes);//丝印模版匹配
+
+    void onMatchSiyin2(cv::Mat image, cv::Mat img_model);
+
 private:
     cv::dnn::Net net; //神经网络
     std::mutex mut;   //锁
     std::atomic<int> defectid = 0;     // 缺陷id（每块玻璃的id）
     ThreadSafeUnorderedMap<int,NewGlassResult> frameResultMap; // 每帧结果数据
     std::atomic<bool> isGPU = false;
+    std::vector<cv::Mat> templateImages; //丝印的匹配模版
+    std::atomic<int> siyinid = 0;
 };
 
 

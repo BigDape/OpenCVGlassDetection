@@ -31,6 +31,9 @@ public:
     virtual bool insertOneData(const GlassDefect2& data) override;         //插入数据库
     virtual bool insertOneData(const GlassSummary& data) override;         //插入数据库
 
+    virtual bool batchInsertData(std::vector<GlassDefect2>& datas) override;
+    virtual bool batchInsertData(std::vector<GlassSizeInfo2>& datas) override;
+
     virtual bool updateData(const GlassDataBaseInfo2& data) override;      //更新数据库
     virtual bool updateData(const GlassSizeInfo2& data) override;      //更新数据库
     virtual bool updateData(const GlassDefect2& data) override;      //更新数据库

@@ -19,6 +19,7 @@ enum CV_GLASSPART {
     MIDDLE,
     TAIL,
     EMPTY,
+    WholeGlass,
 };
 
 
@@ -366,7 +367,9 @@ struct GlassSizeInfo2{
     double marginsX;        // 边距X(mm)
     double marginsY;        // 边距Y(mm)
     size_t glassid;         // 外键id,玻璃的id
-    QString imagePath;      // 缺陷图片的路径
+    QString imagePath0;     // 透射亮场缺陷图片的路径
+    QString imagePath1;     // 反射亮场缺陷图片的路径
+    QString imagePath2;     // 反射暗场缺陷图片的路径
 };
 //单个缺陷信息
 struct GlassDefect2{
@@ -381,19 +384,23 @@ struct GlassDefect2{
     double width;           // 缺陷的宽度
     double area;            // 缺陷面积大小
     size_t glassid;         // 外键id,玻璃的id
-    QString imagePath;      // 缺陷图片的路径
+    QString imagePath0;     // 透射亮场缺陷图片的路径
+    QString imagePath1;     // 反射亮场缺陷图片的路径
+    QString imagePath2;     // 反射暗场缺陷图片的路径
     GlassDefect2():id(0),
-            defectId(0),
-        time(""),
-        defectType(""),
-        defectLevel(""),
-        x(0),
-        y(0),
-        length(0),
-        width(0),
-        area(0),
-        glassid(0),
-        imagePath(""){}
+                defectId(0),
+                time(""),
+                defectType(""),
+                defectLevel(""),
+                x(0),
+                y(0),
+                length(0),
+                width(0),
+                area(0),
+                glassid(0),
+                imagePath0(""),
+                imagePath1(""),
+                imagePath2(""){}
 
 };
 
@@ -452,7 +459,9 @@ struct GlassSize{
     double marginsX;        // 边距X(mm)
     double marginsY;        // 边距Y(mm)
     size_t glassid;         // 外键id,玻璃的id
-    QString imagePath;      // 缺陷图片的路径
+    QString imagePath0;     // 透射亮场缺陷图片的路径
+    QString imagePath1;     // 反射亮场缺陷图片的路径
+    QString imagePath2;     // 反射暗场缺陷图片的路径
 };
 
 //数据统计信息
@@ -754,7 +763,9 @@ struct NewDefectUnitData{
     double pixX;        // 像元X
     double pixY;        // 像元Y
     double pixArea;     // 面积
-    QString imagePath;  // 小图存储的地址
+    QString imagePath0;  // 透射亮场小图存储的地址
+    QString imagePath1;  // 反射亮场小图存储的地址
+    QString imagePath2;  // 反射暗场小图存储的地址
     NewDefectUnitData():
         id(0),
         type(0),
@@ -764,7 +775,9 @@ struct NewDefectUnitData{
         pixX(0),
         pixY(0),
         pixArea(0),
-        imagePath(""){}
+        imagePath0(""),
+        imagePath1(""),
+        imagePath2(""){}
 
 };
 
@@ -784,7 +797,9 @@ struct DoorClampAndHole {
     int PixWidth;         // 门夹宽度
     int MarginsX;         // 门夹边距X
     int MarginsY;         // 门夹边距Y
-    QString Path;         // 门夹存储路径
+    QString Path0;         // 透射门夹存储路径
+    QString Path1;         // 透射门夹存储路径
+    QString Path2;         // 透射门夹存储路径
     cv::Mat Region;       // 图片
 };
 
@@ -850,7 +865,10 @@ struct regionInfor{
     QString path;       // 完整路径
 };
 
-
+struct SaveFile{
+    cv::Mat region;
+    QString path;
+};
 
 template<typename Key, typename Value>
 class ThreadSafeUnorderedMap {

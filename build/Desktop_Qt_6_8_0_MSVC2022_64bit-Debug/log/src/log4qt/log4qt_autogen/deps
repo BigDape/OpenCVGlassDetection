@@ -287,4 +287,4 @@ log4qt_autogen/timestamp: \
 	D:/v0.0.2/hivision/log/src/log4qt/writerappender.h \
 	D:/v0.0.2/hivision/log/src/log4qt/xmllayout.cpp \
 	D:/v0.0.2/hivision/log/src/log4qt/xmllayout.h \
-	C:/Program\ Files/CMake/bin/cmake.exe
+	C:/Qt/Tools/CMake_64/bin/cmake.exe
