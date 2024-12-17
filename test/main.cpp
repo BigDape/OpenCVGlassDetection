@@ -5,6 +5,13 @@
 
 typedef HSAlgorithmNamespace::HSAlgorithmInterface* (*createAlgorithmObjectFunc1)();
 
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <math.h>
+
+using namespace std;
+using namespace cv;
+
 int main() {
 #ifdef false
     // 读取图像
@@ -56,12 +63,27 @@ int main() {
         algorithmPtr = createFunc();
     }
     std::cout<<"test 1233"<<std::endl;
-    cv::Mat image1 = cv::imread("D:/testopencv/part1.jpg");
+    cv::Mat image1 = cv::imread("D:/testopencv/reflectionDarkImage6.jpg");
+
+    cv::Rect rect1(8278,480,274,774);
+    cv::Mat model1 = image1(rect1);
+
+    cv::Rect rect2(8968,1072,972,1292);
+    cv::Mat model2 = image1(rect2);
+
+    QString path1 = "D:/testopencv/glass/model1.jpg";
+    cv::imwrite(path1.toStdString(), model1);
+
+    QString path2 = "D:/testopencv/glass/model2.jpg";
+    cv::imwrite(path2.toStdString(), model2);
+
     qDebug()<<"image1 sucess";
     cv::Mat grayImage;
     cv::cvtColor(image1, grayImage, cv::COLOR_BGR2GRAY);
 
     algorithmPtr->TestExecu(grayImage);
+
+
     } catch(...) {
         qDebug() << "main test An unknown error occurred.";
         // 获取当前的异常信息

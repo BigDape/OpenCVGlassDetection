@@ -5,33 +5,11 @@
 #include "../HsListener.h"
 #include "../Global.h"
 
-typedef HSJsoncppNamespace::HSJsoncppInterface* (*createJsoncppObjectFunc2)();
-
 Calibrate::Calibrate(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Calibrate)
 {
     ui->setupUi(this);
-    //
-    // 动态加载jsoncpp组件
-    //
-    if (jsoncppPtr==nullptr) {
-        QString exePath = QCoreApplication::applicationDirPath();
-        QString dllPath = exePath + "/../jsoncpp/jsoncpp.dll";
-        jsoncppDllHandle = LoadLibrary(dllPath.toStdWString().c_str());
-        if (!jsoncppDllHandle) {
-            qFatal() << "Failed to load DLL. Error code: " << GetLastError();
-        }
-        // 获取创建数据库对象的函数指针
-        createJsoncppObjectFunc2 createFunc = (createJsoncppObjectFunc2)GetProcAddress(jsoncppDllHandle, "createJsoncppObject");
-        if (!createFunc) {
-            qDebug() << "Calibrate: Failed to get function pointer. Error code: " << GetLastError() ;
-            FreeLibrary(jsoncppDllHandle);
-        } else {
-            qDebug() << "Calibrate :Success to get  jsoncppDllHandle function pointer. ";
-        }
-        jsoncppPtr = createFunc();
-    }
     //
     // 加载json文件内的数据，若没有则新建，若有则加载
     //
@@ -53,8 +31,8 @@ void Calibrate::InitCalibrateUI()
     QFile inifile(CalibrateJsonPath);
     if (!inifile.exists()) {
         //写入默认json文件
-        if (jsoncppPtr != nullptr ){
-            jsoncppPtr->writeEmptyCalibrateToJson(CalibrateJsonPath);
+        if (PARAM.jsoncppPtr != nullptr ){
+            PARAM.jsoncppPtr->writeEmptyCalibrateToJson(CalibrateJsonPath);
             ui->camera0topPixLE->setText("0");
             ui->camera0bottomPixLE->setText("0");
             ui->camera0leftPixLE->setText("0");
@@ -71,14 +49,12 @@ void Calibrate::InitCalibrateUI()
             crop.args.push_back(arg2);
             crop.args.push_back(arg3);
             PARAM.crops = crop;
-        } else {
-            qDebug()<<"error: jsoncppPtr==nullptr";
         }
     } else {
-        if (jsoncppPtr!=nullptr){
+        if (PARAM.jsoncppPtr!=nullptr){
             CropArgPackage crop;
             crop.cameracount = 2;
-            jsoncppPtr->readCalibrateFromJson(CalibrateJsonPath,crop);
+            PARAM.jsoncppPtr->readCalibrateFromJson(CalibrateJsonPath,crop);
             if (crop.args.size()==4) {
                 ui->camera0topPixLE->setText(QString::number(crop.args[0].topPixCrop));
                 ui->camera0bottomPixLE->setText(QString::number(crop.args[0].bottomPixCrop));
@@ -91,12 +67,8 @@ void Calibrate::InitCalibrateUI()
                 PARAM.crops = crop;
                 return;
             }
-        } else {
-            qDebug()<<"error: jsoncppPtr==nullptr";
         }
     }
-    // QString message = tr("Not find in RecipeCB Items, now create new file. ");
-    // INFOMATION.criticalMessageBox(this,message);
 }
 
 void Calibrate::SlotSaveClicked()
@@ -123,8 +95,8 @@ void Calibrate::SlotSaveClicked()
         INFOMATION.criticalMessageBox(this,message);
         return;
     }
-    if (jsoncppPtr!=nullptr) {
-        jsoncppPtr->writeCalibrateToJson(CalibrateJsonPath,crop);
+    if (PARAM.jsoncppPtr!=nullptr) {
+        PARAM.jsoncppPtr->writeCalibrateToJson(CalibrateJsonPath,crop);
         PARAM.crops = crop;
         QString message = tr("Save Calibrate Json File success.");
         INFOMATION.informationMessageBox(this,"",message);
@@ -137,9 +109,9 @@ void Calibrate::SlotSaveClicked()
 
 void Calibrate::SlotGetClicked()
 {
-    if (jsoncppPtr!=nullptr){
+    if (PARAM.jsoncppPtr!=nullptr){
         CropArgPackage crop;
-        jsoncppPtr->readCalibrateFromJson(CalibrateJsonPath,crop);
+        PARAM.jsoncppPtr->readCalibrateFromJson(CalibrateJsonPath,crop);
         if (crop.args.size()==4) {
             ui->camera0topPixLE->setText(QString::number(crop.args[0].topPixCrop));
             ui->camera0bottomPixLE->setText(QString::number(crop.args[0].bottomPixCrop));

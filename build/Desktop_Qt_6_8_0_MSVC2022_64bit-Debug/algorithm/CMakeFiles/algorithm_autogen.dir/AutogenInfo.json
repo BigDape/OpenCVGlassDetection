@@ -102,21 +102,39 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/v0.0.2/hivision/algorithm/ClassifyMachine.h",
+			"MU",
+			"EWIEGA46WW/moc_ClassifyMachine.cpp",
+			null
+		],
+		[
 			"D:/v0.0.2/hivision/algorithm/HSAlgorithmInterface.h",
 			"MU",
 			"EWIEGA46WW/moc_HSAlgorithmInterface.cpp",
 			null
 		],
 		[
-			"D:/v0.0.2/hivision/algorithm/algorithm.h",
+			"D:/v0.0.2/hivision/algorithm/MatchTemplate.h",
 			"MU",
-			"EWIEGA46WW/moc_algorithm.cpp",
+			"EWIEGA46WW/moc_MatchTemplate.cpp",
 			null
 		],
 		[
-			"D:/v0.0.2/hivision/algorithm/processtile.h",
+			"D:/v0.0.2/hivision/algorithm/OpenCVAlgorithm.h",
 			"MU",
-			"EWIEGA46WW/moc_processtile.cpp",
+			"EWIEGA46WW/moc_OpenCVAlgorithm.cpp",
+			null
+		],
+		[
+			"D:/v0.0.2/hivision/algorithm/RoundHole.h",
+			"MU",
+			"EWIEGA46WW/moc_RoundHole.cpp",
+			null
+		],
+		[
+			"D:/v0.0.2/hivision/algorithm/Yolov8DL.h",
+			"MU",
+			"EWIEGA46WW/moc_Yolov8DL.cpp",
 			null
 		]
 	],
@@ -176,9 +194,12 @@
 	"SETTINGS_FILE" : "D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/algorithm/CMakeFiles/algorithm_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/v0.0.2/hivision/algorithm/ClassifyMachine.cpp", "MU", null ],
 		[ "D:/v0.0.2/hivision/algorithm/HSAlgorithmInterface.cpp", "MU", null ],
-		[ "D:/v0.0.2/hivision/algorithm/algorithm.cpp", "MU", null ],
-		[ "D:/v0.0.2/hivision/algorithm/processtile.cpp", "MU", null ]
+		[ "D:/v0.0.2/hivision/algorithm/MatchTemplate.cpp", "MU", null ],
+		[ "D:/v0.0.2/hivision/algorithm/OpenCVAlgorithm.cpp", "MU", null ],
+		[ "D:/v0.0.2/hivision/algorithm/RoundHole.cpp", "MU", null ],
+		[ "D:/v0.0.2/hivision/algorithm/Yolov8DL.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

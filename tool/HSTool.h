@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDateTime>
+#include <QDir>
 #include <mutex>
 #include <vector>
 #include <opencv2/opencv.hpp>
@@ -10,41 +11,53 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
+//////////////////文件保存路径//////////////////////
+///
+#define HISTORYPATH  "D:/HVCache/history/"
+#define CAMERAPATH  "D:/HVCache/camera/"
+#define CACHEPATH  "D:/HVCache/cache/"
+#define LIGHTPATH "D:/HVCache/light/"
+
 /**
  * @brief The CV_GLASSPART enum 图片属于玻璃的什么部分
  */
 enum CV_GLASSPART {
-    UNKNOW = 0,
-    HEAD,
-    MIDDLE,
-    TAIL,
-    EMPTY,
+    UNKNOW = 0,     /* 未知部分，用于初始化 */
+    HEAD = 1,       /* 玻璃头部 */
+    MIDDLE = 2,     /* 玻璃中部 */
+    TAIL = 3,       /* 玻璃尾部 */
+    EMPTY = 4,      /* 空白部分 */
+    WholeGlass = 5, /* 整块玻璃 */
 };
-
 
 /**
  * @brief The FrameImage class main模块获取camera模块数据
  */
 struct FrameImage {
-    std::vector<cv::Mat> buffers;   // 每个场对应图片
-    int fieldnumberset;             // 场的数量
-    int framecount;                 // 当前帧
+    std::vector<cv::Mat> buffers;   /* 每个场对应图片 */
+    int fieldnumberset;             /* 光场的数量 */
+    int framecount;                 /* 当前帧数 */
     FrameImage():fieldnumberset(0),framecount(0){}
 };
 
 
-//系统执行的状态
+/**
+ * @brief The SYSTEMSTATUS enum 系统执行状态
+ */
 enum SYSTEMSTATUS{
-    INIT = 0,       // 初始化状态
-    SYANDBY,        // 待机状态
-    OFFLINE,        // 离线状态
-    STOP,           // 停止状态
-    RUNNING,        // 运行状态
-    ABNORMAL,       // 异常状态
-    EXIT,           //  退出状态
-    RESERVE,        // 保留状态
+    INIT = 0,           /* 初始化状态 */
+    SYANDBY = 1,        /* 待机状态 */
+    OFFLINE = 2,        /* 离线状态 */
+    STOP = 3,           /* 停止状态 */
+    RUNNING = 4,        /* 运行状态 */
+    ABNORMAL = 5,       /* 异常状态 */
+    EXIT = 6,           /* 退出状态 */
+    RESERVE = 7,        /* 保留状态 */
 };
 
+/**
+ * @brief The SignalControl class 设置参数
+ */
 struct SignalControl {
 /////////////////////////////////////////////////////////
     /**
@@ -315,49 +328,116 @@ struct SignalControl {
     FrameSignalOutput(0){}
 };
 
-//数据统计信息
+/**
+ * @brief The GlassDataBaseInfo2 class 数据统计信息
+ */
 struct GlassDataBaseInfo2{
-    int id;              // 玻璃的id，唯一的主键
+    int id;                 // 玻璃的id，唯一的主键
     QString time;           // 时间
     QString OKorNG;         // 整体情况OK或者NG
     QString sizeOKorNG;     // 尺寸OK或者NG
     double length;          // 玻璃的长度
     double width;           // 玻璃的宽度
-    double duijiaoxian1;    // 玻璃的对角线1
-    double duijiaoxian2;    // 玻璃的对角线2
-    int defectNumber;       // 玻璃的缺陷数量
     QString defectOKorNG;   // 缺陷OK或者NG
-    int huashanNumber;      // 划伤数量
+    int defectNumber;       // 玻璃的缺陷数量
+    int huahenNumber;       // 划痕数量
+
+    int yiwuNumber;         // 异物数量
+    int AyiwuNumber;        // A区异物数量
+    int ByiwuNumber;        // B区异物数量
+
     int qipaoNumber;        // 气泡数量
-    int jieshiNumber;       // 结石数量
-    int benbianNumber;      // 崩边数量
-    int zanwuNumber;        // 脏污数量
+    int sqipaoNumber;       // 小气泡数量
+
+    int madianNumber;       // 麻点数量
+    int A2madianNumber;     // A区二级麻点数量
+    int A3madianNumber;     // A区三级麻点数量
+    int A10mmmadianNumber;  // A区10mm范围内麻点数量
+    int B2madianNumber;     // B区二级麻点数量
+    int B3madianNumber;     // B区三级麻点数量
+    int B10mmmadianNumber;  // B区10mm麻点数量
+    int siyin30mm2madianNumber; //丝印30mm附近2级麻点
+    int siyin30mm3madianNumber; //丝印30mm附近3级麻点
+
+    int shuiyinNumber;      // 水印数量
+    int AshuiyinNumber;     // A区水印数量
+    int B5mmshuiyinNumber;  // B区5mm范围内的水印数量
+
+    int youmobuliangNumber; // 油墨不良数量
+    int A3youmobuliangNumber; // A区3级油墨不良的数量
+    int A2youmobuliangNumber; // A区2级油墨不良数量
+    int A10mm2youmobuliangNumber; //A区10mm范围内2级油墨不良数量
+    int A10mm3youmobuliangNumber; // A区10mm范围内3级油墨不良数量
+    int B3youmobuliangNumber; // B区3级油墨不良数量
+    int B2youmobuliangNumber; // B区2级油墨不良数量
+    int B10mm2youmobuliangNumber; //B区10mm范围内2级油墨不良数量
+    int B10mm3youmobuliangNumber; // B区10mm范围内3级油墨不良数量
+    int siyin30mm3youmobuliangNumber; // 丝印30mm范围内3级点油墨不良数量
+    int siyin30mm2youmobuliangNumber; // 丝印30mm范围内2级点油墨不良数量
+
+    int juchibianNumber;    // 锯齿边数量
+    int juchibianAllLength;  // 锯齿边总长度
+    int siyinquexianNumber; // 丝印缺陷数量
+    int guahuaNumber;       // 刮花数量
+    int AguahuaNumber;      // A区刮花数量
     int liewenNumber;       // 裂纹数量
-    int qitaNumber;         // 其它数量
-    GlassDataBaseInfo2(){
-        id =0;
-        time = "0";
-        OKorNG = "OK";
-        sizeOKorNG = "OK";
-        length =0;
-        width =0;
-        duijiaoxian1 = 0;
-        duijiaoxian2 =0;
-        defectNumber = 0;
-        defectOKorNG = "OK";
-        huashanNumber = 0;
-        qipaoNumber = 0;
-        jieshiNumber = 0;
-        benbianNumber = 0;
-        zanwuNumber = 0;
-        liewenNumber = 0;
-        qitaNumber = 0;
-    }
+    int benbianjiaoNumber;   //崩边角数量
+    QString historyPath;    // 历史图片信息
+    GlassDataBaseInfo2()
+        :id(0)
+        , time("")
+        , OKorNG("OK")
+        , sizeOKorNG("OK")
+        , length(0.0)
+        , width(0.0)
+        , defectOKorNG("OK")
+        , defectNumber(0)
+        , huahenNumber(0)
+        , yiwuNumber(0)
+        , AyiwuNumber(0)
+        , ByiwuNumber(0)
+        , qipaoNumber(0)
+        , sqipaoNumber(0)
+        , madianNumber(0)
+        , A2madianNumber(0)
+        , A3madianNumber(0)
+        , A10mmmadianNumber(0)
+        , B2madianNumber(0)
+        , B3madianNumber(0)
+        , B10mmmadianNumber(0)
+        , siyin30mm2madianNumber(0)
+        , siyin30mm3madianNumber(0)
+        , shuiyinNumber(0)
+        , AshuiyinNumber(0)
+        , B5mmshuiyinNumber(0)
+        , youmobuliangNumber(0)
+        , A3youmobuliangNumber(0)
+        , A2youmobuliangNumber(0)
+        , A10mm2youmobuliangNumber(0)
+        , A10mm3youmobuliangNumber(0)
+        , B3youmobuliangNumber(0)
+        , B2youmobuliangNumber(0)
+        , B10mm2youmobuliangNumber(0)
+        , B10mm3youmobuliangNumber(0)
+        , siyin30mm3youmobuliangNumber(0)
+        , siyin30mm2youmobuliangNumber(0)
+        , juchibianNumber(0)
+        , juchibianAllLength(0)
+        , siyinquexianNumber(0)
+        , guahuaNumber(0)
+        , AguahuaNumber(0)
+        , liewenNumber(0)
+        , benbianjiaoNumber(0)
+        , historyPath(""){}
 };
-// 孔洞、门夹、丝印信息
+
+
+/**
+ * @brief The GlassSizeInfo2 class 孔洞、门夹、丝印信息
+ */
 struct GlassSizeInfo2{
     size_t id;              // 主键id,玻璃尺寸信息的顺序id
-    int sizeno;             // 孔、门夹、丝印排列顺序
+    int sizeID;             // 孔、门夹、丝印排列顺序
     QString time;           // 时间
     QString sizeType;       // 类型
     QString sizeLevel;      // 等级
@@ -365,38 +445,100 @@ struct GlassSizeInfo2{
     double widthY;          // 宽Y(mm)
     double marginsX;        // 边距X(mm)
     double marginsY;        // 边距Y(mm)
+    int Pixlength;          // 门夹长度
+    int PixWidth;            // 门夹宽度
+    int PixMarginsX;         // 门夹边距X
+    int PixMarginsY;         // 门夹边距Y
     size_t glassid;         // 外键id,玻璃的id
-    QString imagePath;      // 缺陷图片的路径
+    QString imagePath0;     // 透射亮场缺陷图片的路径
+    QString imagePath1;     // 反射亮场缺陷图片的路径
+    QString imagePath2;     // 反射暗场缺陷图片的路径
+    cv::Mat Region0;         // 图片
+    cv::Mat Region1;         // 图片
+    cv::Mat Region2;         // 图片
+    cv::Rect rect;           // 坐标信息
+    GlassSizeInfo2():id(0),
+        sizeID(0),
+        time(""),
+        sizeType(""),
+        sizeLevel("OK"),
+        lengthX(0.0),
+        widthY(0.0),
+        marginsX(0.0),
+        marginsY(0.0),
+        Pixlength(0),
+        PixWidth(0),
+        PixMarginsX(0),
+        PixMarginsY(0),
+        glassid(0),
+        imagePath0(""),
+        imagePath1(""),
+        imagePath2(""){}
 };
-//单个缺陷信息
+
+/**
+ * @brief The glassRegion enum 缺陷所处位置
+ */
+enum glassRegion{
+    EDGE = 1,
+    FACE = 2,
+};
+
+/**
+ * @brief The GlassDefect2 class 单个缺陷信息
+ */
 struct GlassDefect2{
-    size_t id;              // 主键id,在所有缺陷中的顺序
+    int id;                 // 主键id,在所有缺陷中的顺序
     int defectId;           // 缺陷id，在一块玻璃中缺陷的顺序
     QString time;           // 缺陷检测时间
     QString defectType;     // 缺陷类型
     QString defectLevel;    // 缺陷等级，OK NG
+    int pixX;               // X坐标的像素值
+    int pixY;               // Y坐标的像素值
+    int pixLength;          // 长度的像素值
+    int pixWidth;           // 宽度的像素值
+    int pixArea;            // 面积的像素值
     double x;               // 缺陷在玻璃上的X坐标
     double y;               // 缺陷在玻璃上的Y坐标
     double length;          // 缺陷的长度
     double width;           // 缺陷的宽度
     double area;            // 缺陷面积大小
     size_t glassid;         // 外键id,玻璃的id
-    QString imagePath;      // 缺陷图片的路径
+    QString imagePath0;     // 透射亮场缺陷图片的路径
+    QString imagePath1;     // 反射亮场缺陷图片的路径
+    QString imagePath2;     // 反射暗场缺陷图片的路径
+    cv::Mat region0;
+    cv::Mat region1;
+    cv::Mat region2;
+    cv::Rect rect;          // 缺陷在玻璃上的位置
+    int typeID;             // 分类器的结果id
+    glassRegion gregion;    // 缺陷在边部还是面部
     GlassDefect2():id(0),
-            defectId(0),
-        time(""),
-        defectType(""),
-        defectLevel(""),
-        x(0),
-        y(0),
-        length(0),
-        width(0),
-        area(0),
-        glassid(0),
-        imagePath(""){}
+                defectId(0),
+                time(""),
+                defectType(""),
+                defectLevel(""),
+                pixX(0),
+                pixY(0),
+                pixLength(0),
+                pixWidth(0),
+                pixArea(0),
+                x(0),
+                y(0),
+                length(0),
+                width(0),
+                area(0),
+                glassid(0),
+                imagePath0(""),
+                imagePath1(""),
+                imagePath2(""),
+                typeID(0){}
 
 };
 
+/**
+ * @brief The GlassSummary class 概述信息
+ */
 struct GlassSummary{
     int id; // 主键id，标注不同的天数
     QString time;   // 刷新表格时的时间
@@ -422,311 +564,9 @@ struct GlassSummary{
     }
 };
 
-//单个缺陷信息
-struct GlassDefect{
-    size_t id;              // 主键id,在所有缺陷中的顺序
-    int defectId;           // 缺陷id，在一块玻璃中缺陷的顺序
-    QString time;           // 缺陷检测时间
-    QString defectType;     // 缺陷类型
-    QString defectLevel;    // 缺陷等级，OK NG
-    double x;               // 缺陷在玻璃上的X坐标
-    double y;               // 缺陷在玻璃上的Y坐标
-    double length;          // 缺陷的长度
-    double width;           // 缺陷的宽度
-    double area;            // 缺陷面积大小
-    size_t glassid;         // 外键id,玻璃的id
-    QString imagePath1;      // 光场1缺陷图片的路径
-    QString imagePath2;      // 光场2缺陷图片的路径
-    QString imagePath3;      // 光场3缺陷图片的路径
-};
-
-// 孔洞、门夹、丝印信息
-struct GlassSize{
-    size_t id;              // 主键id,玻璃尺寸信息的顺序id
-    int sizeID;             // 孔、门夹、丝印排列顺序
-    QString time;           // 时间
-    QString sizeType;       // 类型
-    QString sizeLevel;      // 等级
-    double lengthX;         // 长X(mm)
-    double widthY;          // 宽Y(mm)
-    double marginsX;        // 边距X(mm)
-    double marginsY;        // 边距Y(mm)
-    size_t glassid;         // 外键id,玻璃的id
-    QString imagePath;      // 缺陷图片的路径
-};
-
-//数据统计信息
-struct GlassDataBaseInfo{
-    int id;              // 玻璃的id，唯一的主键
-    QString time;           // 时间
-    QString OKorNG;         // 整体情况OK或者NG
-    QString sizeOKorNG;     // 尺寸OK或者NG
-    double length;          // 玻璃的长度
-    double width;           // 玻璃的宽度
-    double duijiaoxian1;    // 玻璃的对角线1
-    double duijiaoxian2;    // 玻璃的对角线2
-    int defectNumber;       // 玻璃的缺陷数量
-    QString defectOKorNG;   // 缺陷OK或者NG
-    int huashanNumber;      // 划伤数量
-    int qipaoNumber;        // 气泡数量
-    int jieshiNumber;       // 结石数量
-    int benbianNumber;      // 崩边数量
-    int zanwuNumber;        // 脏污数量
-    int liewenNumber;       // 裂纹数量
-    int qitaNumber;         // 其它数量
-    GlassDataBaseInfo(){
-        id =0;
-        time = "0";
-        OKorNG = "OK";
-        sizeOKorNG = "OK";
-        length =0;
-        width =0;
-        duijiaoxian1 = 0;
-        duijiaoxian2 =0;
-        defectNumber = 0;
-        defectOKorNG = "OK";
-        huashanNumber = 0;
-        qipaoNumber = 0;
-        jieshiNumber = 0;
-        benbianNumber = 0;
-        zanwuNumber = 0;
-        liewenNumber = 0;
-        qitaNumber = 0;
-    }
-    ~GlassDataBaseInfo(){}
-};
-// 缺陷统计表格统计结果
-struct GlassDefectInfo{
-    std::vector<GlassDefect> defectdatas; //多行数据
-    int defectCount;//缺陷数目
-};
-// 尺寸统计表格统计结果
-struct GlassSizeInfo{
-    std::vector<GlassSize> sizedatas; // 多行尺寸数据
-    int sizeCount; //尺寸数据数目
-    QString OutLinePath;    // 轮廓图片的路径
-};
-
-//数据总的统计结果
-struct SummaryResult {
-    int GlassNum;       //玻璃总数
-    int ngNum;          //NG数目
-    int okNum;          //OK数目
-    double suceessRate; //合格率
-    int sorted;         //已分拣
-    int unsorted;       //待分检
-    int exceptNum;      //异常数
-    bool currentOKorNG; //当前玻璃OK或者NG
-    bool currentSort;   //当前玻璃是否分拣
-    SummaryResult():GlassNum(0),
-        ngNum(0),
-        okNum(0),
-        suceessRate(0.0),
-        sorted(0),
-        unsorted(0),
-        exceptNum(0),
-        currentOKorNG(false),
-        currentSort(false){}
-};
-
-struct DefectData{
-    int DefectID; //序号
-    QString Time; //时间
-    QString DefectType; //类型
-    QString DetectLeve; //等级
-    double X; //坐标X
-    double Y; //坐标Y
-    double Lenth; //长
-    double Width; //宽
-    double Area; //区域
-};
-
-struct SizeData{
-    int HolesID;// 序号
-    QString Time;// 时间
-    QString Type;// 类型
-    double HolesHeight;// 长X
-    double HolesWidth;// 宽Y
-    double DistanceHorizontal;// 边距X
-    double DistanceVertical;// 边距Y
-    QString HolesLeve;//等级
-};
-
-//单个孔/门夹/丝印
-struct HoleData {
-    QString HolesID;
-    QString Time;
-    QString Type;
-    QString HolesLeve;
-    double DistanceHorizontal;
-    double DistanceVertical;
-    double HolesWidth;
-    double HolesHeight;
-    QString ImageHolesPath;
-};
-//单块玻璃写入json文件中的数据
-struct HoleResult {
-    int GlassID;
-    std::vector<HoleData> holes;
-    double GlassLength;
-    double GlassWidth;
-    double GlassAngle;
-    QString ImageHolesLinePath;
-    QString jsonFullPath; //json文件地址
-};
-
-//单个缺陷
-struct DefeteData{
-    QString Time;
-    int DefectID;
-    QString DefectType;
-    QString DetectLeve;
-    double X;
-    double Y;
-    double Lenth;
-    double Width;
-    double Area;
-    QString ImageNGPath;
-};
-//单块玻璃写入json文件中的缺陷数据
-struct DefeteResult{
-    int GlassID;
-    std::vector<DefeteData> defetes;
-    double GlassWidth;
-    double GlassLength;
-    double GlassAngle;
-    QString jsonFullPath; //json文件地址
-    QDateTime currentTime;
-};
-
-//工单：光源控制器参数
-struct LightControllerParameters{
-    int signalChange;                       //信号切换
-    int lightField_1_LuminescenceTime;      //光场1发光时间
-    int lightField_1_DelayTime;             //光场1延时时间
-    int lightField_2_LuminescenceTime;      //光场2发光时间
-    int lightField_2_DelayTime;             //光场2延时时间
-    int lightField_3_LuminescenceTime;      //光场3发光时间
-    int lightField_3_DelayTime;             //光场3延时时间
-    int lightField_4_LuminescenceTime;      //光场4发光时间
-    int lightField_4_DelayTime;             //光场4延时时间
-    int lightField_5_LuminescenceTime;      //光场5发光时间
-    int lightField_5_DelayTime;             //光场5延时时间
-    int lightField_6_LuminescenceTime;      //光场6发光时间
-    int lightField_6_DelayTime;             //光场6延时时间
-    int lightField_7_LuminescenceTime;      //光场7发光时间
-    int lightField_7_DelayTime;             //光场7延时时间
-    int lightField_8_LuminescenceTime;      //光场8发光时间
-    int lightField_8_DelayTime;             //光场8延时时间
-    int lightField_9_LuminescenceTime;      //光场9发光时间
-    int lightField_9_DelayTime;             //光场9延时时间
-    int lightField_10_LuminescenceTime;      //光场10发光时间
-    int lightField_10_DelayTime;             //光场10延时时间
-    int lightField_11_LuminescenceTime;      //光场11发光时间
-    int lightField_11_DelayTime;             //光场11延时时间
-    int lightField_12_LuminescenceTime;      //光场12发光时间
-    int lightField_12_DelayTime;             //光场12延时时间
-    int horizontalDarkFieldSelectionReg;     //横向暗场选择寄存器
-    int CameraLightCtrl;                     //相机光场控制
-    int LightSignalSlection;                //行信号源选择
-    int LightField;                         //光场数量
-};
-//工单：尺寸测量
-struct DimensionalMeasurementParameters{
-    double YB;  //Y方向B
-    double YK;  //Y方向精度K
-    double width;   //宽度
-    double widthDeviation; //宽度误差
-    double diagonal1; //对角线1
-    double diagonal1Deviation; //对角线1误差
-    double diagonal2; //对角线1
-    double diagonal2Deviation; //对角线1误差
-    int enableMeasure;  //尺寸测量启用
-    double camera1PixAccury;    //相机1像素精度
-    double camera1K;            //相机1像素k值
-    double camera2CompareCamera1; //相机2与相机1精度比值
-    double camera2K;                //相机2像素K值
-    double length;                  //长度
-    double lengthDeviation;         //长度误差
-};
-//工单：控制器系统参数
-struct ControllerSystemParameters {
-    int PixAccury;                          //像素精度
-    int PhotoelectricSignalPulseFiltering;  //光电信号脉冲滤波
-    int PhotoelectricSignalCameraDistance;  //光电相机距离
-    int InnerLineFrequency;                 //内部行频
-    int FrameSignalDuration;                //帧信号持续时间
-    int PhotMode;                           //拍照模式
-    int PhotoEndDelayLine;                  //拍照结束延时行数
-    int EnableModuleOn;                     //模块使能信号
-    int CameraFrameSignalStartDelayLine;    //相机帧信号出发延时行数
-    int CameraPhotoLine;                    //相机拍照函数
-    int CameraStartPlusDuration;            //相机触发脉冲持续时间
-};
-//工单：相机参数
-struct CameraParameters{
-    int FrameCount;         //帧次
-    int PhotoLineCount;     //拍照行数
-    int ExposureTime;       //曝光时间
-    int CameraGain;         //相机增益
-};
-//工单：编码器参数
-struct CoderParameters{
-    int PressureWheelACount;  //压轮编码器A计数
-    int PressureWheelBCount;  //压轮编码器B计数
-    int PressureWheel4FrequencyCount; //压轮编码器四倍频计数
-    int PressureWheelK;             //压轮编码器系数
-    int ExceptOnePixAccury;         //期望单个像素精度
-    int EveryLineToCoderCount;      //每行对应的编码计数
-    int Coder4FrequencyCount;       //编码器4倍频计数
-    int CoderUnitScaleToDistance;   //编码器单位刻度对应距离
-    int CoderUnitTimePlusCount;     //编码器单位时间脉冲计数
-    int CoderTriggerLineCount;      //编码器触发行计数
-    int CoderCount;                 //编码器计数
-    int CoderCountTime;             //编码器计数时间
-    int CoderCountEndFlag;          //编码器计数结束标记
-    int CoderCircleCount;           //编码器装数
-    int CoderPulseFiltering;        //编码器脉冲滤波
-    int CoderChannel;               //编码通道
-    int RollerCircumference;        //辊道周长
-    int RollerMaxToLine;            //辊道最大速度对应行频
-};
-//工单：缺陷检测参数
-struct DefectDetectionCoderParameters{
-    int Camera12PixOffset;          //12相机像素偏差
-    int Camera23PixOffset;         //23相机像素偏差
-    int Camera24PixOffset;          //24相机像素偏差
-    int SiyinToRollerDistance;      //丝印离辊道距离
-    int GlassThickness;             //玻璃厚度
-    int EnableDefect;               //缺陷检测启用
-};
-//工单：缺陷面积阈值
-struct DefectAreaThresholdParameters{
-    int HuashanAreaThreahold;        //划痕面积阈值
-    int QijieAreaThreahold;         //气节面积阈值
-    int ZanwuAreaThreahold;         //脏污面积阈值
-};
-//工单：自定义参数
-struct CustomParameters{
-    int SaveOrigin;                 //保存原图
-    int SaveImage;                  //保存整图
-    int SaveDefectIamge;            //保存缺检图
-    int SaveCorpImage;              //保存裁剪图像
-    int EnableDimensionalMeasurement; //尺寸测量启用
-    int EnableDefect;               //缺陷检测启用
-};
-//工单
-struct WorkOrder{
-    LightControllerParameters LCParam;          //光电控制器参数
-    DimensionalMeasurementParameters DMParam;   //尺寸测量参数
-    ControllerSystemParameters CSParam;         //控制器系统参数
-    std::vector<CameraParameters> CVecParam;       //相机参数
-    CoderParameters CoderParam;                 //控制器参数
-    DefectDetectionCoderParameters DDCParam;    //缺陷检测参数
-    DefectAreaThresholdParameters DATParam;     //缺陷面积阈值参数
-    CustomParameters CTParam;                   //自定义参数
-};
-// 图像裁剪参数
+/**
+ * @brief The CameraCropArg class 单个相机裁剪参数
+ */
 struct CameraCropArg{
     uint topPixCrop;        //图像上边缘裁剪多少像元
     uint bottomPixCrop;     //图像下边缘裁剪多少像元
@@ -738,74 +578,173 @@ struct CameraCropArg{
         leftPixCrop(0),
         rightPixCrop(0){}
 };
-// 图像裁剪参数包
+
+/**
+ * @brief The CropArgPackage class 图像裁剪参数包
+ */
 struct CropArgPackage{
     int cameracount ; //多少相机多少图片
     std::vector<CameraCropArg> args; //裁剪像元
 };
 
-// 单个缺陷数据
-struct NewDefectUnitData{
-    int id;              // 缺陷id
-    int type;            // 缺陷种类
-    QString time;        // 时间
-    double pixLength;   // 长度像元数
-    double pixWidth;    // 宽度像元数
-    double pixX;        // 像元X
-    double pixY;        // 像元Y
-    double pixArea;     // 面积
-    QString imagePath;  // 小图存储的地址
-    NewDefectUnitData():
-        id(0),
-        type(0),
-        time(""),
-        pixLength(0),
-        pixWidth(0),
-        pixX(0),
-        pixY(0),
-        pixArea(0),
-        imagePath(""){}
-
-};
-
-enum SizeType{
-    DoorClam = 0,
-    Hole,
-    Silkscreen,
-    Label,
-};
-
 /**
- * @brief The DoorClamp class Result
+ * @brief The NewGlassResult class 算法执行后的每帧结果
  */
-struct DoorClampAndHole {
-    SizeType type;        // 类型
-    int PixHeight;        // 门夹长度
-    int PixWidth;         // 门夹宽度
-    int MarginsX;         // 门夹边距X
-    int MarginsY;         // 门夹边距Y
-    QString Path;         // 门夹存储路径
-    cv::Mat Region;       // 图片
-};
-
 struct NewGlassResult{
     bool isEmpty;
-    int currentFrameCount;                  // 当前是第几帧
-    std::vector<NewDefectUnitData> res;     // 每帧结果数据
-    std::vector<DoorClampAndHole> sizeRes;  // 尺寸信息
-    double pixGlassLength;                  // 这一帧长度
-    double pixGlassWidth;                   // 这一帧宽度
-    QString FaceQimagePath;                 // 图像保存
-    cv::Mat glassRegion;                    // 玻璃图像
-    CV_GLASSPART part;                      // 玻璃的哪一部分
+    int currentFrameCount;                   // 当前是第几帧
+    std::vector<GlassDefect2> defectRes;     // 每帧结果数据
+    std::vector<GlassSizeInfo2> sizeRes;     // 尺寸信息
+    double pixGlassLength;                   // 这一帧长度
+    double pixGlassWidth;                    // 这一帧宽度
+    QString FaceQimagePath;                  // 图像保存
+    cv::Mat glassRegion;                     // 玻璃图像
+    CV_GLASSPART part;                       // 玻璃的哪一部分
+    int divingX;                             // AB区分割坐标
+    bool AisLeft;                            // A区在左边还是右边
     NewGlassResult():isEmpty(true),
                     currentFrameCount(0),
                     pixGlassLength(0),
                     pixGlassWidth(0),
                     FaceQimagePath(""),
-                    part(CV_GLASSPART::UNKNOW){}
+                    part(CV_GLASSPART::UNKNOW),
+        divingX(0),
+        AisLeft(true){}
 };
 
+/**
+ * @brief The regionInfor class 算法内部所用的检出缺陷信息
+ */
+struct regionInfor{
+    int id;             // 序列id
+    cv::Mat region;     // 区域
+    QString path;       // 完整路径
+    cv::Rect rect;      // 坐标信息
+};
+
+/**
+ * @brief The ClassifyParam class 传统分类器输入参数
+ */
+struct ClassifyParam{
+    cv::Rect regionRect;
+    cv::Mat region;
+};
+
+/**
+ * @brief The GlassResult class 一片玻璃显示信息参数包
+ */
+struct GlassResult {
+    int glassID;                                                            /* 玻璃的主键ID */
+    cv::Mat glassRegion0;                                                    /* 显示玻璃的区域0 */
+    cv::Mat glassRegion1;                                                    /* 显示玻璃的区域1 */
+    cv::Mat glassRegion2;                                                    /* 显示玻璃的区域2 */
+    GlassDataBaseInfo2 glassStatistics;                                     /* 玻璃的统计信息 */
+    std::vector<GlassDefect2> glassDefects;                                 /* 一片玻璃的所有缺陷信息 */
+    std::vector<GlassSizeInfo2> glassSize;                                  /* 尺寸信息 */
+    GlassSummary glassSummary;                                              /* 概述信息 */
+};
+
+/**
+ * @brief The ConnectedComponent class 合并元素的结构体
+ */
+struct ConnectedComponent {
+    cv::Rect rect;
+    int area;
+    int x;
+    int y;
+};
+
+/**
+ * @brief The EdgeElement class 边界小图元素
+ */
+struct EdgeElement {
+    int id;           // 边界小图的id
+    cv::Rect rect;    // 边界小图位置信息
+    cv::Vec4i point2; // 计算梯度值
+};
+
+/**
+ * @brief The EDGEPART enum 边部属于哪个部分
+ */
+enum EDGEPART {
+    TOP = 0,
+    LEFT = 1,
+    RIGHT = 2,
+    BOTTOM = 3,
+    UNINIT = 4,
+};
+
+/**
+ * @brief The EdgeInfo class 算法内部使用到的边部信息
+ */
+struct EdgeInfo{
+    int id;
+    cv::Mat region0;
+    cv::Mat region1;
+    cv::Mat region2;
+    cv::Rect rect;
+    EDGEPART PART;
+    EdgeInfo():id(0),
+        PART(EDGEPART::UNINIT){}
+};
+
+/**
+ * @brief defectClasses 缺陷分类使用到的缺陷
+ */
+static std::vector<QString> defectClasses={"划痕","异物","气泡","麻点","水印","油墨不良","锯齿边","丝印缺陷","刮花","裂纹","崩边","崩角"};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static void saveMatToImage(QString fullpath,cv::Mat region )
+{
+    std::string filename = fullpath.toStdString();
+    cv::imwrite(filename, region);
+}
+
+static QString SyncSaveImage(cv::Mat& region,QString path="")
+{
+    try{
+        if (path == "") {
+            int randomNumber = std::rand() % 123567891;
+            QString time2 = QDateTime::currentDateTime().toString("hh-mm-ss");
+            path = "D:/HVCache/cache/"+time2 +"-"+ QString::number(randomNumber)+".jpg";
+        }
+        std::thread th1(&saveMatToImage,path,region);
+        th1.detach();
+        return path;
+    } catch(...) {
+        qDebug() << " ProcessTile::SyncSaveCurrentTimeImage =>An unknown error occurred.";
+        // 获取当前的异常信息
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+        return "";
+    }
+}
+
+static bool createDir(QString fullPath)
+{
+    QDir dir(fullPath);
+    if (!dir.exists()) {
+        if (dir.mkpath(fullPath)) {
+            qDebug() << fullPath <<"目录创建成功";
+            return true;
+        } else {
+            qDebug() << fullPath <<"目录创建失败";
+            return false;
+        }
+    } else {
+        qDebug() << fullPath <<"目录已存在";
+        return true;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
 class SafeDefinitionThreadSafeVector {
@@ -843,15 +782,6 @@ public:
     std::mutex mutex_;
 };
 
-//检出缺陷信息
-struct regionInfor{
-    int id;             // 序列id
-    cv::Mat region;     // 区域
-    QString path;       // 完整路径
-};
-
-
-
 template<typename Key, typename Value>
 class ThreadSafeUnorderedMap {
 private:
@@ -883,13 +813,11 @@ public:
     }
 };
 
-
-
-
 class __declspec(dllexport) HSTool
 {
 public:
     HSTool();
 };
+
 
 #endif // HSTOOL_H

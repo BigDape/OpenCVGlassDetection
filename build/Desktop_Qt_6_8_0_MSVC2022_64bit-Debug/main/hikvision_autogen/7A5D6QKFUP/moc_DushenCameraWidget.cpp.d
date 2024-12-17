@@ -1,6 +1,7 @@
 D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_autogen/7A5D6QKFUP/moc_DushenCameraWidget.cpp: D:/v0.0.2/hivision/main/Form/DushenCameraWidget.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QEvent \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList \

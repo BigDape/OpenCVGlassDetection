@@ -31,6 +31,9 @@ public:
     virtual bool insertOneData(const GlassDefect2& data) override;         //插入数据库
     virtual bool insertOneData(const GlassSummary& data) override;         //插入数据库
 
+    virtual bool batchInsertData(std::vector<GlassDefect2>& datas) override;
+    virtual bool batchInsertData(std::vector<GlassSizeInfo2>& datas) override;
+
     virtual bool updateData(const GlassDataBaseInfo2& data) override;      //更新数据库
     virtual bool updateData(const GlassSizeInfo2& data) override;      //更新数据库
     virtual bool updateData(const GlassDefect2& data) override;      //更新数据库
@@ -47,11 +50,12 @@ public:
     virtual bool queryTableData(std::vector<GlassSummary>& datas, QString querySql) override;       //查询数据库
     virtual bool closeDataBase() override;   //关闭数据库
 
-    virtual bool getCurrentDefectTableMaxID(int64_t& count) override;
-    virtual bool getCurrentGlassTableMaxID(int64_t& count)  override;
-    virtual bool getCurrentSizeTableMaxID(int64_t& count) override;
+    virtual int64_t getCurrentDefectTableMaxID() override;
+    virtual int64_t getCurrentGlassTableMaxID()  override;
+    virtual int64_t getCurrentSizeTableMaxID() override;
 public:
     QSqlDatabase db;
+    std::mutex mutex;
 };
 
 #endif // DATABASE_H

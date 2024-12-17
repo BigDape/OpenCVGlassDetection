@@ -7,62 +7,7 @@
 #include <QFile>
 #include <QImage>
 
-GlobalParamter::GlobalParamter()
-    :CurrentRecipe(""),
-     SystemName(""),
-     camDefineNum(0),
-     Camera0Name(""),
-     Camera1Name(""),
-     Camera2Name(""),
-     Camera3Name(""),
-     serverIp(""),
-     serverPort(0),
-     YAccuracy(0.0),
-     XCamera0Accuracy(0.0),
-     XCamera1Accuracy(0.0),
-     Camera0Frame(0),
-     Camera0PhotoRow(0),
-     Camera0ExposureTime(0),
-     Camera0Gain(0),
-     Camera1Frame(0),
-     Camera1PhotoRow(0),
-     Camera1ExposureTime(0),
-     Camera1Gain(0),
-     Camera2Frame(0),
-     Camera2PhotoRow(0),
-     Camera2ExposureTime(0),
-     Camera2Gain(0),
-     Camera3Frame(0),
-     Camera3PhotoRow(0),
-     Camera3ExposureTime(0),
-     Camera3Gain(0),
-     EncodePulseFilterUs(0),
-     PhotoelectricSensorFiltering(0),
-     WheelEncoderPhotoPulse(0),
-     EncoderMode(0),
-     SolenoidValve1DownDelay(0),
-     SolenoidValve1UpDelay(0),
-     SolenoidValve2DownDelay(0),
-     SolenoidValve2UpDelay(0),
-     WheelAEncoder(0),
-     WheelBEncoder(0),
-     ErrorPhotoCount(0),
-     LightField1GlowTime(0),
-     LightField2GlowTime(0),
-     LightField3GlowTime(0),
-     LightField4GlowTime(0),
-     LightSignalSynchronizationDelayRegister(0),
-     PhotoMode(0),
-     LightCameraEnable(0),
-     WorkMode(0),
-     LightSourcePulseEndPointRegister(0),
-     SyncPulsePeriodRegister(0),
-     CameraFrameSignalTriggerDelay(0),
-     TimelapseAfterPhotoShootEnd(0),
-     SelectedLightFieldNumber(0),
-     FrameSignalOutput(0),
-     currentsystem(SYSTEMSTATUS::INIT)
-{}
+GlobalParamter::GlobalParamter(){}
 
 GlobalParamter::~GlobalParamter(){}
 
@@ -181,4 +126,60 @@ cv::Mat GlobalParamter::QImage2cvMat(QImage image)
     return mat;
 }
 
-
+void GlobalParamter::ReassignValue(SignalControl signalctrl)
+{
+    SystemName = signalctrl.systemName;
+    camDefineNum = signalctrl.CamareNumber;
+    Camera0Name = signalctrl.Camare0Name;
+    Camera1Name = signalctrl.Camare1Name;
+    Camera2Name = signalctrl.Camare2Name;
+    Camera3Name = signalctrl.Camare3Name;
+    serverIp = signalctrl.ServerIP;
+    serverPort = signalctrl.ServerPort;
+    YAccuracy = signalctrl.YAccuracy;
+    XCamera0Accuracy = signalctrl.XCamera0Accuracy;
+    XCamera1Accuracy = signalctrl.XCamera1Accuracy;
+    Camera0Frame = signalctrl.Camera0Frame;
+    Camera0PhotoRow = signalctrl.Camera0PhotoRow;
+    Camera0ExposureTime = signalctrl.Camera0ExposureTime;
+    Camera0Gain = signalctrl.Camera0Gain;
+    Camera1Frame = signalctrl.Camera1Frame;
+    Camera1PhotoRow = signalctrl.Camera1PhotoRow;
+    Camera1ExposureTime = signalctrl.Camera1ExposureTime;
+    Camera1Gain = signalctrl.Camera1Gain;
+    Camera2Frame = signalctrl.Camera2Frame;
+    Camera2PhotoRow = signalctrl.Camera2PhotoRow;
+    Camera2ExposureTime = signalctrl.Camera2ExposureTime;
+    Camera2Gain = signalctrl.Camera2Gain;
+    Camera3Frame = signalctrl.Camera3Frame;
+    Camera3PhotoRow = signalctrl.Camera3PhotoRow;
+    Camera3ExposureTime = signalctrl.Camera3ExposureTime;
+    Camera3Gain = signalctrl.Camera3Gain;
+    // 控制器参数
+    EncodePulseFilterUs = signalctrl.EncodePulseFilterUs;
+    PhotoelectricSensorFiltering = signalctrl.PhotoelectricSensorFiltering;
+    WheelEncoderPhotoPulse = signalctrl.WheelEncoderPhotoPulse;
+    EncoderMode = signalctrl.EncoderMode;
+    SolenoidValve1DownDelay = signalctrl.SolenoidValve1DownDelay;
+    SolenoidValve1UpDelay = signalctrl.SolenoidValve1UpDelay;
+    SolenoidValve2DownDelay = signalctrl.SolenoidValve2DownDelay;
+    SolenoidValve2UpDelay = signalctrl.SolenoidValve2UpDelay;
+    WheelAEncoder = signalctrl.WheelAEncoder;
+    WheelBEncoder = signalctrl.WheelBEncoder;
+    ErrorPhotoCount = signalctrl.ErrorPhotoCount;
+    // 光源控制器参数
+    LightField1GlowTime = signalctrl.LightField1GlowTime;
+    LightField2GlowTime = signalctrl.LightField2GlowTime;
+    LightField3GlowTime = signalctrl.LightField3GlowTime;
+    LightField4GlowTime = signalctrl.LightField4GlowTime;
+    LightSignalSynchronizationDelayRegister = signalctrl.LightSignalSynchronizationDelayRegister;
+    PhotoMode = signalctrl.PhotoMode;
+    LightCameraEnable = signalctrl.LightCameraEnable;
+    WorkMode = signalctrl.WorkMode;
+    LightSourcePulseEndPointRegister = signalctrl.LightSourcePulseEndPointRegister;
+    SyncPulsePeriodRegister = signalctrl.SyncPulsePeriodRegister;
+    CameraFrameSignalTriggerDelay = signalctrl.CameraFrameSignalTriggerDelay;
+    TimelapseAfterPhotoShootEnd = signalctrl.TimelapseAfterPhotoShootEnd;
+    SelectedLightFieldNumber = signalctrl.SelectedLightFieldNumber;
+    FrameSignalOutput = signalctrl.FrameSignalOutput;
+}

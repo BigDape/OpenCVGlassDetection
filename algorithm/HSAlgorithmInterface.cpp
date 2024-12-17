@@ -1,9 +1,9 @@
 #include "HSAlgorithmInterface.h"
-#include "algorithm.h"
+#include "OpenCVAlgorithm.h"
 
 HSAlgorithmNamespace::HSAlgorithmInterface* createAlgorithmObject()
 {
-    HSAlgorithmNamespace::HSAlgorithmInterface* ptr = new Algorithm();
+    HSAlgorithmNamespace::HSAlgorithmInterface* ptr = new OpenCVAlgorithm();
     return ptr;
 }
 

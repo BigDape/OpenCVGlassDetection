@@ -8,56 +8,11 @@
 #include "../HsListener.h"
 #include "HSSocketInterface.h"
 
-typedef HSJsoncppNamespace::HSJsoncppInterface* (*createJsoncppObjectFunc1)();
-typedef SocketNameSpace::HSSocketInterface* (*createSocketObjectFunc1)();
-
 LightControl::LightControl( QWidget* parent)
     : QWidget(parent)
     , ui(new Ui::LightControl)
-    , SocketObjectPtr(nullptr)
-    , jsoncppPtr(nullptr)
 {
     ui->setupUi(this);
-    //
-    // 动态加载jsoncpp组件
-    //
-    if (jsoncppPtr==nullptr) {
-        QString exePath = QCoreApplication::applicationDirPath();
-        QString dllPath = exePath + "/../jsoncpp/jsoncpp.dll";
-        jsoncppDllHandle = LoadLibrary(dllPath.toStdWString().c_str());
-        if (!jsoncppDllHandle) {
-            qFatal() << "Failed to load DLL. Error code: " << GetLastError();
-        }
-        // 获取创建数据库对象的函数指针
-        createJsoncppObjectFunc1 createFunc = (createJsoncppObjectFunc1)GetProcAddress(jsoncppDllHandle, "createJsoncppObject");
-        if (!createFunc) {
-            qDebug() << "Failed to get function pointer. Error code: " << GetLastError() ;
-            FreeLibrary(jsoncppDllHandle);
-        } else {
-            qDebug() << "Success to get  jsoncppDllHandle function pointer. ";
-        }
-        jsoncppPtr = createFunc();
-    }
-    //
-    // 动态加载通讯组件
-    //
-    if (SocketObjectPtr == nullptr) {
-        QString exePath = QCoreApplication::applicationDirPath();
-        QString dllPath = exePath + "/../socket/socket.dll";
-        socketDllHandle = LoadLibrary(dllPath.toStdWString().c_str());
-        if (!socketDllHandle) {
-            qFatal() << "Failed to load DLL. Error code: " << GetLastError();
-        }
-        // 获取创建数据库对象的函数指针
-        createSocketObjectFunc1 createFunc = (createSocketObjectFunc1)GetProcAddress(socketDllHandle, "createSocketObject");
-        if (!createFunc) {
-            qFatal() << "Failed to get function pointer. Error code: " << GetLastError() ;
-            FreeLibrary(socketDllHandle);
-        } else {
-            qDebug() << "Success to get  socketDllHandle function pointer. ";
-        }
-        SocketObjectPtr = createFunc();
-    }
     LightControl::initWidget();// 初始化窗口
     LightControl::initLoadRecipe();// 加载工单
     LightControl::initSocket();
@@ -76,13 +31,6 @@ LightControl::~LightControl()
     QString currentRecipe = ui->RecipeCB->currentText();
     QString iniPath = QDir::currentPath() + QString("/") + SYSTEMNAME;
     PARAM.SetParamterIntoIniFile(iniPath,"recipe",currentRecipe);
-
-    if (jsoncppPtr!= nullptr) {
-        FreeLibrary(jsoncppDllHandle);
-    }
-    if (SocketObjectPtr != nullptr) {
-        FreeLibrary(socketDllHandle);
-    }
     delete ui;
 }
 
@@ -183,11 +131,11 @@ void LightControl::initLoadRecipe()
 void LightControl::initSocket()
 {
     // 获取通讯处理模块
-    if (SocketObjectPtr != NULL) {
+    if (PARAM.SocketObjectPtr != NULL) {
         QString iniPath = QDir::currentPath() + QString("/") + SYSTEMNAME;
         QString IP = PARAM.GetParamterFromIniFile(iniPath,"system/serverIp");
         QString Port = PARAM.GetParamterFromIniFile(iniPath,"system/RegParaPort");
-        SocketObjectPtr->InitRegs(IP,Port.toUInt());
+        PARAM.SocketObjectPtr->InitRegs(IP,Port.toUInt());
     } 
 }
 
@@ -204,15 +152,16 @@ void LightControl::initConnect()
 
 void LightControl::SendDataToSignal()
 {
-    if (SocketObjectPtr != nullptr) {
-        SocketObjectPtr->SetAllRegs(m_signalctrl);
+    if (PARAM.SocketObjectPtr != nullptr) {
+        PARAM.SocketObjectPtr->SetAllRegs(m_signalctrl);
     }
 }
 
 // 读取json工单到表单中
 void LightControl::readRecipeToTable(std::string filePath)
 {
-    jsoncppPtr->readRecipeFromJson(QString(filePath.c_str()), m_signalctrl);
+    if (PARAM.jsoncppPtr != nullptr)
+        PARAM.jsoncppPtr->readRecipeFromJson(QString(filePath.c_str()), m_signalctrl);
     //系统参数
     ui->SystemNameLE->setText(m_signalctrl.systemName);
     ui->CameraNumLE->setText(QString::number(m_signalctrl.CamareNumber));
@@ -331,9 +280,9 @@ void LightControl::readRecipeToTable(std::string filePath)
 // 全部数据下发
 void LightControl::slotAllSet()
 {
-    if (SocketObjectPtr != nullptr) {
+    if (PARAM.SocketObjectPtr != nullptr) {
         LightControl::getUiContentIntoStruct();
-        SocketObjectPtr->SetAllRegs(m_signalctrl);
+        PARAM.SocketObjectPtr->SetAllRegs(m_signalctrl);
         INFOMATION.informationMessageBox(this,tr("information"),QString(tr("All set success.")));
     } else {
         INFOMATION.informationMessageBox(this,tr("information"),QString(tr("All set fail.")));
@@ -350,7 +299,8 @@ void LightControl::slotAllSave()
     QString dirPath = QCoreApplication::applicationDirPath() + QString("/Recipes/");
     QString currentfilename = dirPath + filename + QString(".json");
     qDebug()<<"slotAllSave path ="<<currentfilename;
-    jsoncppPtr->writeRecipeToJson(currentfilename,m_signalctrl);
+    if (PARAM.jsoncppPtr != nullptr)
+        PARAM.jsoncppPtr->writeRecipeToJson(currentfilename,m_signalctrl);
     INFOMATION.informationMessageBox(this,tr("information"),QString(tr("Save recipe success.")));
 }
 
@@ -379,7 +329,8 @@ void LightControl::slotCreateRecipe()
     } else {
         qDebug() << "Failed to create empty file." ;
     }
-    jsoncppPtr->writeEmptyRecipeToJson(recipeFileName);  //创建空白名单
+    if (PARAM.jsoncppPtr != nullptr)
+        PARAM.jsoncppPtr->writeEmptyRecipeToJson(recipeFileName);  //创建空白名单
     LightControl::readRecipeToTable(recipeFileName.toStdString());
     ui->RecipeCB->addItem(newRecipeFileName);
     ui->RecipeCB->setCurrentText(newRecipeFileName);
@@ -388,8 +339,8 @@ void LightControl::slotCreateRecipe()
 
 void LightControl::slotAllGet()
 {
-    if (SocketObjectPtr!= nullptr) {
-        SocketObjectPtr->GetAllData(m_signalctrl);
+    if (PARAM.SocketObjectPtr!= nullptr) {
+        PARAM.SocketObjectPtr->GetAllData(m_signalctrl);
         LightControl::setUiContentFromStruct();
         INFOMATION.informationMessageBox(this,tr("information"),QString(tr("Get data success.")));
     } else {
@@ -399,8 +350,8 @@ void LightControl::slotAllGet()
 
 void LightControl::slotTestConnect()
 {
-    if(SocketObjectPtr!= nullptr) {
-        if( SocketObjectPtr->TestIPConnect()) {
+    if(PARAM.SocketObjectPtr!= nullptr) {
+        if( PARAM.SocketObjectPtr->TestIPConnect()) {
             QString ipinfor = QString("测试") + PARAM.serverIp + QString(":") + QString::number(PARAM.serverPort);
             INFOMATION.informationMessageBox(this,QString("测试结果"),ipinfor + QString("已连接"));
         } else {
@@ -412,8 +363,8 @@ void LightControl::slotTestConnect()
 
 void LightControl::slotTrigger()
 {
-    if (SocketObjectPtr!= nullptr) {
-        SocketObjectPtr->Trigger();
+    if (PARAM.SocketObjectPtr!= nullptr) {
+        PARAM.SocketObjectPtr->Trigger();
         INFOMATION.informationMessageBox(this,tr("information"),QString(tr("Trigger success.")));
     } else {
         INFOMATION.informationMessageBox(this,tr("information"),QString(tr("Trigger fail.")));
@@ -646,18 +597,16 @@ void LightControl::setUiContentFromStruct()
 
 void LightControl::getFrameSignal()
 {
-    if (SocketObjectPtr != nullptr) {
+    if (PARAM.SocketObjectPtr != nullptr) {
         unsigned int FrameSignal = 0;
         unsigned int CoderACount = 0;
         unsigned int CoderBCount = 0;
         unsigned int errorPhotoCount = 0;
-        SocketObjectPtr->GetRealTimeData(FrameSignal,CoderACount,CoderBCount,errorPhotoCount);
+        PARAM.SocketObjectPtr->GetRealTimeData(FrameSignal,CoderACount,CoderBCount,errorPhotoCount);
         PARAM.FrameSignalOutput = FrameSignal;
         PARAM.WheelAEncoder = CoderACount;
         PARAM.WheelBEncoder = CoderBCount;
         PARAM.ErrorPhotoCount = errorPhotoCount;
-    } else {
-        qDebug()<<"SocketObjectPtr == nullptr";
     }
 }
 

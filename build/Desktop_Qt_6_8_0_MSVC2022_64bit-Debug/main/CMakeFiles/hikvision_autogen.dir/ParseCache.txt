@@ -156,8 +156,8 @@ D:/v0.0.2/hivision/main/Form/Login.h
 D:/v0.0.2/hivision/main/Form/Calibrate.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject
- mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QString
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20functional.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20iterator.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20memory.h
@@ -193,8 +193,13 @@ D:/v0.0.2/hivision/main/Form/Calibrate.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdatastream.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdebug.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdir.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdirlisting.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qendian.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qexceptionhandling.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfile.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfiledevice.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfileinfo.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qflags.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfloat16.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qforeach.h
@@ -205,6 +210,7 @@ D:/v0.0.2/hivision/main/Form/Calibrate.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qglobalstatic.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qhash.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qhashfunctions.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiodevice.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiterator.h
@@ -265,6 +271,7 @@ D:/v0.0.2/hivision/main/Form/Calibrate.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtdeprecationmarkers.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtenvironmentvariables.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtextstream.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtimezone.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtmetamacros.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtnoop.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtpreprocessorsupport.h
@@ -421,13 +428,13 @@ D:/v0.0.2/hivision/main/Form/Calibrate.h
  mdp:C:/opencv/install/include/opencv2/video/background_segm.hpp
  mdp:C:/opencv/install/include/opencv2/video/tracking.hpp
  mdp:C:/opencv/install/include/opencv2/videoio.hpp
- mdp:D:/v0.0.2/hivision/jsoncpp/HSJsoncppInterface.h
  mdp:D:/v0.0.2/hivision/main/Form/Calibrate.h
  mdp:D:/v0.0.2/hivision/tool/HSTool.h
 D:/v0.0.2/hivision/main/Form/DataAnalysis.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QEvent
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList
@@ -979,6 +986,7 @@ D:/v0.0.2/hivision/main/Form/DushenCameraWidget.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QEvent
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList
@@ -1513,6 +1521,7 @@ D:/v0.0.2/hivision/main/Form/DushenCameraWidget.h
 D:/v0.0.2/hivision/main/Form/LightControl.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QString
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20functional.h
@@ -1551,8 +1560,13 @@ D:/v0.0.2/hivision/main/Form/LightControl.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdatastream.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdebug.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdir.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdirlisting.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qendian.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qexceptionhandling.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfile.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfiledevice.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfileinfo.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qflags.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfloat16.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qforeach.h
@@ -1563,6 +1577,7 @@ D:/v0.0.2/hivision/main/Form/LightControl.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qglobalstatic.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qhash.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qhashfunctions.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiodevice.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qitemselectionmodel.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiterable.h
@@ -1625,6 +1640,7 @@ D:/v0.0.2/hivision/main/Form/LightControl.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtdeprecationmarkers.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtenvironmentvariables.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtextstream.h
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtimezone.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtmetamacros.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtnoop.h
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtpreprocessorsupport.h
@@ -1811,6 +1827,7 @@ D:/v0.0.2/hivision/main/MainForm.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QEvent
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList
@@ -2386,6 +2403,7 @@ D:/v0.0.2/hivision/main/mainwindow.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDeadlineTimer
+ mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QEvent
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QHash
  mdp:C:/Qt/6.8.0/msvc2022_64/include/QtCore/QList

@@ -1,7 +1,7 @@
 D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_autogen/7A5D6QKFUP/moc_Calibrate.cpp: D:/v0.0.2/hivision/main/Form/Calibrate.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDateTime \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/QDir \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/QObject \
-  C:/Qt/6.8.0/msvc2022_64/include/QtCore/QString \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20functional.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20iterator.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/q20memory.h \
@@ -37,8 +37,13 @@ D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_au
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdatastream.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdatetime.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdebug.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdir.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qdirlisting.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qendian.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qexceptionhandling.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfile.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfiledevice.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfileinfo.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qflags.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qfloat16.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qforeach.h \
@@ -49,6 +54,7 @@ D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_au
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qglobalstatic.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qhash.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qhashfunctions.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiodevice.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiodevicebase.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiterable.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qiterator.h \
@@ -109,6 +115,7 @@ D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_au
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtdeprecationmarkers.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtenvironmentvariables.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtextstream.h \
+  C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtimezone.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtmetamacros.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtnoop.h \
   C:/Qt/6.8.0/msvc2022_64/include/QtCore/qtpreprocessorsupport.h \
@@ -265,5 +272,4 @@ D:/v0.0.2/hivision/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/hikvision_au
   C:/opencv/install/include/opencv2/video/background_segm.hpp \
   C:/opencv/install/include/opencv2/video/tracking.hpp \
   C:/opencv/install/include/opencv2/videoio.hpp \
-  D:/v0.0.2/hivision/jsoncpp/HSJsoncppInterface.h \
   D:/v0.0.2/hivision/tool/HSTool.h

@@ -2,7 +2,7 @@
 #define CALIBRATE_H
 
 #include <QWidget>
-#include "HSJsoncppInterface.h"
+#include <HSTool.h>
 
 namespace Ui {
 class Calibrate;
@@ -27,8 +27,6 @@ private slots:
 
 private:
     Ui::Calibrate *ui;
-    HSJsoncppNamespace::HSJsoncppInterface* jsoncppPtr = nullptr;
-    HMODULE jsoncppDllHandle;
     QString CalibrateJsonPath; //标定json文件路径
 };
 

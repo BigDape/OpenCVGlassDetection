@@ -42,7 +42,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -66,8 +66,8 @@
      <widget class="QLabel" name="label_15">
       <property name="geometry">
        <rect>
-        <x>790</x>
-        <y>60</y>
+        <x>730</x>
+        <y>70</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -79,8 +79,8 @@
      <widget class="QLabel" name="label_14">
       <property name="geometry">
        <rect>
-        <x>480</x>
-        <y>60</y>
+        <x>430</x>
+        <y>70</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -92,7 +92,7 @@
      <widget class="QGraphicsView" name="graphicsView_2">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>310</x>
         <y>100</y>
         <width>281</width>
         <height>251</height>
@@ -102,7 +102,7 @@
      <widget class="QGraphicsView" name="graphicsView_3">
       <property name="geometry">
        <rect>
-        <x>670</x>
+        <x>610</x>
         <y>100</y>
         <width>281</width>
         <height>251</height>
@@ -112,8 +112,8 @@
      <widget class="QLabel" name="label_13">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>60</y>
+        <x>130</x>
+        <y>70</y>
         <width>54</width>
         <height>12</height>
        </rect>
@@ -125,7 +125,7 @@
      <widget class="QGraphicsView" name="graphicsView">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>10</x>
         <y>100</y>
         <width>281</width>
         <height>251</height>
@@ -135,9 +135,9 @@
      <widget class="QTableWidget" name="SingleFlawtableWidget">
       <property name="geometry">
        <rect>
-        <x>990</x>
+        <x>910</x>
         <y>40</y>
-        <width>901</width>
+        <width>981</width>
         <height>391</height>
        </rect>
       </property>
@@ -186,6 +186,11 @@
         <string>面积</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>缺陷ID</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
@@ -195,9 +200,9 @@
      <widget class="QTableWidget" name="singleSizeTableWidget">
       <property name="geometry">
        <rect>
-        <x>1190</x>
+        <x>1080</x>
         <y>50</y>
-        <width>701</width>
+        <width>801</width>
         <height>381</height>
        </rect>
       </property>
@@ -236,25 +241,79 @@
         <string>边距Y(mm)</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>尺寸ID</string>
+       </property>
+      </column>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView_outLine">
+     <widget class="QGraphicsView" name="graphicsView_Field_3">
       <property name="geometry">
        <rect>
-        <x>80</x>
-        <y>80</y>
-        <width>611</width>
-        <height>301</height>
+        <x>710</x>
+        <y>100</y>
+        <width>331</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView_Field">
+     <widget class="QGraphicsView" name="graphicsView_Field_1">
       <property name="geometry">
        <rect>
-        <x>790</x>
-        <y>80</y>
-        <width>361</width>
-        <height>301</height>
+        <x>10</x>
+        <y>100</y>
+        <width>331</width>
+        <height>261</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="graphicsView_Field_2">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>100</y>
+        <width>331</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>70</y>
+        <width>53</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>光场1</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>70</y>
+        <width>53</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>光场2</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>850</x>
+        <y>70</y>
+        <width>53</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>光场3</string>
       </property>
      </widget>
     </widget>
@@ -262,446 +321,6 @@
      <attribute name="title">
       <string>相机信息</string>
      </attribute>
-    </widget>
-    <widget class="QWidget" name="tab_9">
-     <attribute name="title">
-      <string>实时缺陷</string>
-     </attribute>
-     <widget class="QWidget" name="layoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>1400</x>
-        <y>100</y>
-        <width>374</width>
-        <height>194</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QGraphicsView" name="graphicsView_Field3"/>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="formLayout_3">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_62">
-           <property name="text">
-            <string>  序号：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="defectID3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_64">
-           <property name="text">
-            <string>  时间：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="defectTime3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_66">
-           <property name="text">
-            <string>  类型：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="defectType3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_68">
-           <property name="text">
-            <string>  等级：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="defectLevel3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_70">
-           <property name="text">
-            <string> 坐标X：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="defectX3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_72">
-           <property name="text">
-            <string> 坐标Y：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="defectY3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_74">
-           <property name="text">
-            <string>    长：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="defectLength3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_76">
-           <property name="text">
-            <string>    宽：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="defectWidth3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_78">
-           <property name="text">
-            <string>  面积：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="defectArea3LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>750</x>
-        <y>100</y>
-        <width>374</width>
-        <height>194</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QGraphicsView" name="graphicsView_Field2"/>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_44">
-           <property name="text">
-            <string>  序号：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="defectID2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_46">
-           <property name="text">
-            <string>  时间：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="defectTime2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_48">
-           <property name="text">
-            <string>  类型：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="defectType2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_50">
-           <property name="text">
-            <string>  等级：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="defectLevel2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_52">
-           <property name="text">
-            <string> 坐标X：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="defectX2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_54">
-           <property name="text">
-            <string> 坐标Y：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="defectY2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_56">
-           <property name="text">
-            <string>    长：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="defectLength2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_58">
-           <property name="text">
-            <string>    宽：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="defectWidth2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_60">
-           <property name="text">
-            <string>  面积：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="defectArea2LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>100</y>
-        <width>374</width>
-        <height>194</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QGraphicsView" name="graphicsView_Field1"/>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="formLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_26">
-           <property name="text">
-            <string>  序号：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="defectID1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_28">
-           <property name="text">
-            <string>  时间：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="defectTime1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_30">
-           <property name="text">
-            <string>  类型：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="defectType1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_31">
-           <property name="text">
-            <string>  等级：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="defectLevel1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_34">
-           <property name="text">
-            <string> 坐标X：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="defectX1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_36">
-           <property name="text">
-            <string> 坐标Y：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="defectY1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_38">
-           <property name="text">
-            <string>    长：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="defectLength1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_39">
-           <property name="text">
-            <string>    宽：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="defectWidth1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_40">
-           <property name="text">
-            <string>  面积：</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="defectArea1LB">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </widget>
    <widget class="QTabWidget" name="tabWidget_3">

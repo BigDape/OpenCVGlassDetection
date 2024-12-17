@@ -25,23 +25,10 @@ public:
                               QString& ImagePath1,
                               QString& ImagePath2,
                               QString& ImagePath3) override;
-    /**
-     * @brief getDefectSFromJson
-     * @param jsonFullPath
-     * @param glassid
-     * @param Defects
-     */
-    virtual void getDefectSFromJson(QString jsonFullPath, int glassid, std::vector<DefectData>& Defects) override;
 
     virtual void readHoleFromJson(QString jsonFullPath, int glassid, QString& ImageHolesLinePath) override;
 
     virtual void readSizeSmallImage(QString jsonFileName, int GlassID, int row, QString& ImageHolesPath) override;
-
-    virtual void readSizeFromJson(QString jsonFilePath,int glassid,std::vector<SizeData>& result) override;
-
-    virtual void writeSizeToJson(HoleResult inputdata) override;
-
-    virtual void writeDefectToJson(DefeteResult defect,int GlassID) override;
 
     //communication模块保存json
     virtual void writeComDataToJson(QString recipeFullpath, const SignalControl& data) override;

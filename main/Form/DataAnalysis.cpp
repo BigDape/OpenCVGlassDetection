@@ -14,31 +14,14 @@
 #include <QtCharts/QValueAxis>
 #include <QtCore/QString>
 #include <windows.h>
+#include "../Global.h"
 
-typedef HSDatabaseNamespace::HSDatabaseInterface* (*CreateDatabaseObjectFunc)();
 
 DataAnalysis::DataAnalysis(QWidget *parent) :
     QWidget(parent)
     , ui(new Ui::DataAnalysis)
-    , databasePtr(nullptr)
 {
     ui->setupUi(this);
-
-    if (databasePtr == nullptr) {
-        QString exePath = QCoreApplication::applicationDirPath();
-        QString dllPath = exePath + "/../database/database.dll";
-        HMODULE dllHandle = LoadLibrary(dllPath.toStdWString().c_str());
-        if (!dllHandle) {
-            qFatal() << "Failed to load DLL. Error code: " << GetLastError();
-        }
-        // 获取创建数据库对象的函数指针
-        CreateDatabaseObjectFunc createFunc = (CreateDatabaseObjectFunc)GetProcAddress(dllHandle, "createDatabaseObject");
-        if (!createFunc) {
-            qFatal() << "Failed to get function pointer. Error code: " << GetLastError() ;
-            FreeLibrary(dllHandle);
-        }
-        databasePtr = createFunc();
-    }
 
     scene=new QGraphicsScene();
     loadedPixmapItem = new MyGraphicsItem();
@@ -83,7 +66,8 @@ void DataAnalysis::slotSearchData()
     if(!ui->glassIDLE->text().isEmpty()){
         QString tableid = ui->glassIDLE->text();
         QString sql = QString("SELECT * FROM glass_table WHERE tableID = '%1';").arg(tableid);
-        databasePtr->queryTableData(datas,sql);
+        if (PARAM.databasePtr != nullptr)
+            PARAM.databasePtr->queryTableData(datas,sql);
         DataAnalysis::displayInfoToTable(datas);
     } else {
             QString year1 = ui->YearSCB->currentText();
@@ -106,7 +90,8 @@ void DataAnalysis::slotSearchData()
                 sql = QString("SELECT * FROM glass_table WHERE time >= '%1' AND time <= '%2';").arg(starttime).arg(endtime);
             }
 
-            databasePtr->queryTableData(datas,sql);
+            if (PARAM.databasePtr != nullptr)
+                PARAM.databasePtr->queryTableData(datas,sql);
             DataAnalysis::displayInfoToTable(datas);
 
             //查询柱状图数据
@@ -363,7 +348,8 @@ void DataAnalysis::slotDisplayDefect(QTableWidgetItem* item)
         currentGlassID = ColumnContent.toInt();
         QString sql = QString("SELECT * FROM glass_defect WHERE glassid = %1;").arg(ColumnContent);
         std::vector<GlassDefect2> datas;
-        databasePtr->queryTableData(datas,sql);
+        if (PARAM.databasePtr != nullptr)
+            PARAM.databasePtr->queryTableData(datas,sql);
         qDebug()<<"datas.size() ="<<datas.size();
 
         if (datas.size() != 0) {
@@ -424,7 +410,7 @@ void DataAnalysis::slotDisplayDefect(QTableWidgetItem* item)
                 ui->tableWidget_2->verticalHeader()->setVisible(false); // 隐藏行
                 //显示图片
                 if(i ==0){
-                    QString ImagePath = data.imagePath;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
+                    QString ImagePath = data.imagePath0;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
                     qDebug() << "imagepath = " << ImagePath;
                     QImage img1=QImage(ImagePath+"/1.jpg");
                     QImage img2=QImage(ImagePath+"/2.jpg");
@@ -463,9 +449,10 @@ void DataAnalysis::slotDisplayImage(QTableWidgetItem* item)
         qDebug()<<__FUNCTION__<<"ColumnContent =" <<ColumnContent;
         QString sql= QString("SELECT * FROM glass_defect WHERE id = %1;").arg(ColumnContent.toInt());
         std::vector<GlassDefect2> datas;
-        databasePtr->queryTableData(datas,sql);
+        if (PARAM.databasePtr != nullptr)
+            PARAM.databasePtr->queryTableData(datas,sql);
         if(datas.size()>0){
-            QString ImagePath = datas[0].imagePath;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
+            QString ImagePath = datas[0].imagePath0;//D:/SaveDefectImage/2024-09-04/边Ok/11-31-53-1
             qDebug() << "imagepath = " << ImagePath;
             QImage img1=QImage(ImagePath+"/1.jpg");
             QImage img2=QImage(ImagePath+"/2.jpg");

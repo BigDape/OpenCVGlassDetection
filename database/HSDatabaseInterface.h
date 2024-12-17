@@ -16,6 +16,9 @@ namespace HSDatabaseNamespace{
         virtual bool insertOneData(const GlassDefect2& data) = 0;         //插入数据库
         virtual bool insertOneData(const GlassSummary& data) = 0;         //插入数据库
 
+        virtual bool batchInsertData(std::vector<GlassDefect2>& datas) = 0; //批量插入缺陷数据
+        virtual bool batchInsertData(std::vector<GlassSizeInfo2>& datas) = 0; //批量插入数据
+
         virtual bool updateData(const GlassDataBaseInfo2& data) = 0;      //更新数据库
         virtual bool updateData(const GlassSizeInfo2& data) = 0;      //更新数据库
         virtual bool updateData(const GlassDefect2& data) = 0;      //更新数据库
@@ -31,9 +34,9 @@ namespace HSDatabaseNamespace{
         virtual bool queryTableData(std::vector<GlassDefect2>& datas, QString querySql) = 0;       //查询数据库
         virtual bool queryTableData(std::vector<GlassSummary>& datas, QString querySql) = 0;       //查询数据库
         virtual bool closeDataBase() = 0;   //关闭数据库
-        virtual bool getCurrentDefectTableMaxID(int64_t& count) = 0;
-        virtual bool getCurrentGlassTableMaxID(int64_t& count) = 0;
-        virtual bool getCurrentSizeTableMaxID(int64_t& count) = 0;
+        virtual int64_t getCurrentDefectTableMaxID() = 0;
+        virtual int64_t getCurrentGlassTableMaxID() = 0;
+        virtual int64_t getCurrentSizeTableMaxID() = 0;
     };
 }
 

@@ -71,7 +71,6 @@ private:
     QGraphicsScene* scene3;
     int currentGlassID;  //当前玻璃ID
     chartParam chartdata;
-    HSDatabaseNamespace::HSDatabaseInterface* databasePtr;
 };
 
 #endif // DATAANALYSIS_H

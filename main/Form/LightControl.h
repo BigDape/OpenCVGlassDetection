@@ -64,10 +64,6 @@ private:
     QTimer* timer;
     std::shared_ptr<QTimer> timer1;
     SignalControl m_signalctrl;
-    SocketNameSpace::HSSocketInterface* SocketObjectPtr;
-    HSJsoncppNamespace::HSJsoncppInterface* jsoncppPtr;
-    HMODULE jsoncppDllHandle;
-    HMODULE socketDllHandle;
     QTimer* m_timer; //实时获取帧信号
 };
 

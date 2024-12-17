@@ -4,19 +4,27 @@ project(hikvision VERSION 0.1 LANGUAGES CXX)
 
 # 添加要编译的源文件
 set(SRC_FILES
-        algorithm.cpp
-	algorithm.h
-	HSAlgorithmInterface.cpp
-	HSAlgorithmInterface.h
-	processtile.cpp
-        processtile.h)
+    OpenCVAlgorithm.cpp
+    OpenCVAlgorithm.h
+    HSAlgorithmInterface.cpp
+    HSAlgorithmInterface.h
+    MatchTemplate.h
+    MatchTemplate.cpp
+    ClassifyMachine.h
+    ClassifyMachine.cpp
+    Yolov8DL.h
+    Yolov8DL.cpp
+    RoundHole.h
+    RoundHole.cpp
+)
 
 find_package(Qt6 REQUIRED COMPONENTS Core)
 
 set(CUDA_PATH "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.5")
 
 # 设置生成动态链接库
-add_library(algorithm SHARED ${SRC_FILES})
+add_library(algorithm SHARED ${SRC_FILES}
+    )
 
 # 添加头文件目录
 target_include_directories(algorithm PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CUDA_PATH}/include)

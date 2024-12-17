@@ -590,14 +590,8 @@ QImage DushenBasicFunc::DispImage()
 
 CameraNameSpace::HSCameraError DushenBasicFunc::startGetFrameBuffer(FrameImage& imageunit)
 {
-    // dvpStatus status;
-    // //pBuffer为图片缓存,在此处做多场分离
-    // status = dvpGetFrame(m_handle, &m_pFrame, &pBuffer, GRABTIMEOUT);
-    // if (status == DVP_STATUS_OK) {
-    //bool isEmpty = DushenBasicFunc::MapSS.empty(m_handle);
     bool isEmpty = DushenBasicFunc::MapDC.empty(m_handle);
     if (isEmpty == false) {
-        //callbackDataStruct data = DushenBasicFunc::MapSS.pop(m_handle);
         deepCopyStruct data = DushenBasicFunc::MapDC.pop(m_handle);
         if (data.uFrameID == 0) {
             return (CameraNameSpace::HSCameraError::INNER_ERROR);
@@ -621,63 +615,12 @@ CameraNameSpace::HSCameraError DushenBasicFunc::startGetFrameBuffer(FrameImage& 
                 cv::vconcat(offsetBuffer2, data.buffer2, data.buffer2);
             }
 
-            cv::Rect rect(0, FrameHeight - ImageOffset, FrameWidth, ImageOffset);
-            offsetBuffer0 = data.buffer0(rect);
-            offsetBuffer1 = data.buffer1(rect);
-            offsetBuffer2 = data.buffer2(rect);
-
-            // if ( data.uFrameID  != 1 ) {  //非第一帧，加上200行偏移量
-            //     FrameHeight = FrameHeight + ImageOffset;
-            // }
-            //int ImageSize = ImageLineSize * FrameHeight;            // 每个场图片的大小
-            // 初始化分离后buffer的目标数组
-            // byte** Dest_Buffer = new byte*[FieldNumberSet];
-            // for (int i = 0; i < FieldNumberSet; i++) {
-            //     Dest_Buffer[i] = new byte[ImageSize];
-            // }
-            //重叠区域复制
-            // if( data.uFrameID  != 1 ) {
-            //     for (int lightnum1 = 0; lightnum1 < FieldNumberSet; lightnum1++) {
-            //         memcpy(Dest_Buffer[lightnum1], Last_Buffer[lightnum1], ImageLineSize * ImageOffset);//非第一帧
-            //     }
-            // }
-            // 图片重组
-            // for (int HeightCount = 0; HeightCount < data.iHeight / FieldNumberSet; HeightCount++) {
-            //     for (int lightnum2 = 0; lightnum2 < FieldNumberSet; lightnum2++) {
-            //         if (data.uFrameID  == 1) {
-            //             memcpy(Dest_Buffer[lightnum2] + HeightCount * ImageLineSize,
-            //                    (byte*)data.buffer + (FieldNumberSet * HeightCount + lightnum2) * ImageLineSize,
-            //                    ImageLineSize);
-            //         } else {
-            //             memcpy(Dest_Buffer[lightnum2] + (HeightCount + ImageOffset) * ImageLineSize,
-            //                    (byte*)data.buffer + (FieldNumberSet * HeightCount + lightnum2) * ImageLineSize,
-            //                    ImageLineSize);
-            //         }
-            //     }
-            // }
-            //重叠区域获取
-            // for (int i = 0; i < FieldNumberSet; i++) {//提前复制下图像的最后200行，供下一帧图片拼接
-            //     int destLine = (data.iHeight / FieldNumberSet - ImageOffset);
-            //     int destaddr = destLine * ImageLineSize;
-            //     qDebug()<<"i = "<< i <<", destLine ="<<destLine <<", destaddr ="<<destaddr;
-            //     memcpy(Last_Buffer[i],
-            //             (byte*)Dest_Buffer[i] + destaddr,
-            //             ImageOffset * ImageLineSize);
-            // }
-
-            // 存储结果
-
-            // for (int i = 0; i < FieldNumberSet; ++i) {
-            //     cv::Mat cvMat = cv::Mat(FrameHeight, FrameWidth, CV_8UC1);
-
-            //     for (int j = 0; j < FrameHeight; ++j) {
-            //         const byte* destBufferScanLine = reinterpret_cast<const byte*>(Dest_Buffer[i] + j * ImageLineSize);
-            //         byte* cvMatScanLine = cvMat.ptr<byte>(j);
-            //         for (int x = 0; x < FrameWidth; ++x) {
-            //             cvMatScanLine[x] = destBufferScanLine[x];
-            //         }
-            //     }
-
+            cv::Rect rect0(0, data.buffer0.rows - ImageOffset, data.buffer0.cols, ImageOffset);
+            cv::Rect rect1(0, data.buffer1.rows - ImageOffset, data.buffer1.cols, ImageOffset);
+            cv::Rect rect2(0, data.buffer2.rows - ImageOffset, data.buffer2.cols, ImageOffset);
+            offsetBuffer0 = data.buffer0(rect0);
+            offsetBuffer1 = data.buffer1(rect1);
+            offsetBuffer2 = data.buffer2(rect2);
 
             imageunit.buffers.push_back(data.buffer0);
             imageunit.buffers.push_back(data.buffer1);
