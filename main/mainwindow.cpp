@@ -1458,6 +1458,7 @@ int MainWindow::RangeDefectCount(std::vector<cv::Rect> cacheVes, int Xmm, int Ma
         int res = *std::max_element(Result.begin(),Result.end());
         return res;
     }
+    return 0;
 }
 
 // 划痕判断NG

@@ -25,18 +25,20 @@ ClassifyMachine::ClassifyMachine()
     cv::Mat liewenRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
     cv::Mat benbianRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
     cv::Mat benjiaoRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    correlationCoefficient.push_back(HuahenRow);
-    correlationCoefficient.push_back(yiwuRow);
-    correlationCoefficient.push_back(qipaoRow);
-    correlationCoefficient.push_back(madianRow);
-    correlationCoefficient.push_back(shuiyinRow);
-    correlationCoefficient.push_back(youmobuliangRow);
-    correlationCoefficient.push_back(juchibianRow);
-    correlationCoefficient.push_back(siyinRow);
-    correlationCoefficient.push_back(guahuaRow);
-    correlationCoefficient.push_back(liewenRow);
-    correlationCoefficient.push_back(benbianRow);
-    correlationCoefficient.push_back(benjiaoRow);
+
+
+    correlationCoefficient.row(0).copyTo(HuahenRow);
+    correlationCoefficient.row(1).copyTo(yiwuRow);
+    correlationCoefficient.row(2).copyTo(qipaoRow);
+    correlationCoefficient.row(3).copyTo(madianRow);
+    correlationCoefficient.row(4).copyTo(shuiyinRow);
+    correlationCoefficient.row(5).copyTo(youmobuliangRow);
+    correlationCoefficient.row(6).copyTo(juchibianRow);
+    correlationCoefficient.row(7).copyTo(siyinRow);
+    correlationCoefficient.row(8).copyTo(guahuaRow);
+    correlationCoefficient.row(9).copyTo(liewenRow);
+    correlationCoefficient.row(10).copyTo(benbianRow);
+    correlationCoefficient.row(11).copyTo(benjiaoRow);
 }
 
 void ClassifyMachine::GetCoOccUrrenceMatrix(const cv::Mat& image, int a, int b, std::vector<std::vector<double>> & cooccurrence_matrix)

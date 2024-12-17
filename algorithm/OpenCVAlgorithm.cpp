@@ -17,7 +17,6 @@
 #include <opencv2/core/cuda.hpp>
 #include <opencv2/dnn.hpp>
 #include <chrono>
-#include<future>      //std::future std::promise
 #include <opencv2/cudawarping.hpp>
 #include <opencv2/cudafilters.hpp>
 #include <cuda_runtime.h>
@@ -39,8 +38,8 @@
 
 OpenCVAlgorithm::OpenCVAlgorithm()
 {
-    if (yolov8DLPtr == nullptr)
-        yolov8DLPtr = std::make_shared<Yolov8DL>();
+    // if (yolov8DLPtr == nullptr)
+    //     yolov8DLPtr = std::make_shared<Yolov8DL>();
     if (roundHolePtr == nullptr)
         roundHolePtr = std::make_shared<RoundHole>();
     if (matchTemplatePtr == nullptr)
@@ -350,6 +349,7 @@ bool OpenCVAlgorithm::onMatchHole(cv::Mat image0,
             qDebug() << "质心x坐标: " << centroids.at<double>(i, 0);
             qDebug() << "质心y坐标: " << centroids.at<double>(i, 1) ;
         }
+        return true;
     } catch(...) {
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -359,6 +359,7 @@ bool OpenCVAlgorithm::onMatchHole(cv::Mat image0,
                 qDebug() << __LINE__ <<" Exception: " << ex.what();
             }
         }
+        return false;
     }
 }
 
@@ -1306,9 +1307,9 @@ int OpenCVAlgorithm::PointHashCode(int x, int y)
 }
 
 NewGlassResult OpenCVAlgorithm::MeddiCookerDefectsDetected(cv::Mat image0,
-                                                  cv::Mat image1,
-                                                  cv::Mat image2,
-                                                  int currentframe)
+                                                           cv::Mat image1,
+                                                           cv::Mat image2,
+                                                           int currentframe)
 {
     int imageRows = image2.rows;
     int imageCols = image2.cols;
@@ -1481,11 +1482,13 @@ NewGlassResult OpenCVAlgorithm::MeddiCookerDefectsDetected(cv::Mat image0,
         result.pixGlassWidth = croppedImage.cols;
         result.part = part;
 
+        return result;
         qDebug()<<"帧["<<result.currentFrameCount<<"]执行完毕";
         return result;
     } else {
         qDebug()<<"图片为空";
     }
+    return NewGlassResult();
 }
 
 CV_GLASSPART OpenCVAlgorithm::DetermineGlassPart(cv::Rect maxBoundingRect, int imageRows)
