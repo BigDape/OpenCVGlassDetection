@@ -55,7 +55,7 @@ namespace HSAlgorithmNamespace
                                cv::Mat& image2,
                                cv::Mat& image3) = 0;
 
-        virtual void TestExecu(cv::Mat& image) = 0;
+        virtual void TestExecu(ClassifyParam param) = 0;
 
         virtual void Stop() = 0;
 

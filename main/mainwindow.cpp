@@ -753,6 +753,9 @@ void MainWindow::slot_ActionStart()
     m_pStop->setEnabled(true);
     m_pSettings->setEnabled(false);
     m_offline->setEnabled(false);
+    m_pDB->setEnabled(false);
+    m_calibrate->setEnabled(false);
+
 
     if (PARAM.cameraPtr0 != nullptr && PARAM.cameraPtr1 != nullptr) {
         if (!PARAM.cameraPtr0->IsStarted(m_args[0].camName)){
@@ -779,6 +782,9 @@ void MainWindow::slot_ActionStop()
     m_pStop->setEnabled(false);
     m_pSettings->setEnabled(true);
     m_offline->setEnabled(true);
+    m_pDB->setEnabled(true);
+    m_calibrate->setEnabled(true);
+
 
     if (m_startThread != nullptr) {
         if(m_startThread->joinable()) {

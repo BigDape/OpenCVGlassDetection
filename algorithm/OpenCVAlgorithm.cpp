@@ -192,8 +192,12 @@ NewGlassResult OpenCVAlgorithm::SyncExecu(int& currentFrameCount,
     return result;
 }
 
-void OpenCVAlgorithm::TestExecu(cv::Mat& image)
+void OpenCVAlgorithm::TestExecu(ClassifyParam param)
 {
+    if (classifyMachinePtr != nullptr) {
+        int classid = classifyMachinePtr->IdentificationDefect(param);
+        qDebug()<<"classid ="<<classid;
+    }
 }
 
 void OpenCVAlgorithm::Stop()
@@ -755,19 +759,28 @@ void OpenCVAlgorithm::EdgeDetectionFunction(cv::Mat src, cv::Mat& dst)
     //
     // 边缘检测
     //
+    cv::Mat grayImage;
+    if (src.channels()!= 1) {
+        cv::cvtColor(src, grayImage, cv::COLOR_BGR2GRAY);
+    } else {
+        grayImage = src;
+    }
+
+    // 滤波
+    cv::Mat thresholdMat;
+    cv::threshold(grayImage, thresholdMat,25,255,cv::THRESH_TOZERO);
+    // 边缘检测
     cv::Mat EdgeResult;
     if (!isGPU) { //CPU
-        cv::Canny(src, EdgeResult, 20, 80);
+        cv::Canny(thresholdMat, EdgeResult, 20, 80);
     } else { // GPU 143ms
         cv::Ptr<cv::cuda::CannyEdgeDetector> cannyDetector = cv::cuda::createCannyEdgeDetector(30, 60,1,true);
-        cv::cuda::GpuMat gpuInputImage(src);
-        // cv::cuda::GpuMat gpuGrayImage;
-        // cv::cuda::cvtColor(gpuInputImage, gpuGrayImage, cv::COLOR_BGR2GRAY);
+        cv::cuda::GpuMat gpuInputImage(thresholdMat);
         cv::cuda::GpuMat gpuCannyEdges;
         cannyDetector->detect(gpuInputImage, gpuCannyEdges);
         gpuCannyEdges.download(EdgeResult);
     }
-
+    // 膨胀
     cv::Mat dilatedImage;
     if (!isGPU) { // CPU
         cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
@@ -783,7 +796,6 @@ void OpenCVAlgorithm::EdgeDetectionFunction(cv::Mat src, cv::Mat& dst)
         dilateFilter->apply(gpuCannyEdges,gpudilatedImage);
         gpudilatedImage.download(dilatedImage);// 将结果从GPU内存传输回主机内存
     }
-
     dst = dilatedImage;
     SyncSaveImage(dst,"D:/testopencv/EdgeResult.jpg");
 }
@@ -1203,42 +1215,22 @@ void OpenCVAlgorithm::CuttinGlassDdges(cv::Mat Frame, cv::Mat& result)
 bool OpenCVAlgorithm::isClose(ConnectedComponent c1, ConnectedComponent c2, int threshold)
 {
     if (c1.rect.x > c2.rect.x) {
-        swap(c1,c2);
+        ConnectedComponent tmp = c1;
+        c1 = c2;
+        c2 = tmp;
     }
     if ( (c1.rect & c2.rect).area() > 0 ) {//两个矩形框重叠
         return true;
     } else { // 两个矩形相差threshold距离
-        // double sqrtV = ProcessTile::rectMinEdgeDistance(c1.rect,c2.rect);
-        double dx = c2.rect.x - c1.rect.x - c1.rect.width;
-        if (dx > threshold) {//x方向不符合条件，则false
+        double dx = c2.rect.x - (c1.rect.x + c1.rect.width);
+        double dy = c2.rect.y - (c1.rect.y + c1.rect.height);
+        double distance = std::sqrt(dx * dx + dy * dy);
+        if (distance > threshold) {
             return false;
         } else {//y方向
-            if (c2.rect.y < c1.rect.y) {//c2的左顶点在c1的上方
-                if (c1.rect.y > (c2.rect.y + c2.rect.height)){//c2左低点在c1左顶点的上方
-                    double dy = c1.rect.y - c2.rect.y - c2.rect.height;
-                    double distance = std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
-                    return (distance <= threshold);
-                } else {//c2左低点在c1左顶点的下方
-                    return true;//dx < threshold
-                }
-            } else {//c2的左顶点在c1左顶点的下方
-                if ((c1.rect.y + c1.rect.height) > c2.rect.y ) {//c1的左低点在c2的左顶点的下方
-                    return true;//dx < threshold
-                } else {//c1的左低点在c2的左顶点的上方
-                    double dy = c2.rect.y - c1.rect.y - c1.rect.height;
-                    double distance = std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
-                    return (distance <= threshold);
-                }
-            }
+            return true;
         }
     }
-}
-
-void OpenCVAlgorithm::swap(ConnectedComponent& c1, ConnectedComponent& c2)
-{
-    ConnectedComponent tmp = c1;
-    c1 = c2;
-    c2 = tmp;
 }
 
 void OpenCVAlgorithm::HoughCircleRadius(cv::Mat image, double& diameter)
@@ -1339,6 +1331,9 @@ NewGlassResult OpenCVAlgorithm::MeddiCookerDefectsDetected(cv::Mat image0,
         std::vector<int> YYs;
         cv::RotatedRect maxminAreaRect;    // 带倾斜角度的最大外接矩形
         cv::Rect maxBoundingRect(0,0,0,0); // 平行于坐标轴的最大外接矩形
+        int maxArea = -1;
+        int maxIndex = -1;
+        std::vector<ConnectedComponent> components;
         for(int i = 0; i < (int)contours.size(); i++) {/* 20ms */
             try {
                 std::vector<cv::Point> contour = contours[i];
@@ -1351,8 +1346,20 @@ NewGlassResult OpenCVAlgorithm::MeddiCookerDefectsDetected(cv::Mat image0,
                 cv::Rect boundingRect = rect.boundingRect();
                 double area = boundingRect.width * boundingRect.height;
                 if (area < 25) continue;
+                if (maxArea <= area) {
+                    maxArea = area;
+                    maxIndex = i;
+                }
+
+                ConnectedComponent component;
+                component.rect = boundingRect;
+                component.area = area;
+                component.x = boundingRect.x;
+                component.y = boundingRect.y;
+                components.push_back(component);
+
                 cv::Scalar color(256, 256, 256);
-                cv::rectangle(clonedMat, boundingRect, color, 2);//在原图上画框
+                cv::rectangle(clonedMat, boundingRect, color, 1);//在原图上画框
 
                 // 检出的缺陷小图
                 int sImageX = std::max<int>(boundingRect.x,0);
@@ -1399,24 +1406,21 @@ NewGlassResult OpenCVAlgorithm::MeddiCookerDefectsDetected(cv::Mat image0,
         }
 
         SyncSaveImage(clonedMat,"D:/testopencv/clonedMat.jpg");
+        // 合并临近缺陷
+        if (maxIndex != -1 && maxIndex < components.size())
+            components.erase(components.begin()+maxIndex);//找到代表背景的元素（通常是面积最大的那个），去除掉
+
+        OpenCVAlgorithm::MergeConnectedDomainDefects(components);//合并缺陷
+
         // 计算玻璃区域的最大外接矩形
-        if (!XXs.empty() && !YYs.empty()) {
-            int minX = *std::min_element(XXs.begin(), XXs.end());
-            int minY = *std::min_element(YYs.begin(), YYs.end());
-            int maxX = *std::max_element(XXs.begin(),XXs.end());
-            int maxY = *std::max_element(YYs.begin(),YYs.end());
-            maxBoundingRect.x = minX < 0 ? 0 : minX;
-            maxBoundingRect.y = minY < 0 ? 0 : minY;
-            maxBoundingRect.height = (maxBoundingRect.y + maxY - minY) > imageRows ? (imageRows - maxBoundingRect.y) : (maxY - minY);
-            maxBoundingRect.width = (maxBoundingRect.x + maxX - minX) > imageCols ? (imageCols - maxBoundingRect.x) : (maxX - minX);
-        }
+        OpenCVAlgorithm::CalculateMaximumBoundingRectangle(XXs, YYs, imageRows, imageCols, maxBoundingRect);
         qDebug()<<"判断玻璃部分后: maxBoundingRect.x ="<<maxBoundingRect.x
                  <<",maxBoundingRect.y="<<maxBoundingRect.y
                  <<"maxBoundingRect.w ="<<maxBoundingRect.width
                  <<",maxBoundingRect.height="<<maxBoundingRect.height;
 
         // 判断玻璃的位置
-        part = DetermineGlassPart(maxBoundingRect, imageRows);
+        part = OpenCVAlgorithm::DetermineGlassPart(maxBoundingRect, imageRows);
         qDebug()<<"part ="<<part;
 
         cv::Mat tmp = clonedMat(maxBoundingRect);
@@ -1442,10 +1446,18 @@ NewGlassResult OpenCVAlgorithm::MeddiCookerDefectsDetected(cv::Mat image0,
         int bottomCoordinate = (maxBoundingRect.y + maxBoundingRect.height) >= imageRows ? 0 : maxBoundingRect.y + maxBoundingRect.height; //图像下边没有玻璃边框
         int leftCoordinate =  maxBoundingRect.x==0 ? 0 :  maxBoundingRect.x;//图像左边没有玻璃边框
         int rightCoordinate = (maxBoundingRect.x + maxBoundingRect.width) >= imageCols ? 0 : maxBoundingRect.x + maxBoundingRect.width;//图像右边没有玻璃边框
-        edgeDefectDetection2(croppedImage0,croppedImage1,croppedImage,topCoordinate,bottomCoordinate,leftCoordinate,rightCoordinate,edges,FrameRegion);
+        edgeDefectDetection2(croppedImage0,
+                             croppedImage1,
+                             croppedImage,
+                             topCoordinate,
+                             bottomCoordinate,
+                             leftCoordinate,
+                             rightCoordinate,
+                             edges,
+                             FrameRegion);
 
         //
-        // 边部缺陷分类
+        // 边部缺陷检出
         //
         std::vector<GlassDefect2> edgeDefects;
         OpenCVAlgorithm::edgePartDefect(edges, edgeDefects);
@@ -1604,7 +1616,7 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
 
             // 求行投影的平均值
             cv::Scalar meanValue = cv::mean(verticalProjection);
-            int rangeValue = 1000;//波动范围参数，根据实际情况修改
+            int rangeValue = 0;//波动范围参数，根据实际情况修改
 
             // 计算大于平均值的位置
             bool pixcontinue =  false;
@@ -1615,7 +1627,7 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
                 } else {
                     if (pixcontinue == true) {
                         pixcontinue = false;
-                        if (i-startloc > 6) {//连续间隔大于6
+                        if (i-startloc > 20) {//连续间隔大于6
                             cv::Rect rect(startloc,0,i-startloc,EDGETHICKNESS);
                             cv::Mat defect0 = edge.region0(rect);
                             cv::Mat defect1 = edge.region1(rect);
@@ -1623,7 +1635,6 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
 
                             GlassDefect2 data;
                             data.time = QDateTime::currentDateTime().toString("hh:mm:ss").toStdString().data();        // 时间
-                            data.defectType = ("");//todo:判断类型
                             data.defectLevel = "NG";
                             data.pixLength = rect.height;   // 长度像元数
                             data.pixWidth = rect.width;    // 宽度像元数
@@ -1651,7 +1662,7 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
 
             // 求行投影的平均值
             cv::Scalar meanValue = cv::mean(horizontalProjection);
-            int rangeValue = 1000;//波动范围参数，根据实际情况修改
+            int rangeValue = 0;//波动范围参数，根据实际情况修改
 
             // 计算大于平均值的位置
             bool pixcontinue =  false;
@@ -1662,7 +1673,7 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
                 } else {
                     if (pixcontinue == true) {
                         pixcontinue = false;
-                        if (i-startloc > 6) {//连续间隔大于6
+                        if (i-startloc > 20) {//连续间隔大于6
                             cv::Rect rect(0,startloc,EDGETHICKNESS,i-startloc);
                             cv::Mat defect0 = edge.region0(rect);
                             cv::Mat defect1 = edge.region1(rect);
@@ -1688,6 +1699,55 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
             }
         }
     }
+}
+
+void OpenCVAlgorithm::CalculateMaximumBoundingRectangle(std::vector<int>& XXs,
+                                                        std::vector<int>& YYs,
+                                                        int imageRows,
+                                                        int imageCols,
+                                                        cv::Rect& maxBoundingRect)
+{
+    // 计算玻璃区域的最大外接矩形
+    if (!XXs.empty() && !YYs.empty()) {
+        int minX = *std::min_element(XXs.begin(), XXs.end());
+        int minY = *std::min_element(YYs.begin(), YYs.end());
+        int maxX = *std::max_element(XXs.begin(),XXs.end());
+        int maxY = *std::max_element(YYs.begin(),YYs.end());
+        maxBoundingRect.x = minX < 0 ? 0 : minX;
+        maxBoundingRect.y = minY < 0 ? 0 : minY;
+        maxBoundingRect.height = (maxBoundingRect.y + maxY - minY) > imageRows ? (imageRows - maxBoundingRect.y) : (maxY - minY);
+        maxBoundingRect.width = (maxBoundingRect.x + maxX - minX) > imageCols ? (imageCols - maxBoundingRect.x) : (maxX - minX);
+    }
+}
+
+void OpenCVAlgorithm::MergeConnectedDomainDefects(std::vector<ConnectedComponent>& components)
+{
+    for (int i = 0; i < (int)components.size(); i++) {// 合并新的区域
+        ConnectedComponent iComponent = components[i];
+        for (int j = i + 1; j < (int)components.size(); j++) {
+            ConnectedComponent jComponent = components[j];
+            if (isClose(iComponent, jComponent, 20)) {//最短欧式距离20个像元
+                int minX = iComponent.rect.x > jComponent.rect.x ? jComponent.rect.x : iComponent.rect.x;
+                int minY = iComponent.rect.y > jComponent.rect.y ? jComponent.rect.y : iComponent.rect.y;
+                int maxX = (iComponent.rect.x + iComponent.rect.width) > (jComponent.rect.x + jComponent.rect.width) ? (iComponent.rect.x + iComponent.rect.width) : (jComponent.rect.x + jComponent.rect.width);
+                int maxY = (iComponent.rect.y + iComponent.rect.height) > (jComponent.rect.y + jComponent.rect.height) ? (iComponent.rect.y + iComponent.rect.height) : (jComponent.rect.y + jComponent.rect.height);
+                cv::Rect mergedRect(minX, minY, maxX - minX, maxY - minY);
+                iComponent.rect = mergedRect;
+                iComponent.area = iComponent.rect.area();
+                iComponent.x = (minX + maxX) /2;
+                iComponent.y = (minY + maxY) /2;
+                components.erase(components.begin()+j);//删除jComponent元素，
+                components[i] = iComponent;
+                if (i==0){//合并完成，从前两个再遍历一遍
+                    i =-1;
+                } else {
+                    i = i-2;
+                }
+                break;
+            }
+        }
+    }
+
 }
 
 

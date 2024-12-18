@@ -12,55 +12,32 @@
 //[划痕，异物，气泡，麻点，水印，油墨不良，锯齿边，丝印，刮花，裂纹，崩边，崩角]
 ClassifyMachine::ClassifyMachine()
 {
-    correlationCoefficient = cv::Mat(12, 12, CV_8UC1);
-    cv::Mat HuahenRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat yiwuRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat qipaoRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat madianRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat shuiyinRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat youmobuliangRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat juchibianRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat siyinRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat guahuaRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat liewenRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat benbianRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-    cv::Mat benjiaoRow = (cv::Mat_<double>(1, 12) << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
-
-
-    correlationCoefficient.row(0).copyTo(HuahenRow);
-    correlationCoefficient.row(1).copyTo(yiwuRow);
-    correlationCoefficient.row(2).copyTo(qipaoRow);
-    correlationCoefficient.row(3).copyTo(madianRow);
-    correlationCoefficient.row(4).copyTo(shuiyinRow);
-    correlationCoefficient.row(5).copyTo(youmobuliangRow);
-    correlationCoefficient.row(6).copyTo(juchibianRow);
-    correlationCoefficient.row(7).copyTo(siyinRow);
-    correlationCoefficient.row(8).copyTo(guahuaRow);
-    correlationCoefficient.row(9).copyTo(liewenRow);
-    correlationCoefficient.row(10).copyTo(benbianRow);
-    correlationCoefficient.row(11).copyTo(benjiaoRow);
 }
 
 void ClassifyMachine::GetCoOccUrrenceMatrix(const cv::Mat& image, int a, int b, std::vector<std::vector<double>> & cooccurrence_matrix)
 {
     // only support gray image
     CV_Assert(image.channels() == 1);
-    for (auto i = 0; i < image.rows; i++)
-    {
-        for (auto j = 0; j < image.cols; j++)
-        {
-            if (i + b >= image.rows || j + a >= image.cols)
-            {
+    int Level = 52;//灰度值分成52个等级，如果耗时过长则
+    int levelMoin = 5;
+    cooccurrence_matrix.resize(Level);
+    for (size_t i = 0; i < Level; ++i) {
+        // 为每个内层向量（对应每行）初始化100个元素为0的double类型向量
+        std::vector<double> colVector(Level, 0);
+        cooccurrence_matrix[i] = colVector;
+    }
+    int sum = 0; //累计和
+    for (auto i = 0; i < image.rows; i++) {
+        for (auto j = 0; j < image.cols; j++) {
+            if (i + b >= image.rows || j + a >= image.cols) {
                 continue;
             }
-            int ij_valule = image.at<uchar>(i, j);
-            int offet_ab_value = image.at<uchar>(i + b, j + a);
+            int ij_valule = image.at<uchar>(i, j) / levelMoin;
+            int offet_ab_value = image.at<uchar>(i + b, j + a)/levelMoin;
             cooccurrence_matrix[ij_valule][offet_ab_value] += 1;
+            ++sum;
         }
     }
-
-    // normalize
-    int sum = cooccurrence_matrix.size() * cooccurrence_matrix.at(0).size();
     for (auto i = 0; i < (int)cooccurrence_matrix.size(); i++)
     {
         for (auto j = 0; j < (int)cooccurrence_matrix.at(0).size(); j++)
@@ -135,18 +112,25 @@ void ClassifyMachine::GetFeatures(cv::Rect regionRect, cv::Mat region, cv::Mat& 
     //1) 面积大小 1
     int Threshold = 30;
     double area = ClassifyMachine::RegionArea(region, Threshold);
+    qDebug()<<"面积大小 area =" <<area;
     //2) 长宽比 1
     double ratio = ClassifyMachine::AspectRatio(regionRect);
+    qDebug()<<"长宽比 ratio ="<<ratio;
     //3) 灰度均值 1
     double mean = ClassifyMachine::grayscaleMean(region);
+    qDebug()<<"灰度均值 mean ="<<mean;
     //4) X方向投影梯度变化 1
     double Xvalue = ClassifyMachine::secondDifferenceMeasure(region, true);
+    qDebug()<<"X方向投影梯度变化 Xvalue ="<<Xvalue;
     //5) Y方向投影梯度变化 1
     double Yvalue = ClassifyMachine::secondDifferenceMeasure(region, false);
+    qDebug()<<"Y方向投影梯度变化 Yvalue ="<<Yvalue;
     //6) 圆度 1
     double roundness = ClassifyMachine::calculateRoundness(region);
+    qDebug()<<"圆度 roundness ="<<roundness;
     //7) 偏心率 1
     double E = ClassifyMachine::calculateEccentricity(region);
+    qDebug()<<"偏心率 E ="<<E;
     //灰度共生矩阵
     std::vector<std::vector<double>>  cooccurrence_matrix;
     ClassifyMachine::GetCoOccUrrenceMatrix(region, 1, 1, cooccurrence_matrix);
@@ -160,7 +144,7 @@ void ClassifyMachine::GetFeatures(cv::Rect regionRect, cv::Mat region, cv::Mat& 
             u_j += j * cooccurrence_matrix[i][j];
         }
     }
-
+    qDebug()<<"u_i="<<u_i <<"u_j="<<u_j;
     float s_i_2=0,s_j_2=0;
     for (auto i = 0;i < (int)cooccurrence_matrix.size(); i++)
     {
@@ -170,7 +154,7 @@ void ClassifyMachine::GetFeatures(cv::Rect regionRect, cv::Mat region, cv::Mat& 
             s_j_2 +=(j-u_j) * (j-u_j) * cooccurrence_matrix[i][j];
         }
     }
-
+    qDebug()<<"s_i_2 ="<<s_i_2 <<", s_j_2 ="<<s_j_2;
     float entropy = 0,energy = 0,contrast = 0,IDM = 0,correlation=0;
     for (auto i = 0; i < (int)cooccurrence_matrix.size(); i++)
     {
@@ -189,18 +173,28 @@ void ClassifyMachine::GetFeatures(cv::Rect regionRect, cv::Mat region, cv::Mat& 
             correlation += ( i * j * cooccurrence_matrix[i][j] - u_i*u_j ) / ( sqrt(s_i_2) * sqrt(s_j_2) + 0.000001);
         }
     }
+
+    // 归一化处理
+    double maxEntropy = log2(52 * 52);
+    entropy = entropy / maxEntropy;
+    double contrast_max = 2 * (52 - 1) * (52 - 1);
+    contrast = contrast / contrast_max;
+    correlation = std::abs(correlation  / 10000.0);
+    correlation = correlation >1 ? 1 : correlation;
+
+
     featureVector.at<double>(0,0) = area;
-    featureVector.at<double>(0,1) = ratio;
-    featureVector.at<double>(0,2) = mean;
-    featureVector.at<double>(0,3) = Xvalue;
-    featureVector.at<double>(0,4) = Yvalue;
-    featureVector.at<double>(0,5) = roundness;
-    featureVector.at<double>(0,6) = E;
-    featureVector.at<double>(0,7) = entropy;
-    featureVector.at<double>(0,8) = energy;
-    featureVector.at<double>(0,9) = contrast;
-    featureVector.at<double>(0,10) = IDM;
-    featureVector.at<double>(0,11) = correlation;
+    featureVector.at<double>(1,0) = ratio;
+    featureVector.at<double>(2,0) = mean;
+    featureVector.at<double>(3,0) = Xvalue;
+    featureVector.at<double>(4,0) = Yvalue;
+    featureVector.at<double>(5,0) = roundness;
+    featureVector.at<double>(6,0) = E;
+    featureVector.at<double>(7,0) = entropy;
+    featureVector.at<double>(8,0) = energy;
+    featureVector.at<double>(9,0) = contrast;
+    featureVector.at<double>(10,0) = IDM;
+    featureVector.at<double>(11,0) = correlation;
 
     qDebug()<<"面积 ="<<area
              <<", 长宽比 ="<<ratio
@@ -254,13 +248,12 @@ double ClassifyMachine::calculateRoundness(cv::Mat image)
 
     // 假设只处理第一个轮廓（如果有多个轮廓，可根据需求遍历处理）
     if (!contours.empty()) {
-        double area = contourArea(contours);
-        double perimeter = arcLength(contours, true);
+        double area = cv::contourArea(contours[0]);
+        double perimeter = arcLength(contours[0], true);
         if (perimeter == 0) {
             return 0;  // 避免除数为0的情况
         }
         double roundness = 4 * CV_PI * area / (perimeter * perimeter);
-        qDebug() << "图像目标的圆度为: " << roundness;
         return roundness;
     }
     else {
@@ -290,47 +283,38 @@ double ClassifyMachine::secondDifferenceMeasure(cv::Mat region, bool isHorizonta
     }
     int size = inputArray.rows * inputArray.cols;
     cv::Mat firstDiff;
-    if (inputArray.rows == 1) {
-        // 如果是行向量形式的一维数组
-        firstDiff = cv::Mat::zeros(1, size - 1, CV_64FC1);
-        for (int i = 0; i < size - 1; ++i) {
-            firstDiff.at<double>(0, i) = inputArray.at<double>(0, i + 1) - inputArray.at<double>(0, i);
+
+    if (inputArray.rows == 1) {// 如果是行向量形式的一维数组
+        for (int i = 0; i < inputArray.cols - 1; ++i) {
+            int diff = std::abs(inputArray.at<int>(0, i+1) - inputArray.at<int>(0,i));
+            firstDiff.push_back(diff);
+        }
+    } else {// 如果是列向量形式的一维数组
+        for (int i = 0; i < inputArray.rows - 1; ++i) {
+            int diff = std::abs(inputArray.at<int>(i+1, 0) - inputArray.at<int>(i,0));
+            firstDiff.push_back(diff);
         }
     }
-    else {
-        // 如果是列向量形式的一维数组
-        firstDiff = cv::Mat::zeros(size - 1, 1, CV_64FC1);
-        for (int i = 0; i < size - 1; ++i) {
-            firstDiff.at<double>(i, 0) = inputArray.at<double>(i + 1, 0) - inputArray.at<double>(i, 0);
-        }
-    }
-    cv::Mat secondDiff;
-    if (firstDiff.rows == 1) {
-        // 对一阶差分再做差分得到二阶差分（行向量情况）
-        secondDiff = cv::Mat::zeros(1, size - 2, CV_64FC1);
-        for (int i = 0; i < size - 2; ++i) {
-            secondDiff.at<double>(0, i) = firstDiff.at<double>(0, i + 1) - firstDiff.at<double>(0, i);
-        }
-    }
-    else {
-        // 对一阶差分再做差分得到二阶差分（列向量情况）
-        secondDiff = cv::Mat::zeros(size - 2, 1, CV_64FC1);
-        for (int i = 0; i < size - 2; ++i) {
-            secondDiff.at<double>(i, 0) = firstDiff.at<double>(i + 1, 0) - firstDiff.at<double>(i, 0);
-        }
-    }
+    // cv::Mat secondDiff;
+    // // 对一阶差分再做差分得到二阶差分（列向量情况）
+    // for (int i = 0; i < firstDiff.rows - 1; ++i) {
+    //     int diff = std::abs(firstDiff.at<int>(i+1, 0) - firstDiff.at<int>(i,0));
+    //     secondDiff.push_back(diff);
+    // }
+
     double sumAbsDiff = 0;
-    for (int i = 0; i < secondDiff.rows * secondDiff.cols; ++i) {
-        sumAbsDiff += std::abs(secondDiff.at<double>(i));
+    for (int i = 0; i < firstDiff.rows; ++i) {
+        sumAbsDiff += firstDiff.at<int>(i,0);
     }
-    return sumAbsDiff / (secondDiff.rows * secondDiff.cols);
+    double mean = sumAbsDiff / (firstDiff.rows * firstDiff.cols);
+    double res = mean /1000.0;
+    return res >=1 ? 1 : res;
 }
 
 double ClassifyMachine::grayscaleMean(cv::Mat region)
 {
     cv::Scalar meanValue = cv::mean(region);
-    double meanRes = meanValue.val[0];
-    qDebug() << "The mean gray value of the image is: " << meanRes;
+    double meanRes = meanValue.val[0]/255;
     return meanRes;
 }
 
@@ -347,18 +331,75 @@ double ClassifyMachine::RegionArea(cv::Mat region, int Threshold)
 {
     cv::Mat dst;
     int retval = cv::threshold(region, dst, Threshold, 255, cv::THRESH_BINARY);
-    return retval;
+    double areaRatio = (double)retval/(double)(region.rows*region.cols);
+    return areaRatio;
 }
 
 int ClassifyMachine::IdentificationDefect(ClassifyParam param)
 {
-    cv::Mat feature;
-    ClassifyMachine::GetFeatures(param.regionRect, param.region, feature);
-    cv::Mat Cresult = correlationCoefficient * feature;
-    double Maxvalue;
-    cv::Point maxLoc;
-    cv::minMaxLoc(Cresult,nullptr, &Maxvalue, nullptr, &maxLoc);
-    return maxLoc.x;
+    try {
+        std::vector<double> features;
+        cv::Mat feature(12, 1, CV_64F);
+        ClassifyMachine::GetFeatures(param.regionRect, param.region, feature);
+
+        cv::Mat HuahenRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat yiwuRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat qipaoRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat madianRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat shuiyinRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat youmobuliangRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat juchibianRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat siyinRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat guahuaRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat liewenRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat benbianRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat benjiaoRow = (cv::Mat_<double>(1, 12) << 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334, 0.08334);
+        cv::Mat HuahenResult = HuahenRow * feature;
+        cv::Mat yiwuResult = yiwuRow * feature;
+        cv::Mat qipaoResult = qipaoRow * feature;
+        cv::Mat madianResult = madianRow * feature;
+        cv::Mat shuiyinResult = shuiyinRow * feature;
+        cv::Mat youmobuliangResult = youmobuliangRow * feature;
+        cv::Mat juchibianResult = juchibianRow * feature;
+        cv::Mat siyinResult = siyinRow * feature;
+        cv::Mat guahuaResult = guahuaRow * feature;
+        cv::Mat liewenResult = liewenRow * feature;
+        cv::Mat benbianResult = benbianRow * feature;
+        cv::Mat benjiaoResult = benjiaoRow * feature;
+
+        features.push_back(HuahenResult.at<double>(0, 0));
+        features.push_back(yiwuResult.at<double>(0, 0));
+        features.push_back(qipaoResult.at<double>(0, 0));
+        features.push_back(madianResult.at<double>(0, 0));
+        features.push_back(shuiyinResult.at<double>(0, 0));
+        features.push_back(youmobuliangResult.at<double>(0, 0));
+        features.push_back(juchibianResult.at<double>(0, 0));
+        features.push_back(siyinResult.at<double>(0, 0));
+        features.push_back(guahuaResult.at<double>(0, 0));
+        features.push_back(liewenResult.at<double>(0, 0));
+        features.push_back(benbianResult.at<double>(0, 0));
+        features.push_back(benjiaoResult.at<double>(0, 0));
+
+        double maxValue = -1;
+        int maxIndex = 0;
+        for(int i=0; i< (int)features.size(); ++i) {
+            if (maxValue < features[i]) {
+                maxValue = features[i];
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    } catch(...) {
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "IdentificationDefect  Exception: " << ex.what();
+            }
+        }
+    }
+    return 0;
 }
 
 

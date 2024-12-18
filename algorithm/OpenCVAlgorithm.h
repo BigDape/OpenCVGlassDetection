@@ -47,7 +47,7 @@ public:
                        cv::Mat& image1,
                        cv::Mat& image2,
                        cv::Mat& image3) override;
-    virtual void TestExecu(cv::Mat& image) override;
+    virtual void TestExecu(ClassifyParam param) override;
     virtual void Stop() override;
     virtual void Exit() override;
 
@@ -94,7 +94,6 @@ private:
                                         std::vector<GlassSizeInfo2>& results);
     void CuttinGlassDdges(cv::Mat Frame, cv::Mat& result);
     bool isClose(ConnectedComponent c1, ConnectedComponent c2, int threshold);
-    void swap(ConnectedComponent& c1, ConnectedComponent& c2);
     void HoughCircleRadius(cv::Mat image, double& diameter);
     cv::Rect getDefectStandardRect(cv::Mat& framCroppedImage,int pixX, int pixY, int pixLength, int pixWidth);
     int PointHashCode(int x, int y);
@@ -103,6 +102,12 @@ private:
                                                 cv::Mat image2,
                                               int currentframe);
     CV_GLASSPART DetermineGlassPart(cv::Rect maxBoundingRect, int imageRows);
+    void CalculateMaximumBoundingRectangle(std::vector<int>& XXs,
+                                           std::vector<int>& YYs,
+                                           int imageRows,
+                                           int imageCols,
+                                           cv::Rect& maxBoundingRect);
+    void MergeConnectedDomainDefects(std::vector<ConnectedComponent>& components);
 private:
     /**
      * @brief stitchFieldImages 拼接单个光场的两个相机的照片
