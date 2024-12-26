@@ -17,6 +17,7 @@
 #define CAMERAPATH  "D:/HVCache/camera/"
 #define CACHEPATH  "D:/HVCache/cache/"
 #define LIGHTPATH "D:/HVCache/light/"
+#define LOGPATH "C:/ProgramData/hivision/"
 
 /**
  * @brief The CV_GLASSPART enum 图片属于玻璃的什么部分
@@ -626,6 +627,7 @@ struct regionInfor{
  * @brief The ClassifyParam class 传统分类器输入参数
  */
 struct ClassifyParam{
+    int defectid;
     cv::Rect regionRect;
     cv::Mat region;
 };
@@ -652,6 +654,11 @@ struct ConnectedComponent {
     int area;
     int x;
     int y;
+    bool isDelete;
+    ConnectedComponent():area(0),
+        x(0),
+        y(0),
+        isDelete(false){}
 };
 
 /**
@@ -691,7 +698,7 @@ struct EdgeInfo{
 /**
  * @brief defectClasses 缺陷分类使用到的缺陷
  */
-static std::vector<QString> defectClasses={"划痕","异物","气泡","麻点","水印","油墨不良","锯齿边","丝印缺陷","刮花","裂纹","崩边","崩角"};
+static std::vector<QString> defectClasses={"异物","划痕","气泡","麻点","水印","油墨不良","锯齿边","丝印缺陷","刮花","裂纹","崩边","崩角"};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -706,7 +713,7 @@ static QString SyncSaveImage(cv::Mat& region,QString path="")
     try{
         if (path == "") {
             int randomNumber = std::rand() % 123567891;
-            QString time2 = QDateTime::currentDateTime().toString("hh-mm-ss");
+            QString time2 = QDateTime::currentDateTime().toString("hh-mm-ss")+ QString::number(region.rows*region.cols);
             path = "D:/HVCache/cache/"+time2 +"-"+ QString::number(randomNumber)+".jpg";
         }
         std::thread th1(&saveMatToImage,path,region);

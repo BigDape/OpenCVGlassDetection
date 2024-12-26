@@ -90,6 +90,7 @@ else()
                                          ${OpenCV_LIBS}
                                          opencv_cudawarping
                                          opencv_cudaarithm
+                                         log4qt
                                         )
  target_include_directories(hikvision PUBLIC C:/Qt/6.8.0/msvc2022_64/include)
 
@@ -104,6 +105,7 @@ else()
          icons/switch.png
          icons/glass.png
          icons/hs.png
+         icons/rank.png
  )
 
  # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

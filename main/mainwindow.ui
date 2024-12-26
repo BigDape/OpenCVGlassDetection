@@ -42,7 +42,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -509,10 +509,10 @@
      <widget class="QLabel" name="qualicaficationRateLB">
       <property name="geometry">
        <rect>
-        <x>116</x>
-        <y>262</y>
-        <width>16</width>
-        <height>16</height>
+        <x>104</x>
+        <y>259</y>
+        <width>41</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">

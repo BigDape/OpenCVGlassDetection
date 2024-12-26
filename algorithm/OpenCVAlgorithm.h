@@ -36,10 +36,6 @@ public:
                                    cv::Mat targetImage,
                                    std::vector<GlassSizeInfo2>& sizeRes,
                                    double minimumSimilarity) override;
-    virtual bool onMatchHole(cv::Mat image0,
-                             cv::Mat image1,
-                             cv::Mat image2,
-                             std::vector<GlassSizeInfo2>& sizeRes) override;
 
     virtual int PartGlassAB(cv::Rect rect, double pixAccuracy, bool& AisLeft) override;
     virtual void RegisterResultCallback(CallbackFun func) override;
@@ -79,10 +75,9 @@ private:
                               int bottomAddition,
                               int leftAddition,
                               int rightAddition,
-                              std::vector<EdgeInfo>& edges,
-                              cv::Mat& FrameRegion);
+                              std::vector<EdgeInfo>& edges);
 
-    void edgePartDefect(std::vector<EdgeInfo> edges, std::vector<GlassDefect2>& edgeDefect);
+    void edgePartDefect(std::vector<EdgeInfo> edges, std::vector<GlassDefect2>& edgeDefects, cv::Mat& clonedMat);
 
 
     void DoorClampDetection(cv::Mat& region,
@@ -107,7 +102,20 @@ private:
                                            int imageRows,
                                            int imageCols,
                                            cv::Rect& maxBoundingRect);
-    void MergeConnectedDomainDefects(std::vector<ConnectedComponent>& components);
+    void MergeConnectedDomainDefects(std::vector<ConnectedComponent>& components,
+                                     cv::Mat& clonedMat,
+                                     cv::Mat& image0,
+                                     cv::Mat& image1,
+                                     cv::Mat& image2,
+                                     NewGlassResult& result,
+                                     cv::Rect maxBoundingRect);
+
+    void DeleteUnnecessaryDefects(int maxIndex,
+                                  cv::Rect maxBoundingRect,
+                                  int imageRows,
+                                  int imageCols,
+                                  std::vector<ConnectedComponent>& components,
+                                  std::vector<ConnectedComponent>& newcomponents);
 private:
     /**
      * @brief stitchFieldImages 拼接单个光场的两个相机的照片

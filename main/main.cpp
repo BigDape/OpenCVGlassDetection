@@ -11,6 +11,10 @@
 #include "MainForm.h"
 #include <Windows.h>
 #include <DbgHelp.h>
+#include <log4qt/logger.h>
+#include <log4qt/logmanager.h>
+#include <log4qt/propertyconfigurator.h>
+
 #pragma comment(lib,"DbgHelp.lib")
 
 // 创建Dump文件
@@ -41,6 +45,9 @@ int main(int argc, char *argv[])
     //注册异常处理函数,使用VS打开D盘的dmp文件，查看崩溃在哪一行
     SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)ApplicationCrashHandler);
     QApplication a(argc, argv);
+    // 加载日志配置文件
+    Log4Qt::PropertyConfigurator::configure(a.applicationDirPath() + "/log.conf");
+
     // 软件国际化
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();

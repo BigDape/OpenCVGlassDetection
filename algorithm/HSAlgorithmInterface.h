@@ -41,11 +41,6 @@ namespace HSAlgorithmNamespace
                                std::vector<GlassSizeInfo2>& sizeRes,
                                double minimumSimilarity) = 0;
 
-        virtual bool onMatchHole(cv::Mat image0,
-                                 cv::Mat image1,
-                                 cv::Mat image2,
-                                 std::vector<GlassSizeInfo2>& sizeRes) = 0;
-
         virtual int PartGlassAB(cv::Rect rect, double pixAccuracy, bool& AisLeft) = 0;
 
         virtual void RegisterResultCallback(CallbackFun func) = 0;

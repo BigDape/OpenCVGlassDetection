@@ -53,6 +53,7 @@ public:
     virtual int64_t getCurrentDefectTableMaxID() override;
     virtual int64_t getCurrentGlassTableMaxID()  override;
     virtual int64_t getCurrentSizeTableMaxID() override;
+    virtual int64_t getCurrentSummaryTableMaxID() override;
 public:
     QSqlDatabase db;
     std::mutex mutex;

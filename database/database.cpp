@@ -101,6 +101,7 @@ bool DataBase::openDataBase()
 
 bool DataBase::insertOneData(const GlassDataBaseInfo2& data)
 {
+    qDebug()<<__FUNCTION__;
     std::lock_guard<std::mutex> lock(mutex);
     QSqlQuery query(db);
     QString sql = QString("INSERT INTO glass_table"
@@ -118,12 +119,12 @@ bool DataBase::insertOneData(const GlassDataBaseInfo2& data)
                           "VALUES ("
                           "%1, '%2', '%3', '%4', %5, %6, "
                           "'%7', %8, %9, %10, %11, "
-                          "%12, %13, %14, %15, %16"
-                          "%17, %18, %19, %20, %21"
-                          "%22, %23, %24, %25, %26"
-                          "%27, %28, %29, %30, %31,"
-                          "%32, %33, %34, %35, %36,"
-                          "%37, %38, %39, %40, %41,"
+                          "%12, %13, %14, %15, %16, "
+                          "%17, %18, %19, %20, %21, "
+                          "%22, %23, %24, %25, %26, "
+                          "%27, %28, %29, %30, %31, "
+                          "%32, %33, %34, %35, %36, "
+                          "%37, %38, %39, %40, %41, "
                           "%42, %43, %44, '%45'"
                           ")")
                           .arg(data.id).arg(data.time).arg(data.OKorNG).arg(data.sizeOKorNG).arg(data.length).arg(data.width)
@@ -222,7 +223,9 @@ bool DataBase::insertOneData(const GlassSummary& data)
 
 bool DataBase::batchInsertData(std::vector<GlassDefect2>& datas)
 {
+    qDebug()<<__FUNCTION__;
     std::lock_guard<std::mutex> lock(mutex);
+    qDebug()<<__FUNCTION__;
     // 开启事务
     QSqlQuery query;
     if (!query.exec("BEGIN;")) {
@@ -262,7 +265,9 @@ bool DataBase::batchInsertData(std::vector<GlassDefect2>& datas)
 
 bool DataBase::batchInsertData(std::vector<GlassSizeInfo2>& datas)
 {
+    qDebug()<<__FUNCTION__;
     std::lock_guard<std::mutex> lock(mutex);
+    qDebug()<<__FUNCTION__;
     if (datas.size() == 0)
         return true;
     // 开启事务
@@ -529,14 +534,14 @@ bool DataBase::queryTableData(std::vector<GlassSizeInfo2>& datas, QString queryS
         data.widthY = query.value(6).toDouble();
         data.marginsX = query.value(7).toDouble();
         data.marginsY = query.value(8).toDouble();
-        data.Pixlength = query.value(8).toInt();
-        data.PixWidth = query.value(9).toInt();
-        data.PixMarginsX = query.value(10).toInt();
-        data.PixMarginsY = query.value(11).toInt();
-        data.glassid = query.value(12).toInt();
-        data.imagePath0 = query.value(13).toString();
-        data.imagePath1 = query.value(14).toString();
-        data.imagePath2 = query.value(15).toString();
+        data.Pixlength = query.value(9).toInt();
+        data.PixWidth = query.value(10).toInt();
+        data.PixMarginsX = query.value(11).toInt();
+        data.PixMarginsY = query.value(12).toInt();
+        data.glassid = query.value(13).toInt();
+        data.imagePath0 = query.value(14).toString();
+        data.imagePath1 = query.value(15).toString();
+        data.imagePath2 = query.value(16).toString();
         datas.push_back(data);
     }
     return true;
@@ -655,6 +660,25 @@ int64_t DataBase::getCurrentSizeTableMaxID()
     if (query.next()) {
         count = query.value(0).toInt();
         qDebug() << "glass_sizeinfo max(id) =" << count;
+    } else {
+        qDebug() << "查询失败";
+    }
+    return count;
+}
+
+int64_t DataBase::getCurrentSummaryTableMaxID()
+{
+    std::lock_guard<std::mutex> lock(mutex);
+    QString querySql = "SELECT MAX(id) FROM glass_summary;";
+    QSqlQuery query(db);
+    qDebug()<<querySql;
+    int64_t count = 0;
+    if(!query.exec(querySql)) {
+        qDebug() << "Failed to query data: " << query.lastError().text();
+    }
+    if (query.next()) {
+        count = query.value(0).toInt();
+        qDebug() << "glass_summary max(id) =" << count;
     } else {
         qDebug() << "查询失败";
     }

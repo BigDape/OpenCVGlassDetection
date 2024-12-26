@@ -153,8 +153,6 @@ private:
                            QGraphicsView* view,
                            MyGraphicsItem* loadImgItem); //加载小图
 
-    void initLoadedImage(MyGraphicsItem* loadItem, QGraphicsView* view);
-
     void insertSizeTable(GlassSizeInfo2 info);
 
     void batchInsertSizeTable(std::vector<GlassSizeInfo2> infos);
@@ -253,10 +251,9 @@ public slots:
 
     void slot_InsertDatabase();//数据库批量插入
 
-    void slot_InsertSizeDatabase(std::vector<GlassSizeInfo2> datas);
-
     void slot_RebackHistoryImage();
 
+    void slot_Silkscreen();
 signals:
     void sign_InsertDatabase();//数据库批量插入
     void sign_GlassStaticTableInsertRowData(GlassDataBaseInfo2 info);//数据统计表插入一行
@@ -281,6 +278,7 @@ private:
     QAction* m_pDB;                         /* 数据查询按钮对象 */
     QAction* m_offline;                     /* 离线模式按钮对象 */
     QAction* m_calibrate;                   /* 标定模式按钮对象 */
+    QAction* m_silkscreen;                  /* 丝印匹配按钮对象 */
 
     MyGraphicsItem* loadedPixmapItem = nullptr;         /* 缺陷小图光场1 */
     MyGraphicsItem* loadedPixmapItem2 = nullptr;        /* 缺陷小图光场2 */
@@ -318,13 +316,15 @@ private:
     std::atomic<int>    m_benbianNumber = 0;                                /* 崩边数量 */
     std::atomic<int>    m_liewenNumber = 0;                                 /* 裂纹数量 */
 
-    std::atomic<int> defectPrimaryKey;                                      /* 缺陷数据库主键 */
-    std::atomic<int> glassPrimaryKey;                                       /* glass_table表主键 */
-    std::atomic<int> sizePrimaryKey;                                        /* 尺寸数据库主键 */
+    std::atomic<int> defectPrimaryKey = 0;                                      /* 缺陷数据库主键 */
+    std::atomic<int> glassPrimaryKey = 0;                                       /* glass_table表主键 */
+    std::atomic<int> sizePrimaryKey = 0;                                        /* 尺寸数据库主键 */
+    std::atomic<int> summaryPrimaryKey = 0;                                     /* summary表主键 */
 
     QHBoxLayout* ImageLayout = nullptr;                                     /* 显示图片的布局 */
     std::shared_ptr<std::thread> m_startThread = nullptr;                   /* 开始线程指针 */
     std::mutex m_mutex;                                                     /* 全局锁 */
+    std::mutex time_mutex;                                                  /* 时间锁 */
     cv::Mat m_glassRegion;                                                  /* 显示玻璃的区域 */
     GlassResult m_glassResult;      // 玻璃信息
     std::vector<cv::Rect>   m_AmadianRects;     // A区麻点的区域的点集合。todo：一片玻璃结束需要清理

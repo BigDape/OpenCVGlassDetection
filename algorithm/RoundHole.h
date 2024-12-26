@@ -25,9 +25,10 @@ class RoundHole
 public:
     RoundHole();
 
-    void HoughCircleRadius(cv::Mat image,
-                           std::vector<double>& diameters,
-                           std::vector<cv::Point>& centers);
+    void HoughCircleRadius(cv::Mat glass1,
+                           cv::Mat glass2,
+                           cv::Mat glass3,
+                           std::vector<GlassSizeInfo2>& sizeRes);
 };
 
 #endif // ROUNDHOLE_H

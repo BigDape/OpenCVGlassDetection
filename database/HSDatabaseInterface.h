@@ -37,6 +37,7 @@ namespace HSDatabaseNamespace{
         virtual int64_t getCurrentDefectTableMaxID() = 0;
         virtual int64_t getCurrentGlassTableMaxID() = 0;
         virtual int64_t getCurrentSizeTableMaxID() = 0;
+        virtual int64_t getCurrentSummaryTableMaxID() = 0;
     };
 }
 

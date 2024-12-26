@@ -306,6 +306,11 @@ void MainWindow::InitToolBar()
     m_calibrate->setToolTip(tr("calibrate."));
     m_calibrate->setIcon(QIcon(":/icons/glass.png"));
     ui->toolBar->addAction(m_calibrate);
+    // 丝印匹配
+    m_silkscreen = new QAction("&丝印匹配", this);
+    m_silkscreen->setToolTip(tr("silkscreen."));
+    m_silkscreen->setIcon(QIcon(":/icons/rank.png"));
+    ui->toolBar->addAction(m_silkscreen);
 
     ui->toolBar->setIconSize(QSize(40, 40));
     ui->toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -321,7 +326,8 @@ void MainWindow::InitToolBar()
     connect(m_pStop, SIGNAL(triggered()), this, SLOT(slot_ActionStop()));                   //点击停止响应事件
     connect(m_pDB, SIGNAL(triggered()), this, SLOT(slot_DataSearch()));                     //点击数据查询响应事件
     connect(m_offline, SIGNAL(triggered()), this, SLOT(slot_Offline()));                    //点击离线模式响应事件
-    connect(m_calibrate, SIGNAL(triggered()), this, SLOT(slot_Calibrate()));                //点击标定响应时间
+    connect(m_calibrate, SIGNAL(triggered()), this, SLOT(slot_Calibrate()));                //点击标定响应事件
+    connect(m_silkscreen, SIGNAL(triggered()), this, SLOT(slot_Silkscreen()));              //点击丝印匹配响应事件
 }
 
 void MainWindow::InitGlassStaticTableWidget()
@@ -373,12 +379,12 @@ void MainWindow::InitGlassStaticTableWidget()
     //
     // 读取数据库信息，插入数据统计表格中
     //
-    std::vector<GlassDataBaseInfo2> datas;
-    if (PARAM.databasePtr != nullptr)
-        PARAM.databasePtr->queryTableData(datas, "SELECT * FROM glass_table ORDER BY id DESC LIMIT 100;");
-    for (auto& data : datas) {
-        MainWindow::insertGlassStaticTable(data);
-    }
+    // std::vector<GlassDataBaseInfo2> datas;
+    // if (PARAM.databasePtr != nullptr)
+    //     PARAM.databasePtr->queryTableData(datas, "SELECT * FROM glass_table ORDER BY id DESC LIMIT 100;");
+    // for (auto& data : datas) {
+    //     MainWindow::insertGlassStaticTable(data);
+    // }
     // 注册回调函数
     connect(this, SIGNAL(sign_GlassStaticTableInsertRowData(GlassDataBaseInfo2)), this, SLOT(slot_GlassStaticTableInsertRowData(GlassDataBaseInfo2)));
 }
@@ -388,9 +394,20 @@ void MainWindow::InitSingleFlawTableWidget()
     //
     // 初始化单个缺陷界面
     //
-    MainWindow::initLoadedImage(loadedPixmapItem, ui->graphicsView);
-    MainWindow::initLoadedImage(loadedPixmapItem2, ui->graphicsView_2);
-    MainWindow::initLoadedImage(loadedPixmapItem3, ui->graphicsView_3);
+    QGraphicsScene* scene1 = new QGraphicsScene();
+    loadedPixmapItem = new MyGraphicsItem();
+    ui->graphicsView->setScene(scene1);
+    scene1->addItem(loadedPixmapItem);
+
+    QGraphicsScene* scene2 = new QGraphicsScene();
+    loadedPixmapItem2 = new MyGraphicsItem();
+    ui->graphicsView_2->setScene(scene2);
+    scene2->addItem(loadedPixmapItem2);
+
+    QGraphicsScene* scene3 = new QGraphicsScene();
+    loadedPixmapItem3 = new MyGraphicsItem();
+    ui->graphicsView_3->setScene(scene3);
+    scene3->addItem(loadedPixmapItem3);
 
     ui->SingleFlawtableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->SingleFlawtableWidget->setColumnWidth(0, 90);
@@ -400,33 +417,33 @@ void MainWindow::InitSingleFlawTableWidget()
     //
     // 若数据统计界面不为空，则显示第一行玻璃的缺陷信息
     //
-    QTableWidgetItem *itemID = ui->glassstatictablewidget->item(0, 0);
-    if (itemID != NULL) {
-        int glassid = itemID->text().toInt();
-        QString sql = QString("SELECT * FROM glass_defect WHERE glassid = %1;").arg(glassid);
-        std::vector<GlassDefect2> datas;
-        if (PARAM.databasePtr != nullptr)
-            PARAM.databasePtr->queryTableData(datas, sql);
-        if (datas.size() > 0) {
-            ui->SingleFlawtableWidget->setRowCount(datas.size());
-            ui->SingleFlawtableWidget->setColumnCount(9);
-            //
-            // 更新缺陷小图
-            //
-            QImage img1(datas[0].imagePath0);
-            QImage img2(datas[0].imagePath1);
-            QImage img3(datas[0].imagePath2);
+    // QTableWidgetItem *itemID = ui->glassstatictablewidget->item(0, 0);
+    // if (itemID != NULL) {
+    //     int glassid = itemID->text().toInt();
+    //     QString sql = QString("SELECT * FROM glass_defect WHERE glassid = %1;").arg(glassid);
+    //     std::vector<GlassDefect2> datas;
+    //     if (PARAM.databasePtr != nullptr)
+    //         PARAM.databasePtr->queryTableData(datas, sql);
+    //     if (datas.size() > 0) {
+    //         ui->SingleFlawtableWidget->setRowCount(datas.size());
+    //         ui->SingleFlawtableWidget->setColumnCount(9);
+    //         //
+    //         // 更新缺陷小图
+    //         //
+    //         QImage img1(datas[0].imagePath0);
+    //         QImage img2(datas[0].imagePath1);
+    //         QImage img3(datas[0].imagePath2);
 
-            MainWindow::loadedPixmapImage(img1,ui->graphicsView,loadedPixmapItem);
-            MainWindow::loadedPixmapImage(img2,ui->graphicsView_2,loadedPixmapItem2);
-            MainWindow::loadedPixmapImage(img3,ui->graphicsView_3,loadedPixmapItem3);
+    //         MainWindow::loadedPixmapImage(img1,ui->graphicsView,loadedPixmapItem);
+    //         MainWindow::loadedPixmapImage(img2,ui->graphicsView_2,loadedPixmapItem2);
+    //         MainWindow::loadedPixmapImage(img3,ui->graphicsView_3,loadedPixmapItem3);
 
-            // 插入缺陷
-            for (auto& defect : datas) {
-                MainWindow::insertDefectTable(defect);
-            }
-        }
-    }
+    //         // 插入缺陷
+    //         for (auto& defect : datas) {
+    //             MainWindow::insertDefectTable(defect);
+    //         }
+    //     }
+    // }
     // 双击更新小图
     connect(ui->SingleFlawtableWidget,SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(slot_UpdateDefectImages(QTableWidgetItem*)));
     connect(this, SIGNAL(sign_UpdateDefectTable(CV_GLASSPART, std::vector<GlassDefect2>)), this, SLOT(slot_UpdateDefectTable(CV_GLASSPART, std::vector<GlassDefect2>)));
@@ -438,9 +455,20 @@ void MainWindow::InitSingleSizeTableWidget()
     //
     // 初始化尺寸信息界面
     //
-    MainWindow::initLoadedImage(loadedPixmapItem50, ui->graphicsView_Field_1);
-    MainWindow::initLoadedImage(loadedPixmapItem51, ui->graphicsView_Field_2);
-    MainWindow::initLoadedImage(loadedPixmapItem52, ui->graphicsView_Field_3);
+    QGraphicsScene* scene1 = new QGraphicsScene();
+    loadedPixmapItem50 = new MyGraphicsItem();
+    ui->graphicsView_Field_1->setScene(scene1);
+    scene1->addItem(loadedPixmapItem50);
+
+    QGraphicsScene* scene2 = new QGraphicsScene();
+    loadedPixmapItem51 = new MyGraphicsItem();
+    ui->graphicsView_Field_2->setScene(scene2);
+    scene2->addItem(loadedPixmapItem51);
+
+    QGraphicsScene* scene3 = new QGraphicsScene();
+    loadedPixmapItem52 = new MyGraphicsItem();
+    ui->graphicsView_Field_3->setScene(scene3);
+    scene3->addItem(loadedPixmapItem52);
 
     ui->singleSizeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->singleSizeTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -450,15 +478,15 @@ void MainWindow::InitSingleSizeTableWidget()
     //
     // 读取历史尺寸信息
     //
-    QTableWidgetItem *itemID = ui->glassstatictablewidget->item(0, 0);
-    if (itemID != NULL) {
-        int glassid = itemID->text().toInt();
-        QString sql = QString("SELECT * FROM glass_sizeinfo WHERE glassid = %1;").arg(glassid);
-        std::vector<GlassSizeInfo2> datas;
-        if (PARAM.databasePtr != nullptr)
-            PARAM.databasePtr->queryTableData(datas, sql);
-        MainWindow::batchInsertSizeTable(datas);
-    }
+    // QTableWidgetItem *itemID = ui->glassstatictablewidget->item(0, 0);
+    // if (itemID != NULL) {
+    //     int glassid = itemID->text().toInt();
+    //     QString sql = QString("SELECT * FROM glass_sizeinfo WHERE glassid = %1;").arg(glassid);
+    //     std::vector<GlassSizeInfo2> datas;
+    //     if (PARAM.databasePtr != nullptr)
+    //         PARAM.databasePtr->queryTableData(datas, sql);
+    //     MainWindow::batchInsertSizeTable(datas);
+    // }
     connect(ui->singleSizeTableWidget,SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(slot_UpdateSizeImage(QTableWidgetItem*)));
     connect(this, SIGNAL(sign_SingleSizeUpdataTableData(std::vector<GlassSizeInfo2>)), this, SLOT(slot_SingleSizeUpdataTableData(std::vector<GlassSizeInfo2>)));
 }
@@ -526,13 +554,13 @@ void MainWindow::InitSummaryTableWidget()
     // 读取数据库获取初始化值
     //
 
-    QString sql = "SELECT * FROM glass_summary ORDER BY time DESC LIMIT 1;";
-    std::vector<GlassSummary> datas;
-    if (PARAM.databasePtr != nullptr)
-        PARAM.databasePtr->queryTableData(datas, sql);
-    if (datas.size()  > 0){
-        m_glassResult.glassSummary = datas[0];
-    }
+    // QString sql = "SELECT * FROM glass_summary ORDER BY time DESC LIMIT 1;";
+    // std::vector<GlassSummary> datas;
+    // if (PARAM.databasePtr != nullptr)
+    //     PARAM.databasePtr->queryTableData(datas, sql);
+    // if (datas.size()  > 0){
+    //     m_glassResult.glassSummary = datas[0];
+    // }
     ui->glassTotalCountLB->setText(QString::number(m_glassResult.glassSummary.glasstotalcount));
     ui->glassTotalCountLB->setAlignment(Qt::AlignCenter);
 
@@ -558,6 +586,7 @@ void MainWindow::InitDatabaseParam()
         defectPrimaryKey = PARAM.databasePtr->getCurrentDefectTableMaxID();
         glassPrimaryKey = PARAM.databasePtr->getCurrentGlassTableMaxID();
         sizePrimaryKey = PARAM.databasePtr->getCurrentSizeTableMaxID();
+        summaryPrimaryKey = PARAM.databasePtr->getCurrentSummaryTableMaxID();
     }
     // PARAM赋值读取
     if (PARAM.jsoncppPtr != nullptr) {
@@ -598,7 +627,7 @@ LOOPGET:
 
 void MainWindow::upDateOverView()
 {
-    m_glassResult.glassSummary.id = 0; //todo:获取数据库表的主键
+    m_glassResult.glassSummary.id = ++summaryPrimaryKey; //表的主键
     m_glassResult.glassSummary.time = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
     m_glassResult.glassSummary.glasstotalcount += 1; //玻璃块数加一
     if (m_glassResult.glassStatistics.defectOKorNG == "NG" || m_glassResult.glassStatistics.sizeOKorNG == "NG") {
@@ -617,7 +646,7 @@ void MainWindow::upDateOverView()
     ui->currentGlassStatus->setText(QString(m_glassResult.glassSummary.currentglassstatus));
     ui->glassOKCountLB->setText(QString::number(m_glassResult.glassSummary.OKcount));
     ui->glassNGCountLB->setText(QString::number(m_glassResult.glassSummary.NGcount));
-    QString text = "%"+ QString::number(m_glassResult.glassSummary.passrate * 100);
+    QString text =  QString::number(m_glassResult.glassSummary.passrate * 100) + "%";
     ui->qualicaficationRateLB->setText(text);
     ui->ExceptionCountLB->setText(QString::number(m_glassResult.glassSummary.exceptioncount));
     QString mes1 = "玻璃["+QString::number(glassPrimaryKey) + "] 玻璃结束状态更新成功。";
@@ -641,11 +670,9 @@ void MainWindow::imageDisplay(CV_GLASSPART part, cv::Mat image)
                 /* 每帧图像的行数因为仿射有变化，现在缩放统一大小 */
                 double scaleFactor = (double)m_glassRegion.rows / (double)image.rows;// 计算缩放因子
                 double newWidth1 = static_cast<int>((double)image.cols * scaleFactor);// 计算缩放后的宽
-                qDebug()<<"(double)image.cols = "<<(double)image.cols <<", scaleFactor ="<<scaleFactor<<", m_glassRegion.rows ="<<m_glassRegion.rows;
                 cv::resize(image, image, cv::Size(newWidth1, m_glassRegion.rows));
             }
             if (m_glassRegion.rows == 0 || m_glassRegion.cols == 0) {//算法误判头部
-                qDebug()<<"算法误判头部:m_glassRegion.rows ="<<m_glassRegion.rows<<", m_glassRegion.cols ="<<m_glassRegion.cols;
                 m_glassRegion = image;
             } else  {
                 cv::hconcat(m_glassRegion,image,m_glassRegion);
@@ -687,25 +714,17 @@ void MainWindow::slot_InsertDatabase()
 {
     if (PARAM.databasePtr != nullptr) {
         PARAM.databasePtr->insertOneData(m_glassResult.glassStatistics);
-        if ( !m_glassResult.glassDefects.empty() ){
+        if ( !m_glassResult.glassDefects.empty() ) {
             PARAM.databasePtr->batchInsertData(m_glassResult.glassDefects);
         }
-        PARAM.databasePtr->batchInsertData(m_glassResult.glassSize);
+        if ( !m_glassResult.glassSize.empty() ) {
+            PARAM.databasePtr->batchInsertData(m_glassResult.glassSize);
+        }
         PARAM.databasePtr->insertOneData(m_glassResult.glassSummary);
     }
+    PARAM.OneGlassFinished = true;
 }
 
-void  MainWindow::slot_InsertSizeDatabase(std::vector<GlassSizeInfo2> datas)
-{
-    if ( datas.empty() ){
-        qDebug()<<"slot_InsertSizeDatabase Datas.empty()";
-        return;
-    } else {
-        if (PARAM.databasePtr != nullptr) {
-            PARAM.databasePtr->batchInsertData(datas);
-        }
-    }
-}
 
 /////////////////////////////////public slot///////////////////////////////////////////////////////////////
 
@@ -876,6 +895,7 @@ void MainWindow::slot_SingleSizeUpdataTableData(std::vector<GlassSizeInfo2> info
 
 void MainWindow::slot_RefreshSystemTime()
 {
+    std::lock_guard<std::mutex> lock(time_mutex);
     QDate currentDate = QDate::currentDate();
     QLocale locale1(QLocale::Chinese);
     QString weekday = locale1.dayName(currentDate.dayOfWeek(), QLocale::LongFormat);
@@ -901,7 +921,9 @@ void MainWindow::GetCameraBufferAndExceute()
 {
     FrameImage imageunit0;
     FrameImage imageunit1;
+    //
     // 获取每帧图片
+    //
 CAMERA0:
     if (PARAM.cameraPtr0 != nullptr && PARAM.cameraPtr1 != nullptr) {
         PARAM.cameraPtr0->startGetFrameBuffer(imageunit0);
@@ -966,30 +988,28 @@ CAMERA1:
         // 匹配丝印和孔
         if (result.part == CV_GLASSPART::TAIL) {
             // 保存整图
-            SyncSaveImage(m_glassResult.glassRegion0,"D:/HVCache/history/0.jpg");
-            SyncSaveImage(m_glassResult.glassRegion1,"D:/HVCache/history/1.jpg");
-            SyncSaveImage(m_glassResult.glassRegion2,"D:/HVCache/history/2.jpg");
+            QString path0 = "D:/HVCache/history/" + QString::number(glassPrimaryKey) + "_0.jpg";
+            QString path1 = "D:/HVCache/history/" + QString::number(glassPrimaryKey) + "_1.jpg";
+            QString path2 = "D:/HVCache/history/" + QString::number(glassPrimaryKey) + "_2.jpg";
+            SyncSaveImage(m_glassResult.glassRegion0,path0);
+            SyncSaveImage(m_glassResult.glassRegion1,path1);
+            SyncSaveImage(m_glassResult.glassRegion2,path2);
 
             PARAM.algorithmPtr->onMatchSilkscreen(m_glassResult.glassRegion0,
                                                   m_glassResult.glassRegion1,
                                                   m_glassResult.glassRegion2,
-                                                  m_glassResult.glassSize,0.3);//相似度设置为0.3
+                                                  m_glassResult.glassSize,0.5);//相似度设置为0.3
 
             // 对图像进行分区
             if (m_glassResult.glassSize.size() > 0 ) {// 有丝印
                 result.divingX = PARAM.algorithmPtr->PartGlassAB(m_glassResult.glassSize[0].rect,
                                                                  PARAM.XCamera0Accuracy,
                                                                  result.AisLeft);
-            } else {//
+            } else {
                 qDebug()<<"未找到丝印";
                 result.divingX = 0;
                 result.AisLeft = true;
             }
-
-            PARAM.algorithmPtr->onMatchHole(m_glassResult.glassRegion0,
-                                            m_glassResult.glassRegion1,
-                                            m_glassResult.glassRegion2,
-                                            m_glassResult.glassSize);
         }
 
         // 逐帧处理结果
@@ -997,16 +1017,23 @@ CAMERA1:
             MainWindow::imageDisplay(result.part, result.glassRegion);// 分帧显示透射场图像
             MainWindow::handleFrameData(result); // 处理缺陷数据
             if (result.part == CV_GLASSPART::TAIL) { // 玻璃结束
-                MainWindow::summaryDefectNumber(result.divingX,
-                                                result.AisLeft,
-                                                result.sizeRes[0].rect);// 统计缺陷数据
-                emit sign_GlassStaticTableInsertRowData(m_glassResult.glassStatistics); //更新统计信息
-                emit sign_UpdateDefectTable(result.part, m_glassResult.glassDefects);   //更新缺陷数据
-                MainWindow::handleFrameData(result.sizeRes);// 处理尺寸数据
-                emit sign_SingleSizeUpdataTableData(m_glassResult.glassSize);//更新尺寸信息
+                if(result.sizeRes.size() > 0) {
+                    MainWindow::summaryDefectNumber(result.divingX,
+                                                    result.AisLeft,
+                                                    result.sizeRes[0].rect);// 统计缺陷数据
+                } else {//玻璃没有丝印
+                    cv::Rect rect(0,0,0,0);
+                    MainWindow::summaryDefectNumber(result.divingX,
+                                                    result.AisLeft,
+                                                    rect);// 统计缺陷数据
+                }
                 MainWindow::upDateOverView();               // 更新概述信息
-                emit sign_InsertDatabase();                 // 更新数据库
-                MainWindow::clearGlassDisplay();            //玻璃结束，清理
+                emit sign_GlassStaticTableInsertRowData(m_glassResult.glassStatistics); // 更新统计信息
+                emit sign_UpdateDefectTable(result.part, m_glassResult.glassDefects);   // 更新缺陷数据
+                MainWindow::handleFrameData(m_glassResult.glassSize);                   // 处理尺寸数据
+                emit sign_SingleSizeUpdataTableData(m_glassResult.glassSize);           // 更新尺寸信息
+                emit sign_InsertDatabase();                                             // 更新数据库
+                MainWindow::clearGlassDisplay();                                        // 玻璃结束，清理
             }
         } catch (...) {
             std::exception_ptr eptr = std::current_exception();
@@ -1048,7 +1075,7 @@ void MainWindow::slot_DisplayMain(cv::Mat image)
 
 void MainWindow::slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2> FrameDefects)
 {
-    if (part == CV_GLASSPART::HEAD) {//清除表格
+    //if (part == CV_GLASSPART::HEAD) {//清除表格
         ui->SingleFlawtableWidget->clear();
         QStringList headerLabels = {tr("序号"),
                                     tr("时间"),
@@ -1063,7 +1090,7 @@ void MainWindow::slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefe
         ui->SingleFlawtableWidget->setColumnCount(headerLabels.size());
         ui->SingleFlawtableWidget->setHorizontalHeaderLabels(headerLabels);
         ui->SingleFlawtableWidget->setRowCount(0);
-    }
+    //}
     if (FrameDefects.size() > 0 ) {
         QImage img1(FrameDefects[0].imagePath0);
         QImage img2(FrameDefects[0].imagePath1);
@@ -1071,8 +1098,12 @@ void MainWindow::slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefe
         MainWindow::loadedPixmapImage(img1,ui->graphicsView,loadedPixmapItem);
         MainWindow::loadedPixmapImage(img2,ui->graphicsView_2,loadedPixmapItem2);
         MainWindow::loadedPixmapImage(img3,ui->graphicsView_3,loadedPixmapItem3);
+        int count =0;
         for (auto defect: m_glassResult.glassDefects) {
+            if (count >99 )
+                break;
             MainWindow::insertDefectTable(defect);
+            ++count;
         }
     }
 }
@@ -1137,14 +1168,13 @@ void MainWindow::slot_UpdateDefectImages(QTableWidgetItem* item)
             qDebug()<<"item 为空";
         }
     } catch(...) {
-        qDebug()<<" MainWindow::slot_UpdateDefectImages throw a unknow Exception.";
         // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
             try {
                 std::rethrow_exception(eptr);
             } catch (const std::exception& ex) {
-                qDebug() << "Exception: " << ex.what();
+                qDebug() << "slot_UpdateDefectImages Exception: " << ex.what();
             }
         }
     }
@@ -1154,8 +1184,7 @@ void MainWindow::slot_UpdateSizeImage(QTableWidgetItem* item)
 {
     if (item) {
         int row = item->row();
-        QString sizeID = ui->singleSizeTableWidget->item(row, 7)->text();
-        qDebug()<<"sizeID = "<< sizeID;
+        QString sizeID = ui->singleSizeTableWidget->item(row, 8)->text();
         if (PARAM.databasePtr != nullptr) {
             QString querySql = QString("SELECT * FROM glass_sizeinfo WHERE id = %1;").arg(sizeID.toInt());
             std::vector<GlassSizeInfo2> datas;
@@ -1218,7 +1247,8 @@ void MainWindow::InitImageCacheDirectory()
         createDir(CAMERAPATH);
         createDir(CACHEPATH);
         createDir(LIGHTPATH);
-    } catch(...){
+        createDir(LOGPATH);
+    } catch(...) {
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
             try {
@@ -1269,6 +1299,7 @@ void MainWindow::insertGlassStaticTable(GlassDataBaseInfo2 data)
         //
         // 同一块玻璃的数据插入到表格的同一行，新玻璃插入到第一行
         //
+        qDebug()<<"data.id ="<<data.id;
         if (itemID != NULL) {
             if(itemID->text().toInt() != data.id){
                 ui->glassstatictablewidget->insertRow(0);
@@ -1285,7 +1316,7 @@ void MainWindow::insertGlassStaticTable(GlassDataBaseInfo2 data)
         }
         MainWindow::setTableWidgetItem(0,0,QString::number(data.id),ui->glassstatictablewidget,brush);//ID
         MainWindow::setTableWidgetItem(0,1,data.time,ui->glassstatictablewidget,brush);//时间
-        MainWindow::setTableWidgetItem(0,2,QString::number(data.id),ui->glassstatictablewidget,brush);//OK/NG
+        MainWindow::setTableWidgetItem(0,2,data.OKorNG,ui->glassstatictablewidget,brush);//OK/NG
         MainWindow::setTableWidgetItem(0,3,data.sizeOKorNG,ui->glassstatictablewidget,brush);//尺寸OK/NG
         MainWindow::setTableWidgetItem(0,4,QString::number(data.length,'f', 2),ui->glassstatictablewidget,brush);//长度
         MainWindow::setTableWidgetItem(0,5,QString::number(data.width,'f', 2),ui->glassstatictablewidget,brush);//宽度
@@ -1360,6 +1391,11 @@ void MainWindow::summaryDefectNumber(int diviX, bool AisLeft, cv::Rect siyinRect
             MainWindow::NGorOKbengbianjiao(defect);
         }
     }
+    m_glassResult.glassStatistics.id = glassPrimaryKey;
+    if (m_glassResult.glassStatistics.defectOKorNG == "NG") {
+        m_glassResult.glassStatistics.OKorNG = "NG";
+    }
+    m_glassResult.glassStatistics.time= QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
 }
 
 void MainWindow::insertDefectTable(GlassDefect2 defect)
@@ -1399,25 +1435,26 @@ void MainWindow::loadedPixmapImage(QImage img,
     view->update();
 }
 
-void MainWindow::initLoadedImage(MyGraphicsItem* loadItem, QGraphicsView* view)
-{
-    QGraphicsScene* scene = new QGraphicsScene();
-    loadItem = new MyGraphicsItem();
-    view->setScene(scene);
-    scene->addItem(loadItem);
-}
-
 void MainWindow::insertSizeTable(GlassSizeInfo2 info)
 {
     ui->singleSizeTableWidget->insertRow(0);
+    qDebug()<<"Size Data=>{"<<"info.sizeID="<<info.sizeID
+             <<",info.time="<<info.time
+             <<",info.sizeType="<<info.sizeType
+             <<",info.sizeLevel="<<info.sizeLevel
+             <<",info.lengthX="<<info.lengthX
+             <<",info.widthY="<<info.widthY
+             <<",info.marginsX="<<info.marginsX
+             <<",info.marginsY="<<info.marginsY
+             <<",info.id="<<info.id;
     MainWindow::setTableWidgetItem(0,0,QString::number(info.sizeID),ui->singleSizeTableWidget);// 序号
     MainWindow::setTableWidgetItem(0,1,info.time,ui->singleSizeTableWidget);// 时间
     MainWindow::setTableWidgetItem(0,2,info.sizeType,ui->singleSizeTableWidget);// 类型
     MainWindow::setTableWidgetItem(0,3,info.sizeLevel,ui->singleSizeTableWidget);// 等级
-    MainWindow::setTableWidgetItem(0,4,QString::number(info.lengthX, 'f', 2),ui->singleSizeTableWidget);// 长X
-    MainWindow::setTableWidgetItem(0,5,QString::number(info.widthY, 'f', 2),ui->singleSizeTableWidget);// 宽Y
-    MainWindow::setTableWidgetItem(0,6,QString::number(info.marginsX, 'f', 2),ui->singleSizeTableWidget);// 边距X
-    MainWindow::setTableWidgetItem(0,7,QString::number(info.marginsY, 'f', 2),ui->singleSizeTableWidget);// 边距Y
+    MainWindow::setTableWidgetItem(0,4,QString::number(info.lengthX),ui->singleSizeTableWidget);// 长X
+    MainWindow::setTableWidgetItem(0,5,QString::number(info.widthY),ui->singleSizeTableWidget);// 宽Y
+    MainWindow::setTableWidgetItem(0,6,QString::number(info.marginsX),ui->singleSizeTableWidget);// 边距X
+    MainWindow::setTableWidgetItem(0,7,QString::number(info.marginsY),ui->singleSizeTableWidget);// 边距Y
     MainWindow::setTableWidgetItem(0,8,QString::number(info.id),ui->singleSizeTableWidget);
 }
 
@@ -1425,6 +1462,15 @@ void MainWindow::batchInsertSizeTable(std::vector<GlassSizeInfo2> infos)
 {
     if(infos.size() > 0 ) {
         for (auto info : infos) {
+            qDebug()<<"MainWindow::batchInsertSizeTable Size Data=>{"<<"info.sizeID="<<info.sizeID
+                     <<",info.time="<<info.time
+                     <<",info.sizeType="<<info.sizeType
+                     <<",info.sizeLevel="<<info.sizeLevel
+                     <<",info.lengthX="<<info.lengthX
+                     <<",info.widthY="<<info.widthY
+                     <<",info.marginsX="<<info.marginsX
+                     <<",info.marginsY="<<info.marginsY
+                     <<",info.id="<<info.id;
             MainWindow::insertSizeTable(info);
         }
         for (int row = 0; row < ui->singleSizeTableWidget->rowCount(); ++row) {
@@ -1435,13 +1481,36 @@ void MainWindow::batchInsertSizeTable(std::vector<GlassSizeInfo2> infos)
                 }
             }
         }
-        //显示孔洞小图
-        QImage img2(infos[0].imagePath0);
-        MainWindow::loadedPixmapImage(img2,ui->graphicsView_Field_1,loadedPixmapItem50);
-        QImage img3(infos[0].imagePath1);
-        MainWindow::loadedPixmapImage(img3,ui->graphicsView_Field_2,loadedPixmapItem51);
-        QImage img4(infos[0].imagePath2);
-        MainWindow::loadedPixmapImage(img3,ui->graphicsView_Field_3,loadedPixmapItem52);
+        QImage img1=QImage(infos[0].imagePath0);
+        QImage img2=QImage(infos[0].imagePath1);
+        QImage img3=QImage(infos[0].imagePath2);
+        if(img1.isNull()) {
+            qDebug() << "img1图像("<<infos[0].imagePath0<<")无法加载，可能文件不存在。";
+        } else {
+            loadedPixmapItem50->loadImage(img1);
+            int nwidth = ui->graphicsView_Field_1->width(), nheight = ui->graphicsView_Field_1->height();
+            loadedPixmapItem50->setQGraphicsViewWH(nwidth, nheight);
+            ui->graphicsView_Field_1->setSceneRect((QRectF(-(nwidth / 2), -(nheight / 2), nwidth, nheight)));
+            ui->graphicsView_Field_1->update();
+        }
+        if(img2.isNull()) {
+            qDebug() << "img2图像("<<infos[0].imagePath1<<")无法加载，可能文件不存在。";
+        } else {
+            loadedPixmapItem51->loadImage(img2);
+            int nwidth2 = ui->graphicsView_Field_2->width(), nheight2 = ui->graphicsView_Field_2->height();
+            loadedPixmapItem51->setQGraphicsViewWH(nwidth2, nheight2);
+            ui->graphicsView_Field_2->setSceneRect((QRectF(-(nwidth2 / 2), -(nheight2 / 2), nwidth2, nheight2)));
+            ui->graphicsView_Field_2->update();
+        }
+        if(img3.isNull()) {
+            qDebug() << "img3图像("<<infos[0].imagePath2<<")无法加载，可能文件不存在。";
+        } else {
+            loadedPixmapItem52->loadImage(img3);
+            int nwidth3 = ui->graphicsView_Field_3->width(), nheight3 = ui->graphicsView_Field_3->height();
+            loadedPixmapItem52->setQGraphicsViewWH(nwidth3, nheight3);
+            ui->graphicsView_Field_3->setSceneRect((QRectF(-(nwidth3 / 2), -(nheight3 / 2), nwidth3, nheight3)));
+            ui->graphicsView_Field_3->update();
+        }
     }
 }
 
@@ -1768,57 +1837,102 @@ void MainWindow::NGorOKbengbianjiao(GlassDefect2 defect)
 
 void MainWindow::handleFrameData(NewGlassResult result)
 {
-    int defectId = result.defectRes.size();
-    m_glassResult.glassStatistics.length += result.pixGlassLength * PARAM.XCamera0Accuracy;
-    m_glassResult.glassStatistics.width += result.pixGlassWidth * PARAM.YAccuracy;
-    for (auto& defect : result.defectRes) {
-        defect.id = ++defectPrimaryKey;                                    // 主键id,在所有缺陷中的顺序
-        defect.defectId = ++defectId;
+    for (auto defect : result.defectRes) {
+                                            // 主键id,在所有缺陷中的顺序
         defect.x = defect.pixX * PARAM.XCamera0Accuracy;
-        defect.y = defect.pixY * PARAM.YAccuracy;
+        defect.y = m_glassResult.glassStatistics.length + defect.pixY * PARAM.YAccuracy;//每帧坐标转化为整体坐标
+        if (defect.x == 0 || defect.y == 0) //边部缺陷过滤，由透射场来处理
+            continue;
+
         defect.length = defect.pixLength * PARAM.YAccuracy;
         defect.width = defect.pixWidth * PARAM.XCamera0Accuracy;
+
         defect.area = defect.pixArea * PARAM.XCamera0Accuracy;
+        if (defect.area > 1000) continue;//todo:面积太大是丝印，去除掉
+        defect.id = ++defectPrimaryKey;
         defect.glassid = glassPrimaryKey;
         m_glassResult.glassDefects.push_back(defect);//将每帧数据插入全局变量中
     }
+    m_glassResult.glassStatistics.length += result.pixGlassLength * PARAM.XCamera0Accuracy;
+    m_glassResult.glassStatistics.width =  (m_glassResult.glassStatistics.width + result.pixGlassWidth * PARAM.YAccuracy)/2.0;
 }
 
 void MainWindow::handleFrameData(std::vector<GlassSizeInfo2>& glassSize)
 {
     int sizeID = 0;
     for (auto& size : glassSize) {
+        size.id = ++sizePrimaryKey;
         size.sizeID = ++sizeID;
         size.lengthX = size.Pixlength * PARAM.YAccuracy;
         size.widthY = size.PixWidth * PARAM.XCamera0Accuracy;
         size.marginsX = size.PixMarginsX * PARAM.YAccuracy;
         size.marginsY = size.PixMarginsY * PARAM.XCamera0Accuracy;
         size.glassid = glassPrimaryKey;
-        m_glassResult.glassSize.push_back(size);
     }
 }
 
 
 void MainWindow::clearGlassDisplay()
 {
-    m_AmadianRects.clear();
-    m_BmadianRects.clear();
-    m_BshuiyinRects.clear();
-    m_A10mm2youmobuliangRects.clear();
-    m_A10mm3youmobuliangRects.clear();
-    m_B10mm2youmobuliangRects.clear();
-    m_B10mm3youmobuliangRects.clear();
-    m_juchibianAllLengthRects = 0;
-    m_juchibianAllWidthRects = 0;
-    if (!m_glassResult.glassRegion0.empty())
-        m_glassResult.glassRegion0.release();
-    if (!m_glassResult.glassRegion1.empty())
-        m_glassResult.glassRegion1.release();
-    if (!m_glassResult.glassRegion2.empty())
-        m_glassResult.glassRegion2.release();
-    m_glassResult.glassStatistics = GlassDataBaseInfo2();
-    m_glassResult.glassDefects.clear();
-    m_glassResult.glassSize.clear();
+CLEAR:
+    if (PARAM.OneGlassFinished == true) {
+        m_AmadianRects.clear();
+        m_BmadianRects.clear();
+        m_BshuiyinRects.clear();
+        m_A10mm2youmobuliangRects.clear();
+        m_A10mm3youmobuliangRects.clear();
+        m_B10mm2youmobuliangRects.clear();
+        m_B10mm3youmobuliangRects.clear();
+        m_juchibianAllLengthRects = 0;
+        m_juchibianAllWidthRects = 0;
+        if (!m_glassResult.glassRegion0.empty())
+            m_glassResult.glassRegion0.release();
+        if (!m_glassResult.glassRegion1.empty())
+            m_glassResult.glassRegion1.release();
+        if (!m_glassResult.glassRegion2.empty())
+            m_glassResult.glassRegion2.release();
+        m_glassResult.glassStatistics.length = 0;
+        m_glassResult.glassStatistics = GlassDataBaseInfo2();
+        m_glassResult.glassDefects.clear();
+        m_glassResult.glassSize.clear();
+        PARAM.OneGlassFinished = false;
+        qDebug()<<"数据清理成功。";
+    } else {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        goto CLEAR;
+    }
 }
+
+void MainWindow::slot_Silkscreen()
+{
+    try {
+        QString exePath = QDir::currentPath() +"/template" ;
+        qDebug()<<exePath;
+        //获取选择的目录路径
+        QStringList offlineSelectedFiles =  QFileDialog::getOpenFileNames( this, "选择文件或目录", exePath, "All Files (*);;Directories (*/)", nullptr, QFileDialog::ReadOnly);
+        //若目录路径不为空
+        if (!offlineSelectedFiles.isEmpty()) {
+            auto start = std::chrono::high_resolution_clock::now();// 开始时间
+            if (PARAM.algorithmPtr != nullptr) {
+                std::vector<QString> paths;
+                //遍历容器
+                for(int i = 0; i < (int)offlineSelectedFiles.size(); ++i) {
+                    qDebug() << offlineSelectedFiles[i];//输出文件的完整路径名
+                    paths.push_back(offlineSelectedFiles[i]);
+                }
+                PARAM.algorithmPtr->setTemplate(paths);
+            }
+            auto endf1 = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double, std::milli> durationf1 = endf1 - start;
+            qDebug() << "Finished 2 time：" << durationf1.count() << " ms";
+        } else {
+            return;
+        }
+    } catch(...) {
+        qDebug()<<"slot_ButtonExportClicked() error";
+    }
+}
+
+
 
 

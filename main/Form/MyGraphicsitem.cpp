@@ -58,7 +58,7 @@ void MyGraphicsItem::ResetItemPos()
     m_scaleValue = m_scaleDafault;
     //缩放到一开始的自适应大小
     setScale(m_scaleDafault);
-    //setPos(0,0);
+    setPos(0,0);
 }
 
 void MyGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)

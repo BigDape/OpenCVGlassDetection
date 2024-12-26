@@ -28,7 +28,7 @@ public:
 
     int IdentificationDefect(ClassifyParam param);
 
-    void GetFeatures(cv::Rect regionRect, cv::Mat region, cv::Mat& featureVector);
+    void GetFeatures(int defectid, cv::Rect regionRect, cv::Mat region, cv::Mat& featureVector);
 
     void GetCoOccUrrenceMatrix(const cv::Mat& image,
                                int a,

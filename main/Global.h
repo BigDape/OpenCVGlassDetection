@@ -97,6 +97,7 @@ public:
     unsigned int TimelapseAfterPhotoShootEnd = 0;// 光源控制器参数--拍照结束延时行数(行)
     unsigned int SelectedLightFieldNumber = 0;// 光源控制器参数--选择光场的数量
     unsigned int FrameSignalOutput = 0;// 光源控制器参数--帧信号输出
+    bool OneGlassFinished = false;  //标注数据库是否全部完成
 
     std::unordered_map<int,std::pair<QString,QString>> rowMapXY; //当前玻璃的缺陷坐标
     CropArgPackage crops;  //标定数据

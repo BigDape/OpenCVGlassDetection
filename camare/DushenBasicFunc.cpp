@@ -679,7 +679,6 @@ dvpInt32  DushenBasicFunc::OnGetFrame(dvpHandle handle, dvpStreamEvent event, vo
         pFrame->iHeight = pFrame->iHeight - (pFrame->iHeight % 3);
     }
 
-    // callbackDataStruct data;
     deepCopyStruct data;
     data.format = pFrame->format;
     data.uFrameID = pFrame->uFrameID;
@@ -688,7 +687,7 @@ dvpInt32  DushenBasicFunc::OnGetFrame(dvpHandle handle, dvpStreamEvent event, vo
     data.uBytes = pFrame->uBytes;
     data.uTimestamp = pFrame->uTimestamp;
 
-    qDebug()<<"data.iHeight/3 ="<<data.iHeight/3<<", data.iWidth ="<<data.iWidth;
+    qDebug()<<"data.uFrameID ="<<data.uFrameID<<", data.iHeight/3 ="<<data.iHeight/3<<", data.iWidth ="<<data.iWidth;
     cv::Mat projectionLMat(data.iHeight/3,data.iWidth,CV_8UC1);
     cv::Mat reflectionLMat(data.iHeight/3,data.iWidth,CV_8UC1);
     cv::Mat reflectionDMat(data.iHeight/3,data.iWidth,CV_8UC1);

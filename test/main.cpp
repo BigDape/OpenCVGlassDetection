@@ -92,12 +92,24 @@ int main() {
         algorithmPtr = createFunc();
     }
     std::cout<<"test 1233"<<std::endl;
-    cv::Mat image1 = cv::imread("D:/testopencv/1.jpeg");
+    cv::Mat image1 = cv::imread("D:/v0.0.3/build/Desktop_Qt_6_8_0_MSVC2022_64bit-Debug/main/template/model3.jpg");
+    // cv::Rect rect33(7755,9674,300,750);
+    // cv::Mat model = image1(rect33);
+    cv::Mat dst1;
+    double thresh = 200;
+    // 使用cv::THRESH_TOZERO类型进行阈值处理
+    cv::threshold(image1, dst1, thresh, 255, cv::THRESH_TOZERO);
+
+    cv::imwrite("D:/HVCache/history/model777.jpg",dst1);
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    return 0;
+    std::vector<GlassSizeInfo2> sizeRes;
+    return 0;
     cv::Rect rect2(0,0,image1.cols,8600);
     cv::Mat image2 = image1(rect2);
 
     cv::Mat clonedMat = image2.clone();
-    auto start = std::chrono::high_resolution_clock::now();// 开始时间
+    //auto start = std::chrono::high_resolution_clock::now();// 开始时间
     cv::Mat grayImage;
     cv::cvtColor(image2, grayImage, cv::COLOR_BGR2GRAY);
     cv::Mat EdgeResult;
@@ -257,7 +269,7 @@ int main() {
     QString path1 = "D:/testopencv/topEdge1.jpg";
     SyncSaveImage(topEdge0,path1);
 
-
+    auto start = std::chrono::high_resolution_clock::now();// 开始时间
     ClassifyParam param;
     param.regionRect = tmprect;
     param.region = tmpregion;
