@@ -1,6 +1,6 @@
 ﻿/********************************************************************************
  *  Puspose:
- *      mainwidnows.cpp
+ *      mainwidnows.cpp 处理函数
  *
  * Author:
  *      zhang shuanggui
@@ -502,14 +502,8 @@ void MainWindow::InitCameraSettingTableWidget()
     arg0.framecount = PARAM.Camera0Frame;
     arg0.height = PARAM.Camera0PhotoRow;
     arg0.gain = PARAM.Camera0Gain;
-    qDebug()<<"arg0.camName = "<<arg0.camName
-             <<",arg0.camNumber="<<arg0.camNumber
-             <<",arg0.fieldnumberset="<<arg0.fieldnumberset
-             <<",arg0.expo="<<arg0.expo
-             <<",arg0.framecount="<<arg0.framecount
-             <<",arg0.height="<<arg0.height
-             <<",arg0.gain ="<<arg0.gain;
     m_args.push_back(arg0);
+
     DushenCameraArgs arg1;
     arg1.camName = PARAM.Camera1Name;
     arg1.camNumber = PARAM.camDefineNum;
@@ -518,14 +512,8 @@ void MainWindow::InitCameraSettingTableWidget()
     arg1.framecount = PARAM.Camera1Frame;
     arg1.height = PARAM.Camera1PhotoRow;
     arg1.gain = PARAM.Camera1Gain;
-    qDebug()<<"arg1.camName = "<<arg1.camName
-             <<",arg1.camNumber="<<arg1.camNumber
-             <<",arg1.fieldnumberset="<<arg1.fieldnumberset
-             <<",arg1.expo="<<arg1.expo
-             <<",arg1.framecount="<<arg1.framecount
-             <<",arg1.height="<<arg1.height
-             <<",arg1.gain ="<<arg1.gain;
     m_args.push_back(arg1);
+
     DushenCameraWidget * camerawid = new DushenCameraWidget(nullptr);
     camerawid->InitDushenCameraWidget(PARAM.cameraPtr0,m_args[0]);
     hbox_layout->addWidget(camerawid);
@@ -607,6 +595,26 @@ void MainWindow::InitDatabaseParam()
     connect(this,SIGNAL(sign_InsertDatabase()), this, SLOT(slot_InsertDatabase()));
 }
 
+void MainWindow::InitImageCacheDirectory()
+{
+    try{
+        createDir(HISTORYPATH);
+        createDir(CAMERAPATH);
+        createDir(CACHEPATH);
+        createDir(LIGHTPATH);
+        createDir(LOGPATH);
+    } catch(...) {
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) {
+            try {
+                std::rethrow_exception(eptr);
+            } catch (const std::exception& ex) {
+                qDebug() << "Exception: " << ex.what();
+            }
+        }
+    }
+}
+
 void MainWindow::ProcessThreadCV()
 {
     //
@@ -627,21 +635,24 @@ LOOPGET:
 
 void MainWindow::upDateOverView()
 {
-    m_glassResult.glassSummary.id = ++summaryPrimaryKey; //表的主键
-    m_glassResult.glassSummary.time = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    m_glassResult.glassSummary.id = ++summaryPrimaryKey; //表glass_summary的主键，自增1
+    m_glassResult.glassSummary.time = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");//获取当前系统时间
     m_glassResult.glassSummary.glasstotalcount += 1; //玻璃块数加一
-    if (m_glassResult.glassStatistics.defectOKorNG == "NG" || m_glassResult.glassStatistics.sizeOKorNG == "NG") {
+    if (m_glassResult.glassStatistics.defectOKorNG == "NG" || m_glassResult.glassStatistics.sizeOKorNG == "NG") {//缺陷NG或者尺寸NG则判断状态为NG
         m_glassResult.glassSummary.currentglassstatus = "NG" ;
-        m_glassResult.glassSummary.NGcount += 1;
+        m_glassResult.glassSummary.NGcount += 1; // NG数目加一
     } else {
         m_glassResult.glassSummary.currentglassstatus = "OK";
-        m_glassResult.glassSummary.OKcount += 1;
+        m_glassResult.glassSummary.OKcount += 1; // OK数目加一
     }
-    m_glassResult.glassSummary.passrate = (double)m_glassResult.glassSummary.OKcount / (double)m_glassResult.glassSummary.glasstotalcount;
-    m_glassResult.glassSummary.exceptioncount = 0;
+    m_glassResult.glassSummary.passrate = (double)m_glassResult.glassSummary.OKcount / (double)m_glassResult.glassSummary.glasstotalcount;// 合格率
+    m_glassResult.glassSummary.exceptioncount = 0; // 异常数目
     m_glassResult.glassSummary.messagePath = "";
     m_glassResult.glassSummary.lastglassID = glassPrimaryKey;  //最后一块玻璃的ID,ID对应的是数据统计里面的ID
 
+    //
+    // 界面更新玻璃信息
+    //
     ui->glassTotalCountLB->setText(QString::number(m_glassResult.glassSummary.glasstotalcount));
     ui->currentGlassStatus->setText(QString(m_glassResult.glassSummary.currentglassstatus));
     ui->glassOKCountLB->setText(QString::number(m_glassResult.glassSummary.OKcount));
@@ -649,6 +660,10 @@ void MainWindow::upDateOverView()
     QString text =  QString::number(m_glassResult.glassSummary.passrate * 100) + "%";
     ui->qualicaficationRateLB->setText(text);
     ui->ExceptionCountLB->setText(QString::number(m_glassResult.glassSummary.exceptioncount));
+
+    //
+    // 日志更新信息
+    //
     QString mes1 = "玻璃["+QString::number(glassPrimaryKey) + "] 玻璃结束状态更新成功。";
     INFOMATION.outputMessage(ui->loglistWidget,mes1);
 }
@@ -660,7 +675,7 @@ void MainWindow::imageDisplay(CV_GLASSPART part, cv::Mat image)
             qDebug()<<"imageDisplay in param image.rows == 0";
             return;
         }
-        //将不同帧图片拼接起来，注意非第一帧图片有重复区域
+        //将不同帧图片拼接起来
         if (part == CV_GLASSPART::HEAD || part == CV_GLASSPART::WholeGlass) {
             if (!m_glassRegion.empty())
                 m_glassRegion.release();
@@ -675,7 +690,7 @@ void MainWindow::imageDisplay(CV_GLASSPART part, cv::Mat image)
             if (m_glassRegion.rows == 0 || m_glassRegion.cols == 0) {//算法误判头部
                 m_glassRegion = image;
             } else  {
-                cv::hconcat(m_glassRegion,image,m_glassRegion);
+                cv::hconcat(m_glassRegion,image,m_glassRegion);//垂直拼接
             }
         }
         if (!m_glassRegion.empty()) {
@@ -693,7 +708,6 @@ void MainWindow::imageDisplay(CV_GLASSPART part, cv::Mat image)
     }
 }
 
-
 bool MainWindow::checkFrameParam(FrameImage imageunit0, FrameImage imageunit1)
 {
     if (imageunit0.buffers.size() <= 0 || imageunit1.buffers.size() <= 0) {
@@ -708,7 +722,36 @@ bool MainWindow::checkFrameParam(FrameImage imageunit0, FrameImage imageunit1)
     return true;
 }
 
-
+void MainWindow::clearGlassDisplay()
+{
+CLEAR:
+    if (PARAM.OneGlassFinished == true) {
+        m_AmadianRects.clear();
+        m_BmadianRects.clear();
+        m_BshuiyinRects.clear();
+        m_A10mm2youmobuliangRects.clear();
+        m_A10mm3youmobuliangRects.clear();
+        m_B10mm2youmobuliangRects.clear();
+        m_B10mm3youmobuliangRects.clear();
+        m_juchibianAllLengthRects = 0;
+        m_juchibianAllWidthRects = 0;
+        if (!m_glassResult.glassRegion0.empty())
+            m_glassResult.glassRegion0.release();
+        if (!m_glassResult.glassRegion1.empty())
+            m_glassResult.glassRegion1.release();
+        if (!m_glassResult.glassRegion2.empty())
+            m_glassResult.glassRegion2.release();
+        m_glassResult.glassStatistics.length = 0;
+        m_glassResult.glassStatistics = GlassDataBaseInfo2();
+        m_glassResult.glassDefects.clear();
+        m_glassResult.glassSize.clear();
+        PARAM.OneGlassFinished = false;
+        qDebug()<<"数据清理成功。";
+    } else {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        goto CLEAR;
+    }
+}
 
 void MainWindow::slot_InsertDatabase()
 {
@@ -774,7 +817,7 @@ void MainWindow::slot_ActionStart()
     m_offline->setEnabled(false);
     m_pDB->setEnabled(false);
     m_calibrate->setEnabled(false);
-
+    m_silkscreen->setEnabled(false);
 
     if (PARAM.cameraPtr0 != nullptr && PARAM.cameraPtr1 != nullptr) {
         if (!PARAM.cameraPtr0->IsStarted(m_args[0].camName)){
@@ -803,7 +846,7 @@ void MainWindow::slot_ActionStop()
     m_offline->setEnabled(true);
     m_pDB->setEnabled(true);
     m_calibrate->setEnabled(true);
-
+    m_silkscreen->setEnabled(true);
 
     if (m_startThread != nullptr) {
         if(m_startThread->joinable()) {
@@ -830,30 +873,122 @@ void MainWindow::slot_DataSearch()
 
 void MainWindow::slot_Offline()
 {
-    try {
-        //获取选择的目录路径
-        QStringList offlineSelectedFiles =  QFileDialog::getOpenFileNames( this, "选择文件或目录", "D:/", "All Files (*);;Directories (*/)", nullptr, QFileDialog::ReadOnly);
-        //若目录路径不为空
-        if (!offlineSelectedFiles.isEmpty()) {
-            auto start = std::chrono::high_resolution_clock::now();// 开始时间
-            if (PARAM.algorithmPtr != nullptr) {
-                // PARAM.algorithmPtr->RegisterResultCallback(std::bind(&MainWindow::MainWindowsDisplay, this, std::placeholders::_1));
-                // //遍历容器
-                // for(int i = 0; i < (int)offlineSelectedFiles.size(); ++i) {
-                //     qDebug() << offlineSelectedFiles[i];//输出文件的完整路径名
-                //     cv::Mat projectionImage,reflectionLightImage,reflectionDarkImage;
-                //     projectionImage = cv::imread(offlineSelectedFiles[i].toStdString());
-                //     PARAM.algorithmPtr->SyncExecu(i, projectionImage,reflectionLightImage,reflectionDarkImage);
-                // }
+    //获取选择的目录路径
+    QStringList offlineSelectedFiles =  QFileDialog::getOpenFileNames( this, "选择文件或目录", "D:/", "All Files (*);;Directories (*/)", nullptr, QFileDialog::ReadOnly);
+    //若目录路径不为空
+    if (!offlineSelectedFiles.isEmpty()) {
+        auto start = std::chrono::high_resolution_clock::now();// 开始时间
+        if (PARAM.algorithmPtr != nullptr) {
+            //遍历容器
+            if ( offlineSelectedFiles.size() != 3 ) {
+                QString message = "请按照顺序选择透射场整图、反射亮场整图、反射暗场整图。";
+                INFOMATION.criticalMessageBox(this,message);
+            } else {
+                qDebug() << offlineSelectedFiles[0];//输出文件的完整路径名
+                qDebug() << offlineSelectedFiles[1];
+                qDebug() << offlineSelectedFiles[2];
+                cv::Mat tmpImage0 = cv::imread(offlineSelectedFiles[0].toStdString());
+                cv::Mat tmpImage1 = cv::imread(offlineSelectedFiles[1].toStdString());
+                cv::Mat tmpImage2 = cv::imread(offlineSelectedFiles[2].toStdString());
+                if (tmpImage0.channels() != 1) {
+                    cv::cvtColor(tmpImage0, tmpImage0, cv::COLOR_BGRA2BGR);
+                }
+                if (tmpImage1.channels() != 1) {
+                    cv::cvtColor(tmpImage1, tmpImage1, cv::COLOR_BGRA2BGR);
+                }
+                if (tmpImage2.channels() != 1) {
+                    cv::cvtColor(tmpImage2, tmpImage2, cv::COLOR_BGRA2BGR);
+                }
+                if (tmpImage0.empty() || tmpImage1.empty() || tmpImage2.empty()) {
+                    qDebug() << "无法读取图像。";
+                }
+                // 计算每份的宽度和高度
+                int partWidth0 = tmpImage0.cols;
+                int partHeight0 = tmpImage0.rows / 3;
+                // 分割并保存三份图像
+                for (int i = 0; i < 3; i++) {
+                    cv::Rect roi(0, i * partHeight0, partWidth0, partHeight0);
+                    cv::Mat partImage0 = tmpImage0(roi);
+                    cv::Mat partImage1 = tmpImage1(roi);
+                    cv::Mat partImage2 = tmpImage2(roi);
+                    NewGlassResult result = PARAM.algorithmPtr->SyncExecu(i, partImage0,partImage1,partImage2);
+                    if (result.isEmpty) return;
+                    if (result.part == CV_GLASSPART::HEAD) {
+                        glassPrimaryKey += 1;
+                        m_glassResult.glassID = glassPrimaryKey;
+                    }
+                    // 纵向拼图
+                    PARAM.algorithmPtr->VerticalPuzzle(result,
+                                                           partImage0,
+                                                           partImage1,
+                                                           partImage2,
+                                                           m_glassResult.glassRegion0,
+                                                           m_glassResult.glassRegion1,
+                                                           m_glassResult.glassRegion2);
+
+                    // 匹配丝印和孔
+                    if (result.part == CV_GLASSPART::TAIL) {
+                        // 保存整图
+                        QString path0 = "D:/HVCache/history/" + QString::number(glassPrimaryKey) + "_0.jpg";
+                        QString path1 = "D:/HVCache/history/" + QString::number(glassPrimaryKey) + "_1.jpg";
+                        QString path2 = "D:/HVCache/history/" + QString::number(glassPrimaryKey) + "_2.jpg";
+                        SyncSaveImage(m_glassResult.glassRegion0,path0);
+                        SyncSaveImage(m_glassResult.glassRegion1,path1);
+                        SyncSaveImage(m_glassResult.glassRegion2,path2);
+
+                        PARAM.algorithmPtr->onMatchSilkscreen(m_glassResult.glassRegion0,
+                                                                  m_glassResult.glassRegion1,
+                                                                  m_glassResult.glassRegion2,
+                                                                  m_glassResult.glassSize,0.5);//相似度设置为0.3
+
+                        // 对图像进行分区
+                        if (m_glassResult.glassSize.size() > 0 ) {// 有丝印
+                            result.divingX = PARAM.algorithmPtr->PartGlassAB(m_glassResult.glassSize[0].rect,
+                                                                                 PARAM.XCamera0Accuracy,
+                                                                                 result.AisLeft);
+                        } else {
+                            qDebug()<<"未找到丝印";
+                            result.divingX = 0;
+                            result.AisLeft = true;
+                        }
+                    }
+
+                    // 逐帧处理结果
+                    try{
+                        MainWindow::imageDisplay(result.part, result.glassRegion);// 分帧显示透射场图像
+                        MainWindow::handleFrameData(result); // 处理缺陷数据
+                        if (result.part == CV_GLASSPART::TAIL) { // 玻璃结束
+                            if(result.sizeRes.size() > 0) {
+                                MainWindow::summaryDefectNumber(result.divingX,
+                                                                    result.AisLeft,
+                                                                    result.sizeRes[0].rect);// 统计缺陷数据
+                            } else {//玻璃没有丝印
+                                cv::Rect rect(0,0,0,0);
+                                MainWindow::summaryDefectNumber(result.divingX,
+                                                                    result.AisLeft,
+                                                                    rect);// 统计缺陷数据
+                            }
+                            MainWindow::upDateOverView();               // 更新概述信息
+                            emit sign_GlassStaticTableInsertRowData(m_glassResult.glassStatistics); // 更新统计信息
+                            emit sign_UpdateDefectTable(result.part, m_glassResult.glassDefects);   // 更新缺陷数据
+                            MainWindow::handleFrameData(m_glassResult.glassSize);                   // 处理尺寸数据
+                            emit sign_SingleSizeUpdataTableData(m_glassResult.glassSize);           // 更新尺寸信息
+                            emit sign_InsertDatabase();                                             // 更新数据库
+                            MainWindow::clearGlassDisplay();                                        // 玻璃结束，清理
+                        }
+                    } catch (...) {
+                        std::exception_ptr eptr = std::current_exception();
+                        if (eptr) {
+                            try {
+                                std::rethrow_exception(eptr);
+                            } catch (const std::exception& ex) {
+                                qDebug() << "Exception: " << ex.what();
+                            }
+                        }
+                    }
+                }
             }
-            auto endf1 = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> durationf1 = endf1 - start;
-            qDebug() << "Finished 2 time：" << durationf1.count() << " ms";
-        } else {
-            return;
         }
-    } catch(...) {
-        qDebug()<<"slot_ButtonExportClicked() error";
     }
 }
 
@@ -1075,9 +1210,8 @@ void MainWindow::slot_DisplayMain(cv::Mat image)
 
 void MainWindow::slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2> FrameDefects)
 {
-    //if (part == CV_GLASSPART::HEAD) {//清除表格
-        ui->SingleFlawtableWidget->clear();
-        QStringList headerLabels = {tr("序号"),
+    ui->SingleFlawtableWidget->clear();
+    QStringList headerLabels = {tr("序号"),
                                     tr("时间"),
                                     tr("类型"),
                                     tr("等级"),
@@ -1087,10 +1221,9 @@ void MainWindow::slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefe
                                     tr("宽"),
                                     tr("面积"),
                                     tr("缺陷ID")};
-        ui->SingleFlawtableWidget->setColumnCount(headerLabels.size());
-        ui->SingleFlawtableWidget->setHorizontalHeaderLabels(headerLabels);
-        ui->SingleFlawtableWidget->setRowCount(0);
-    //}
+    ui->SingleFlawtableWidget->setColumnCount(headerLabels.size());
+    ui->SingleFlawtableWidget->setHorizontalHeaderLabels(headerLabels);
+    ui->SingleFlawtableWidget->setRowCount(0);
     if (FrameDefects.size() > 0 ) {
         QImage img1(FrameDefects[0].imagePath0);
         QImage img2(FrameDefects[0].imagePath1);
@@ -1240,27 +1373,6 @@ void MainWindow::slot_RebackHistoryImage()
     }
 }
 
-void MainWindow::InitImageCacheDirectory()
-{
-    try{
-        createDir(HISTORYPATH);
-        createDir(CAMERAPATH);
-        createDir(CACHEPATH);
-        createDir(LIGHTPATH);
-        createDir(LOGPATH);
-    } catch(...) {
-        std::exception_ptr eptr = std::current_exception();
-        if (eptr) {
-            try {
-                std::rethrow_exception(eptr);
-            } catch (const std::exception& ex) {
-                qDebug() << "Exception: " << ex.what();
-            }
-        }
-    }
-}
-
-
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
@@ -1348,7 +1460,6 @@ void MainWindow::insertGlassStaticTable(GlassDataBaseInfo2 data)
             }
         }
     }
-
 }
 
 void MainWindow::setTableWidgetItem(int row,
@@ -1364,9 +1475,11 @@ void MainWindow::setTableWidgetItem(int row,
     table->setItem(row, col, item);
 }
 
-void MainWindow::summaryDefectNumber(int diviX, bool AisLeft, cv::Rect siyinRect)
+void MainWindow::summaryDefectNumber(int diviX,
+                                     bool AisLeft,
+                                     cv::Rect siyinRect)
 {
-    for(auto defect : m_glassResult.glassDefects) {
+    for (auto defect : m_glassResult.glassDefects) {
         if (defect.defectType == tr("划痕")) {
             MainWindow::NGorOKHuaheng(defect);
         } else if (defect.defectType == tr("异物")) {
@@ -1438,15 +1551,6 @@ void MainWindow::loadedPixmapImage(QImage img,
 void MainWindow::insertSizeTable(GlassSizeInfo2 info)
 {
     ui->singleSizeTableWidget->insertRow(0);
-    qDebug()<<"Size Data=>{"<<"info.sizeID="<<info.sizeID
-             <<",info.time="<<info.time
-             <<",info.sizeType="<<info.sizeType
-             <<",info.sizeLevel="<<info.sizeLevel
-             <<",info.lengthX="<<info.lengthX
-             <<",info.widthY="<<info.widthY
-             <<",info.marginsX="<<info.marginsX
-             <<",info.marginsY="<<info.marginsY
-             <<",info.id="<<info.id;
     MainWindow::setTableWidgetItem(0,0,QString::number(info.sizeID),ui->singleSizeTableWidget);// 序号
     MainWindow::setTableWidgetItem(0,1,info.time,ui->singleSizeTableWidget);// 时间
     MainWindow::setTableWidgetItem(0,2,info.sizeType,ui->singleSizeTableWidget);// 类型
@@ -1462,15 +1566,6 @@ void MainWindow::batchInsertSizeTable(std::vector<GlassSizeInfo2> infos)
 {
     if(infos.size() > 0 ) {
         for (auto info : infos) {
-            qDebug()<<"MainWindow::batchInsertSizeTable Size Data=>{"<<"info.sizeID="<<info.sizeID
-                     <<",info.time="<<info.time
-                     <<",info.sizeType="<<info.sizeType
-                     <<",info.sizeLevel="<<info.sizeLevel
-                     <<",info.lengthX="<<info.lengthX
-                     <<",info.widthY="<<info.widthY
-                     <<",info.marginsX="<<info.marginsX
-                     <<",info.marginsY="<<info.marginsY
-                     <<",info.id="<<info.id;
             MainWindow::insertSizeTable(info);
         }
         for (int row = 0; row < ui->singleSizeTableWidget->rowCount(); ++row) {
@@ -1539,6 +1634,10 @@ int MainWindow::RangeDefectCount(std::vector<cv::Rect> cacheVes, int Xmm, int Ma
 // 划痕判断NG
 void MainWindow::NGorOKHuaheng(GlassDefect2 defect)
 {
+    //
+    // 1.中央主要可视区域(包含A区与B区)，不允许存在划痕：（划痕标准L ≥ 1mm，W ≥ 0.2mm）；
+    // 2.边角部位（距长宽边10mm区域）不允许W≥ 0.2mm；L ≥ 5mm划痕，W ≥ 0.2mm；L≥1mm且 L＜5mm允许1处划痕；
+    //
     if (defect.gregion == glassRegion::EDGE) {
         if (defect.rect.width * PARAM.XCamera0Accuracy > 5 || defect.rect.height * PARAM.YAccuracy > 5) {//边部大于5mm划伤算缺陷
             m_glassResult.glassStatistics.defectOKorNG = "NG";
@@ -1554,6 +1653,11 @@ void MainWindow::NGorOKHuaheng(GlassDefect2 defect)
 
 void MainWindow::NGorOKyiwu(GlassDefect2 defect, int diviX, bool AisLeft)
 {
+    //
+    // 1.A区：允许明显异物(目测明显，成像缺陷灰度大于背景灰度30以上）数量不大于3处：（异物标准L ≥ 0.3mm）；
+    // 2.B区：允许明显异物(目测明显，成像缺陷灰度大于背景灰度30以上）数量不大于3处：（异物标准L ≥ 0.3mm）；
+    // 3.不明显异物(目测不明显，成像缺陷灰度大于背景灰度15以上30以下）数量最多允许4处：（不明显异物标准L≥ 0.5mm，不明显异物间距50 mm以上）；
+    //
     m_glassResult.glassStatistics.yiwuNumber += 1;
     m_glassResult.glassStatistics.defectNumber += 1;
     if (m_glassResult.glassStatistics.defectOKorNG == "NG")//已经NG了，不需要再判断
@@ -1577,7 +1681,9 @@ void MainWindow::NGorOKyiwu(GlassDefect2 defect, int diviX, bool AisLeft)
 }
 
 void MainWindow::NGorOKqipao(GlassDefect2 defect)
-{
+{   //
+    // 中央主要可视区域不允许大气泡（大气泡标准D>0.3mm），最多允许出现2个小气泡（D ≥ 0.2mm），且2个小气泡中心间距要在150mm以上；
+    //
     m_glassResult.glassStatistics.qipaoNumber += 1;
     m_glassResult.glassStatistics.defectNumber += 1;
     if (m_glassResult.glassStatistics.defectOKorNG == "NG")//已经NG了，不需要再判断
@@ -1594,6 +1700,11 @@ void MainWindow::NGorOKqipao(GlassDefect2 defect)
 
 void MainWindow::NGorOKmadian(GlassDefect2 defect, int diviX, bool AisLeft, cv::Rect siyinRect)
 {
+    //
+    // 1.A区允许2个三级点，5个二级点，且10mm范围内不允许超过3个麻点聚集；
+    // 2.B区允许4个三级点，10个二级点，且10mm范围内不允许超过6个不良点聚集；
+    // 3.丝印的最小外接矩形向外延伸30mm范围内允许出现1个三级点，2个二级点；
+    //
     if (defect.rect.height * PARAM.YAccuracy > 0.3 || defect.rect.width * PARAM.XCamera0Accuracy > 0.3) {//过滤一级点
         m_glassResult.glassStatistics.madianNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1667,6 +1778,10 @@ void MainWindow::NGorOKmadian(GlassDefect2 defect, int diviX, bool AisLeft, cv::
 
 void MainWindow::NGorOKshuiyin(GlassDefect2 defect, int diviX, bool AisLeft)
 {
+    //
+    // 1.A区不允许有水印点；（水印点标准D>= 0.5mm）
+    // 2.B区不允许在5*5 mm范围内出现连续3个水印点，允许5*5mm范围内小于3个水印点；
+    //
     if (defect.rect.height * PARAM.YAccuracy > 0.5 || defect.rect.width * PARAM.XCamera0Accuracy > 0.5) {
         m_glassResult.glassStatistics.shuiyinNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1696,6 +1811,11 @@ void MainWindow::NGorOKshuiyin(GlassDefect2 defect, int diviX, bool AisLeft)
 
 void MainWindow::NGorOKyoumobuliang(GlassDefect2 defect, int diviX, bool AisLeft, cv::Rect siyinRect)
 {
+    //
+    // 1.A区允许最多有3个三级点，5个二级点，且10mm范围内不允许有超过2个三级点和3个二级点；
+    // 2.B区允许最多有6个三级点，10个二级点，且10mm范围内不允许有超过4个三级点和6个二级点；
+    // 3.丝印的最小外接矩形向外延伸30mm范围内最多允许1个三级点，2个二级点；
+    //
     if (defect.rect.height * PARAM.YAccuracy > 0.3 || defect.rect.width * PARAM.XCamera0Accuracy > 0.3) {
         m_glassResult.glassStatistics.youmobuliangNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1771,6 +1891,9 @@ void MainWindow::NGorOKyoumobuliang(GlassDefect2 defect, int diviX, bool AisLeft
 
 void MainWindow::NGorOKjuchibian(GlassDefect2 defect)
 {
+    //
+    // 矩形玻璃长边和宽边油墨边出现的锯齿边长度不允许超过100mm;（锯齿边标准w>=0.5mm，L>=1mm，点状锯齿标准d>=1mm）
+    //
     if (defect.rect.height * PARAM.YAccuracy > 1 || defect.rect.width * PARAM.XCamera0Accuracy > 1) {
         m_glassResult.glassStatistics.juchibianNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1790,6 +1913,10 @@ void MainWindow::NGorOKjuchibian(GlassDefect2 defect)
 
 void MainWindow::NGorOKsiyinquexian(GlassDefect2 defect)
 {
+    //
+    // 1.丝印尺寸位置偏差≤±0.8mm.
+    // 2.旋钮周边丝印的同心度值﹥1.5mm。
+    //
     if(defect.defectLevel == "NG") {
         m_glassResult.glassStatistics.siyinquexianNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1799,6 +1926,9 @@ void MainWindow::NGorOKsiyinquexian(GlassDefect2 defect)
 
 void MainWindow::NGorOKguahua(GlassDefect2 defect, int diviX, bool AisLeft)
 {
+    //
+    // 1.面板A区不允许刮花；（刮花的标准D>=1mm）
+    //
     if (defect.rect.height * PARAM.YAccuracy > 1 || defect.rect.width * PARAM.XCamera0Accuracy > 1) {
         m_glassResult.glassStatistics.guahuaNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1819,6 +1949,9 @@ void MainWindow::NGorOKguahua(GlassDefect2 defect, int diviX, bool AisLeft)
 
 void MainWindow::NGorOKliewen(GlassDefect2 defect)
 {
+    //
+    // 1.边部区域不允许出现裂纹；（裂纹标准 L≥1mm且W≥0.1mm）
+    //
     if (defect.rect.height * PARAM.YAccuracy > 1 && defect.rect.width * PARAM.XCamera0Accuracy > 0.1){
         m_glassResult.glassStatistics.liewenNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1828,6 +1961,9 @@ void MainWindow::NGorOKliewen(GlassDefect2 defect)
 
 void MainWindow::NGorOKbengbianjiao(GlassDefect2 defect)
 {
+    //
+    // 1.边部不允许出现崩边崩角≥1mm不允许
+    //
     if (defect.rect.height * PARAM.YAccuracy > 1 || defect.rect.width * PARAM.XCamera0Accuracy > 1){
         m_glassResult.glassStatistics.benbianjiaoNumber += 1;
         m_glassResult.glassStatistics.defectNumber += 1;
@@ -1838,23 +1974,20 @@ void MainWindow::NGorOKbengbianjiao(GlassDefect2 defect)
 void MainWindow::handleFrameData(NewGlassResult result)
 {
     for (auto defect : result.defectRes) {
-                                            // 主键id,在所有缺陷中的顺序
         defect.x = defect.pixX * PARAM.XCamera0Accuracy;
-        defect.y = m_glassResult.glassStatistics.length + defect.pixY * PARAM.YAccuracy;//每帧坐标转化为整体坐标
-        if (defect.x == 0 || defect.y == 0) //边部缺陷过滤，由透射场来处理
+        defect.y = m_glassResult.glassStatistics.length + defect.pixY * PARAM.YAccuracy;// 每帧坐标转化为整体坐标
+        if (defect.x == 0 || defect.y == 0) // 边部缺陷过滤，由透射场来处理
             continue;
-
         defect.length = defect.pixLength * PARAM.YAccuracy;
         defect.width = defect.pixWidth * PARAM.XCamera0Accuracy;
-
         defect.area = defect.pixArea * PARAM.XCamera0Accuracy;
-        if (defect.area > 1000) continue;//todo:面积太大是丝印，去除掉
-        defect.id = ++defectPrimaryKey;
+        if (defect.area > 1000) continue;       //todo:面积太大是丝印，去除掉
+        defect.id = ++defectPrimaryKey;         // 主键id,在所有缺陷中的顺序
         defect.glassid = glassPrimaryKey;
         m_glassResult.glassDefects.push_back(defect);//将每帧数据插入全局变量中
     }
-    m_glassResult.glassStatistics.length += result.pixGlassLength * PARAM.XCamera0Accuracy;
-    m_glassResult.glassStatistics.width =  (m_glassResult.glassStatistics.width + result.pixGlassWidth * PARAM.YAccuracy)/2.0;
+    m_glassResult.glassStatistics.length += result.pixGlassLength * PARAM.XCamera0Accuracy; //总长度等于每帧长度相加总和
+    m_glassResult.glassStatistics.width =  (m_glassResult.glassStatistics.width + result.pixGlassWidth * PARAM.YAccuracy)/2.0;//总宽度等于每帧宽度的平均值
 }
 
 void MainWindow::handleFrameData(std::vector<GlassSizeInfo2>& glassSize)
@@ -1868,38 +2001,6 @@ void MainWindow::handleFrameData(std::vector<GlassSizeInfo2>& glassSize)
         size.marginsX = size.PixMarginsX * PARAM.YAccuracy;
         size.marginsY = size.PixMarginsY * PARAM.XCamera0Accuracy;
         size.glassid = glassPrimaryKey;
-    }
-}
-
-
-void MainWindow::clearGlassDisplay()
-{
-CLEAR:
-    if (PARAM.OneGlassFinished == true) {
-        m_AmadianRects.clear();
-        m_BmadianRects.clear();
-        m_BshuiyinRects.clear();
-        m_A10mm2youmobuliangRects.clear();
-        m_A10mm3youmobuliangRects.clear();
-        m_B10mm2youmobuliangRects.clear();
-        m_B10mm3youmobuliangRects.clear();
-        m_juchibianAllLengthRects = 0;
-        m_juchibianAllWidthRects = 0;
-        if (!m_glassResult.glassRegion0.empty())
-            m_glassResult.glassRegion0.release();
-        if (!m_glassResult.glassRegion1.empty())
-            m_glassResult.glassRegion1.release();
-        if (!m_glassResult.glassRegion2.empty())
-            m_glassResult.glassRegion2.release();
-        m_glassResult.glassStatistics.length = 0;
-        m_glassResult.glassStatistics = GlassDataBaseInfo2();
-        m_glassResult.glassDefects.clear();
-        m_glassResult.glassSize.clear();
-        PARAM.OneGlassFinished = false;
-        qDebug()<<"数据清理成功。";
-    } else {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        goto CLEAR;
     }
 }
 

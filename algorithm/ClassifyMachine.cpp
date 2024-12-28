@@ -18,7 +18,9 @@ void ClassifyMachine::GetCoOccUrrenceMatrix(const cv::Mat& image, int a, int b, 
 {
     try {
         // only support gray image
-        CV_Assert(image.channels() == 1);
+        if (image.channels() != 1) {
+            cv::cvtColor(image, image, cv::COLOR_BGRA2BGR);
+        }
         int Level = 52;//灰度值分成52个等级，如果耗时过长则
         int levelMoin = 5;
         cooccurrence_matrix.resize(Level);
@@ -219,26 +221,30 @@ void ClassifyMachine::GetFeatures(int defectid, cv::Rect regionRect, cv::Mat reg
 double ClassifyMachine::calculateEccentricity(cv::Mat region)
 {
     try {
-        cv::Mat binaryImage;
-        cv::threshold(region, binaryImage, 127, 255, cv::THRESH_BINARY);
+        return 0.0001;
+        // if (region.type() != CV_8UC1) {
+        //     cv::cvtColor(region,region,cv::COLOR_BGRA2BGR);
+        // }
+        // cv::Mat binaryImage;
+        // cv::threshold(region, binaryImage, 127, 255, cv::THRESH_BINARY);
 
-        cv::Moments mu = moments(binaryImage, true);  // 计算矩，第二个参数设为true表示计算中心矩
+        // cv::Moments mu = cv::moments(binaryImage, false);  // 计算矩，第二个参数设为true表示计算中心矩
 
-        // 提取二阶中心矩
-        double mu20 = mu.mu20;
-        double mu02 = mu.mu02;
-        double mu11 = mu.mu11;
+        // // 提取二阶中心矩
+        // double mu20 = mu.mu20;
+        // double mu02 = mu.mu02;
+        // double mu11 = mu.mu11;
 
-        // 构建协方差矩阵（这里简单用两个变量表示特征值相关计算，实际更复杂的情况可能需要完整求特征值算法）
-        double a = mu20 + mu02;
-        double b = sqrt((mu20 - mu02) * (mu20 - mu02) + 4 * mu11 * mu11);
+        // // 构建协方差矩阵（这里简单用两个变量表示特征值相关计算，实际更复杂的情况可能需要完整求特征值算法）
+        // double a = mu20 + mu02;
+        // double b = sqrt((mu20 - mu02) * (mu20 - mu02) + 4 * mu11 * mu11);
 
-        // 计算最大和最小特征值（这里的推导基于协方差矩阵特征值计算理论简化而来）
-        double lambda_max = (a + b) / 2;
-        double lambda_min = (a - b) / 2;
+        // // 计算最大和最小特征值（这里的推导基于协方差矩阵特征值计算理论简化而来）
+        // double lambda_max = (a + b) / 2;
+        // double lambda_min = (a - b) / 2;
 
-        // 计算偏心率
-        return sqrt(1 - lambda_min / lambda_max+0.0001);
+        // // 计算偏心率
+        // return sqrt(1 - lambda_min / lambda_max+0.0001);
     } catch(...) {
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
@@ -256,10 +262,15 @@ double ClassifyMachine::calculateEccentricity(cv::Mat region)
 double ClassifyMachine::calculateRoundness(cv::Mat image)
 {
     try{
+        if (image.type() != CV_8UC1) {
+            cv::cvtColor(image,image,cv::COLOR_BGRA2BGR);
+        }
         // 二值化图像，这里简单使用阈值127进行二值化，实际可根据情况调整阈值
         cv::Mat binaryImage;
         cv::threshold(image, binaryImage, 127, 255, cv::THRESH_BINARY);
-
+        if (binaryImage.type() != CV_8UC1) {
+            cv::cvtColor(binaryImage,binaryImage,cv::COLOR_BGR2GRAY);
+        }
         // 寻找轮廓
         std::vector<std::vector<cv::Point>> contours;
         cv::findContours(binaryImage, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
@@ -294,6 +305,9 @@ double ClassifyMachine::calculateRoundness(cv::Mat image)
 double ClassifyMachine::secondDifferenceMeasure(cv::Mat region, bool isHorizontal)
 {
     try{
+        if (region.type() != CV_8UC1) {
+            cv::cvtColor(region,region,cv::COLOR_BGRA2BGR);
+        }
         cv::Mat inputArray;
         if (isHorizontal) {
             // 计算水平投影（行投影）
@@ -306,11 +320,7 @@ double ClassifyMachine::secondDifferenceMeasure(cv::Mat region, bool isHorizonta
         if (inputArray.rows == 0 || inputArray.cols == 0) {
             return 0;  // 如果输入为空数组，返回0
         }
-        // 检查是否为一维数组（单通道的行向量或者列向量形式）
-        if (inputArray.channels()!= 1 || (inputArray.rows > 1 && inputArray.cols > 1)) {
-            qDebug() << "输入的数组格式不符合要求，需为一维数组（单通道的行向量或列向量）";
-            return -1;
-        }
+
         int size = inputArray.rows * inputArray.cols;
         cv::Mat firstDiff;
 

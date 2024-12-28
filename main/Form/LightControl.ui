@@ -39,7 +39,7 @@
      <item>
       <widget class="QTabWidget" name="tab3">
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="SystemParam">
         <attribute name="title">
@@ -667,10 +667,78 @@
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="LightCameraEnableLE"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="PhotoModeLB">
+            <property name="text">
+             <string>拍照模式</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLineEdit" name="TimelapseAfterPhotoShootEndLE"/>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="LightSignalSynchronizationDelayRegisterLE"/>
+          </item>
+          <item row="13" column="1">
+           <widget class="QLineEdit" name="FrameSignalOutputLE"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="LightField4GlowTimeLE"/>
+          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="LightField2GlowTimeLB">
             <property name="text">
              <string>光场2发光时间10ns</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QLineEdit" name="SelectedLightFieldNumberLE"/>
+          </item>
+          <item row="13" column="0">
+           <widget class="QLabel" name="FrameSignalOutputLB">
+            <property name="text">
+             <string>帧信号输出</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="LightSourcePulseEndPointRegisterLB">
+            <property name="text">
+             <string>光源脉冲结束点寄存器</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="LightField1GlowTimeLE"/>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="SyncPulsePeriodRegisterLE"/>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="WorkModeLE"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="LightField3GlowTimeLE"/>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="CameraFrameSignalTriggerDelayLE"/>
+          </item>
+          <item row="12" column="0">
+           <widget class="QLabel" name="SelectedLightFieldNumberLB">
+            <property name="text">
+             <string>选择光场的数量</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="LightCameraEnableLB">
+            <property name="text">
+             <string>光源相机使能信号</string>
             </property>
            </widget>
           </item>
@@ -688,89 +756,10 @@
             </property>
            </widget>
           </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="LightSourcePulseEndPointRegisterLB">
-            <property name="text">
-             <string>光源脉冲结束点寄存器</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLineEdit" name="LightCameraEnableLE"/>
-          </item>
-          <item row="12" column="1">
-           <widget class="QLineEdit" name="SelectedLightFieldNumberLE"/>
-          </item>
-          <item row="11" column="1">
-           <widget class="QLineEdit" name="TimelapseAfterPhotoShootEndLE"/>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="LightField4GlowTimeLE"/>
-          </item>
-          <item row="12" column="0">
-           <widget class="QLabel" name="SelectedLightFieldNumberLB">
-            <property name="text">
-             <string>选择光场的数量</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLineEdit" name="LightSignalSynchronizationDelayRegisterLE"/>
-          </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="CameraFrameSignalTriggerDelayLB">
-            <property name="text">
-             <string>相机帧信号触发延时行数(行)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="LightField2GlowTimeLE"/>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="PhotoModeLB">
-            <property name="text">
-             <string>拍照模式</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLineEdit" name="LightSourcePulseEndPointRegisterLE"/>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="LightField1GlowTimeLE"/>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="LightField1GlowTimeLB">
             <property name="text">
              <string>光场1发光时间10ns</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QLineEdit" name="SyncPulsePeriodRegisterLE"/>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLineEdit" name="PhotoModeLE"/>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="WorkModeLB">
-            <property name="text">
-             <string>工作模式(0工作/1测试)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="LightField3GlowTimeLB">
-            <property name="text">
-             <string>光场3发光时间10ns</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="LightCameraEnableLB">
-            <property name="text">
-             <string>光源相机使能信号</string>
             </property>
            </widget>
           </item>
@@ -781,12 +770,6 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
-           <widget class="QLineEdit" name="WorkModeLE"/>
-          </item>
-          <item row="10" column="1">
-           <widget class="QLineEdit" name="CameraFrameSignalTriggerDelayLE"/>
-          </item>
           <item row="11" column="0">
            <widget class="QLabel" name="TimelapseAfterPhotoShootEndLB">
             <property name="text">
@@ -794,18 +777,35 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="LightField3GlowTimeLE"/>
-          </item>
-          <item row="13" column="0">
-           <widget class="QLabel" name="FrameSignalOutputLB">
+          <item row="2" column="0">
+           <widget class="QLabel" name="LightField3GlowTimeLB">
             <property name="text">
-             <string>帧信号输出</string>
+             <string>光场3发光时间10ns</string>
             </property>
            </widget>
           </item>
-          <item row="13" column="1">
-           <widget class="QLineEdit" name="FrameSignalOutputLE"/>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="LightSourcePulseEndPointRegisterLE"/>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="WorkModeLB">
+            <property name="text">
+             <string>工作模式(0工作/1测试)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="CameraFrameSignalTriggerDelayLB">
+            <property name="text">
+             <string>相机帧信号触发延时行数(行)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="PhotoModeLE"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="LightField2GlowTimeLE"/>
           </item>
          </layout>
         </widget>

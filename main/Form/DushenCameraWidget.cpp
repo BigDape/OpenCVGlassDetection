@@ -14,15 +14,6 @@ DushenCameraWidget::DushenCameraWidget(QWidget* parent)
 
 DushenCameraWidget::~DushenCameraWidget()
 {
-    //防止下次开启相机无法采集
-    // if (CameraObject->IsScanned(RealCameraName)) {
-    //     if (CameraObject->IsStarted(RealCameraName)) {
-    //         CameraObject->StopFunc(RealCameraName);
-    //         CameraObject->Closefunc(RealCameraName);
-    //     } else if (CameraObject->IsOpened(RealCameraName)) {
-    //         CameraObject->Closefunc(RealCameraName);
-    //     }
-    // }
     delete ui;
 }
 
@@ -162,10 +153,6 @@ void DushenCameraWidget::on_pushButton_Open_clicked()
         if (result == CameraNameSpace::HSCameraError::SUCCESS) {//ui->comboBox_Devices->currentText()
             loadedPixmapItem = new MyGraphicsItem();
             scene->addItem(loadedPixmapItem);
-
-//            connect(CameraBase.get(), SIGNAL(sig_DeliverImage(QImage)), this, SLOT(slot_ShowImage(QImage)));
-//            connect(CameraBase.get(), SIGNAL(sig_DeliverFrameRate(QString)), this, SLOT(slot_ShowFrameRate(QString)));
-
             ui->pushButton_Open->setText("关闭");
             ui->lbl_CameraName->setText(ui->comboBox_Devices->currentText());
             ui->pushButton_Start->setEnabled(true);
@@ -179,8 +166,6 @@ void DushenCameraWidget::on_pushButton_Open_clicked()
         }
     } else {
         CameraObject->Closefunc(RealCameraName);
-//        CameraBase->slot_Closefunc(ui->lbl_CameraName->text());
-//        disconnect(CameraBase.get(), SIGNAL(sig_DeliverImage(QImage)), this, SLOT(slot_ShowImage(QImage)));
         scene->removeItem(loadedPixmapItem);
         delete loadedPixmapItem;
 
@@ -229,7 +214,6 @@ void DushenCameraWidget::on_combox_trigger_changed(Qt::CheckState s)
 
 void DushenCameraWidget::on_pushButton_Save_clicked()
 {
-    //todo:保存到json文件
 }
 
 void DushenCameraWidget::on_pushButton_Saveini_clicked()
@@ -284,11 +268,7 @@ void DushenCameraWidget::StartCamera()
             }
             ui->comboBox_MultiFieldSelect->setEnabled(false);
             ui->pushButton_MultiFieldSelect->setEnabled(false);
-        } else {
-           //log_singleton::Write_Log("相机未启动", Log_Level::Error);
         }
-    } else {
-           // log_singleton::Write_Log("相机未打开", Log_Level::Error);
     }
 }
 

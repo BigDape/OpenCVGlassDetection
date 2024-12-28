@@ -1,6 +1,21 @@
-﻿#ifndef MAINWINDOW_H
+﻿/********************************************************************************
+ *  Puspose:
+ *      mainwidnows.h 处理函数
+ *
+ * Author:
+ *      zhang shuanggui
+ *
+ * create time:
+ *      2025/11/25
+ *
+ *******************************************************************************/
+
+#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+/////////////////////////////////////////////////////////////////////////////////////
+///  @brief 引用的头文件
+///
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QSettings>
@@ -16,10 +31,13 @@
 #include "HSAlgorithmInterface.h"
 #include "HSDatabaseInterface.h"
 #include "HSCameraInterface.h"
+#include "HSJsoncppInterface.h"
 #include "Form/DataAnalysis.h"
 #include "HSTool.h"
 
-
+////////////////////////////////////////////////////////////////////////////////////
+///  @brief MainForm类的声明
+///
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -95,7 +113,10 @@ public:
      */
     void InitDatabaseParam();
 
-    void InitImageCacheDirectory();//初始化图片缓存目录
+    /**
+     * @brief InitImageCacheDirectory 初始化图片缓存目录
+     */
+    void InitImageCacheDirectory();
 
     /**
      * @brief ProcessThreadCV 开始处理流程
@@ -105,75 +126,200 @@ public:
 private:
     /**
      * @brief upDateOverView 更新概述
-     * @param [in] status 更新的玻璃帧所属部分
      */
     void upDateOverView();
 
     /**
      * @brief imageDisplay 主界面上的图片显示
      * @param [in] part 更新的玻璃帧所属部分
-     * @param [in] currentFrameCount 相机拍照所属的帧数
      * @param [in] image 要显示的图像
      */
     void imageDisplay(CV_GLASSPART part, cv::Mat image);
 
     /**
      * @brief checkFrameParam 检查相机获取的图像是否符合要求
-     * @param [in] imageunit 原始图像数据
+     * @param [in] imageunit0 imageunit 原始图像数据
+     * @param [in] imageunit1 imageunit 原始图像数据
      * @return true 符合要求 false 不符合要求
      */
     bool checkFrameParam(FrameImage imageunit0, FrameImage imageunit1);
 
     /**
      * @brief clearGlassDisplay 一片玻璃处理完后，重新清理部分全局变量
-     * @param [in] part 所属玻璃的部分
      */
     void clearGlassDisplay();
 
-    void insertGlassStaticTable(GlassDataBaseInfo2 data);//插入一行统计数据
+    /**
+     * @brief insertGlassStaticTable 统计界面中插入一行统计数据
+     * @param [in] data 统计数据
+     */
+    void insertGlassStaticTable(GlassDataBaseInfo2 data);
 
+    /**
+     * @brief setTableWidgetItem 设置单个表格内容
+     * @param [in] row 表格的第几行
+     * @param [in] col 表格的第几列
+     * @param [in] text 表格要填入的内容
+     * @param [in] table 表格对象
+     * @param [in] brush 表格背景颜色，默认为白色
+     */
     void setTableWidgetItem(int row,
                             int col,
                             QString text,
                             QTableWidget* table,
                             QBrush brush = Qt::white);
+
     /**
-     * @brief [in] summaryDefectNumber 统计缺陷，判断是否NG
+     * @brief summaryDefectNumber 统计缺陷，判断是否NG
      * @param [in] diviX A与B区分界X
      * @param [in] AisLeft A区是否在左边
-     * @param [in] siyinRect 丝印的位置（匹配到的第一个丝印）todo:玻璃没有丝印
+     * @param [in] siyinRect 丝印的位置（匹配到的第一个丝印
      */
     void summaryDefectNumber(int diviX,
                              bool AisLeft,
                              cv::Rect siyinRect);
 
-    void insertDefectTable(GlassDefect2 defect);//插入一行统计数据
+    /**
+     * @brief insertDefectTable 插入一行统计数据
+     * @param [in] defect 单个缺陷信息
+     */
+    void insertDefectTable(GlassDefect2 defect);
 
+    /**
+     * @brief loadedPixmapImage 加载小图
+     * @param [in] img 要加载的小图
+     * @param [in] view 要显示的组件
+     * @param [in] loadImgItem 显示的组件
+     */
     void loadedPixmapImage(QImage img,
                            QGraphicsView* view,
-                           MyGraphicsItem* loadImgItem); //加载小图
+                           MyGraphicsItem* loadImgItem);
 
+    /**
+     * @brief insertSizeTable 尺寸表格中插入尺寸信息
+     * @param [in] info 尺寸信息
+     */
     void insertSizeTable(GlassSizeInfo2 info);
 
+    /**
+     * @brief batchInsertSizeTable 批量插入多个尺寸信息数据
+     * @param [in] infos 尺寸信息
+     */
     void batchInsertSizeTable(std::vector<GlassSizeInfo2> infos);
 
-    int RangeDefectCount(std::vector<cv::Rect> cacheVes, int Xmm, int MaxDefectCount);//查看指定范围内的缺陷数量
+    /**
+     * @brief RangeDefectCount 查看指定范围内的缺陷数量
+     * @param [in] cacheVes 缺陷位置集合
+     * @param [in] Xmm 多少毫米范围内
+     * @param [in] MaxDefectCount 最大缺陷数量
+     * @return 返回最大的缺陷数量
+     */
+    int RangeDefectCount(std::vector<cv::Rect> cacheVes,
+                         int Xmm,
+                         int MaxDefectCount);
 
-    // 划痕判断NG
+    /**
+     * @brief NGorOKHuaheng 判断划痕是否NG
+     * @param [in] defect
+     */
     void NGorOKHuaheng(GlassDefect2 defect);
-    void NGorOKyiwu(GlassDefect2 defect, int diviX, bool AisLeft);
+
+    /**
+     * @brief NGorOKyiwu 判断异物是否NG
+     * @param [in] defect 缺陷信息
+     * @param [in] diviX
+     * @param AisLeft
+     */
+    void NGorOKyiwu(GlassDefect2 defect,
+                    int diviX,
+                    bool AisLeft);
+
+    /**
+     * @brief NGorOKqipao 判断气泡是否NG
+     * @param [in] defect 缺陷信息
+     */
     void NGorOKqipao(GlassDefect2 defect);
-    void NGorOKmadian(GlassDefect2 defect, int diviX, bool AisLeft, cv::Rect siyinRect);
-    void NGorOKshuiyin(GlassDefect2 defect, int diviX, bool AisLeft);
-    void NGorOKyoumobuliang(GlassDefect2 defect, int diviX, bool AisLeft, cv::Rect siyinRect);
+
+    /**
+     * @brief NGorOKmadian 判断麻点是否NG
+     * @param [in] defect 缺陷信息
+     * @param [in] diviX 玻璃X轴分界线，小于diviX是A区，大于divix是B区
+     * @param [in] AisLeft A区是否在左边
+     * @param [in] siyinRect 丝印所在位置
+     */
+    void NGorOKmadian(GlassDefect2 defect,
+                      int diviX,
+                      bool AisLeft,
+                      cv::Rect siyinRect);
+
+    /**
+     * @brief NGorOKshuiyin 判断水印是否NG
+     * @param [in] defect 缺陷信息
+     * @param [in] diviX 玻璃X轴分界线，小于diviX是A区，大于divix是B区
+     * @param [in] AisLeft A区是否在左边
+     */
+    void NGorOKshuiyin(GlassDefect2 defect,
+                       int diviX,
+                       bool AisLeft);
+
+    /**
+     * @brief NGorOKyoumobuliang 判断油墨不良是否NG
+     * @param [in] defect 缺陷信息
+     * @param [in] diviX 玻璃X轴分界线，小于diviX是A区，大于divix是B区
+     * @param [in] AisLeft A区是否在左边
+     * @param [in] siyinRect 丝印所在位置
+     */
+    void NGorOKyoumobuliang(GlassDefect2 defect,
+                            int diviX,
+                            bool AisLeft,
+                            cv::Rect siyinRect);
+
+    /**
+     * @brief NGorOKjuchibian 判断锯齿便是否NG
+     * @param [in] defect 缺陷信息
+     */
     void NGorOKjuchibian(GlassDefect2 defect);
+
+    /**
+     * @brief NGorOKsiyinquexian 判断丝印缺陷
+     * @param [in] defect 缺陷信息
+     */
     void NGorOKsiyinquexian(GlassDefect2 defect);
-    void NGorOKguahua(GlassDefect2 defect, int diviX, bool AisLeft);
+
+    /**
+     * @brief NGorOKguahua 判断刮花是否NG
+     * @param [in] defect 缺陷信息
+     * @param [in] diviX 玻璃X轴分界线，小于diviX是A区，大于divix是B区
+     * @param [in] AisLeft A区是否在左边
+     */
+    void NGorOKguahua(GlassDefect2 defect,
+                      int diviX,
+                      bool AisLeft);
+
+    /**
+     * @brief NGorOKliewen 判断刮花是否NG
+     * @param [in] defect 缺陷信息
+     */
     void NGorOKliewen(GlassDefect2 defect);
+
+    /**
+     * @brief NGorOKbengbianjiao 判断崩边角是否NG
+     * @param [in] defect 缺陷信息
+     */
     void NGorOKbengbianjiao(GlassDefect2 defect);
 
+    /**
+     * @brief handleFrameData 处理每帧缺陷数据结果
+     * @param [in] result 每帧数据结果
+     */
     void handleFrameData(NewGlassResult result);
+
+    /**
+     * @brief handleFrameData 处理每帧尺寸数据结果
+     * @param [in] glassSize 每帧数据尺寸结果
+     */
     void handleFrameData(std::vector<GlassSizeInfo2>& glassSize);
+
     /**
      * @brief GetCameraBufferAndExceute 获取相机照片和执行程序
      */
@@ -233,7 +379,6 @@ public slots:
 
     /**
      * @brief slot_DisplayMain 槽函数，在主界面上显示图片
-     * @param [in] part 图片属于玻璃的什么位置
      * @param [in] image 玻璃cv::Mat图像
      */
     void slot_DisplayMain(cv::Mat image);
@@ -245,20 +390,62 @@ public slots:
      */
     void slot_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2> FrameDefects);
 
-    void slot_UpdateDefectImages(QTableWidgetItem* item);//更新缺陷小图
+    /**
+     * @brief slot_UpdateDefectImages 更新缺陷小图
+     * @param item 小图组件指针
+     */
+    void slot_UpdateDefectImages(QTableWidgetItem* item);
 
-    void slot_UpdateSizeImage(QTableWidgetItem* item);//更新尺寸小图
+    /**
+     * @brief slot_UpdateSizeImage 更新尺寸小图
+     * @param item 小图组件指针
+     */
+    void slot_UpdateSizeImage(QTableWidgetItem* item);
 
-    void slot_InsertDatabase();//数据库批量插入
+    /**
+     * @brief slot_InsertDatabase 数据库批量插入
+     */
+    void slot_InsertDatabase();
 
+    /**
+     * @brief slot_RebackHistoryImage 缺陷显示界面回溯历史图片
+     */
     void slot_RebackHistoryImage();
 
+    /**
+     * @brief slot_Silkscreen 丝印匹配的模板
+     */
     void slot_Silkscreen();
+
 signals:
-    void sign_InsertDatabase();//数据库批量插入
-    void sign_GlassStaticTableInsertRowData(GlassDataBaseInfo2 info);//数据统计表插入一行
-    void sign_DisplayMain(cv::Mat image); //显示图片
+    /**
+     * @brief sign_InsertDatabase 数据库批量插入
+     */
+    void sign_InsertDatabase();
+
+    /**
+     * @brief sign_GlassStaticTableInsertRowData 数据统计表插入一行
+     * @param info
+     */
+    void sign_GlassStaticTableInsertRowData(GlassDataBaseInfo2 info);
+
+    /**
+     * @brief sign_DisplayMain 显示图片
+     * @param image
+     */
+    void sign_DisplayMain(cv::Mat image);
+
+    /**
+     * @brief sign_UpdateDefectTable 更新缺陷表格
+     * @param part 玻璃部分
+     * @param FrameDefects 缺陷数据
+     */
     void sign_UpdateDefectTable(CV_GLASSPART part, std::vector<GlassDefect2> FrameDefects);
+
+    /**
+     * @brief sign_SingleSizeUpdataTableData 更新尺寸表格
+     * @param infos
+     */
     void sign_SingleSizeUpdataTableData(std::vector<GlassSizeInfo2> infos);
 protected:
     /**
@@ -266,7 +453,11 @@ protected:
      * @param event
      */
     void mousePressEvent(QMouseEvent *event) override;
-    // 右击菜单栏
+
+    /**
+     * @brief contextMenuEvent 右击显示菜单栏
+     * @param event
+     */
     void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
@@ -326,15 +517,15 @@ private:
     std::mutex m_mutex;                                                     /* 全局锁 */
     std::mutex time_mutex;                                                  /* 时间锁 */
     cv::Mat m_glassRegion;                                                  /* 显示玻璃的区域 */
-    GlassResult m_glassResult;      // 玻璃信息
-    std::vector<cv::Rect>   m_AmadianRects;     // A区麻点的区域的点集合。todo：一片玻璃结束需要清理
-    std::vector<cv::Rect>   m_BmadianRects;     // B区麻点的区域点集合。todo：一片玻璃结束需要清理
-    std::vector<cv::Rect>   m_BshuiyinRects;    // B区水印的区域点集合。todo：一片玻璃结束需要清理
-    std::vector<cv::Rect>   m_A10mm2youmobuliangRects; // A区10mm范围内2级点的区域点集合
-    std::vector<cv::Rect>   m_A10mm3youmobuliangRects; // A区10mm范围内3级点的区域点集合
-    std::vector<cv::Rect>   m_B10mm2youmobuliangRects; // B区10mm范围内2级点的区域点集合
-    std::vector<cv::Rect>   m_B10mm3youmobuliangRects; // B区10mm范围内3级点的区域点集合
-    int   m_juchibianAllLengthRects = 0; // 锯齿边长度
-    int   m_juchibianAllWidthRects = 0; // 锯齿边宽度
+    GlassResult m_glassResult;                                              /* 玻璃信息 */
+    std::vector<cv::Rect>   m_AmadianRects;                                 /* A区麻点的区域的点集合。 */
+    std::vector<cv::Rect>   m_BmadianRects;                                 /* B区麻点的区域点集合。 */
+    std::vector<cv::Rect>   m_BshuiyinRects;                                /* B区水印的区域点集合。 */
+    std::vector<cv::Rect>   m_A10mm2youmobuliangRects;                      /* A区10mm范围内2级点的区域点集合 */
+    std::vector<cv::Rect>   m_A10mm3youmobuliangRects;                      /* A区10mm范围内3级点的区域点集合 */
+    std::vector<cv::Rect>   m_B10mm2youmobuliangRects;                      /* B区10mm范围内2级点的区域点集合 */
+    std::vector<cv::Rect>   m_B10mm3youmobuliangRects;                      /* B区10mm范围内3级点的区域点集合 */
+    int   m_juchibianAllLengthRects = 0;                                    /* 锯齿边长度 */
+    int   m_juchibianAllWidthRects = 0;                                     /* 锯齿边宽度 */
 };
 #endif // MAINWINDOW_H

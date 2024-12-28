@@ -1,4 +1,15 @@
-﻿#include "LightControl.h"
+﻿/********************************************************************************
+ *  Puspose:
+ *      LightControl.h 设置界面源文件
+ *
+ * Author:
+ *      zhang shuanggui
+ *
+ * create time:
+ *      2025/11/25
+ *
+ *******************************************************************************/
+#include "LightControl.h"
 #include "ui_LightControl.h"
 #include <QTimer>
 #include <QDir>
@@ -33,7 +44,6 @@ LightControl::~LightControl()
     PARAM.SetParamterIntoIniFile(iniPath,"recipe",currentRecipe);
     delete ui;
 }
-
 
 // 初始化输入框输入类型
 void LightControl::initWidget()
@@ -535,9 +545,6 @@ void LightControl::setUiContentFromStruct()
     ui->SelectedLightFieldNumberLE->setText(QString::number(m_signalctrl.SelectedLightFieldNumber));
     ui->FrameSignalOutputLE->setText(QString::number(m_signalctrl.FrameSignalOutput));
 
-    //
-    // 初始化全局变量
-    //
     //
     // 初始化全局变量
     //

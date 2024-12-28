@@ -1,4 +1,15 @@
-﻿#ifndef LIGHTCONTROL_H
+﻿/********************************************************************************
+ *  Puspose:
+ *      LightControl.h 设置界面头文件
+ *
+ * Author:
+ *      zhang shuanggui
+ *
+ * create time:
+ *      2025/11/25
+ *
+ *******************************************************************************/
+#ifndef LIGHTCONTROL_H
 #define LIGHTCONTROL_H
 
 
@@ -7,7 +18,6 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include "HSTool.h"
-#include "HSJsoncppInterface.h"
 
 #define SYSTEMNAME "app.ini"
 
@@ -29,40 +39,104 @@ class LightControl : public QWidget
 public:
     explicit LightControl( QWidget* parent = nullptr);
     ~LightControl();
-    // 读取json工单到表单中
+
+    /**
+     * @brief readRecipeToTable 读取json工单到表单中
+     * @param filePath 文件路径
+     */
     void readRecipeToTable(std::string filePath);
 private:
     /**
      * @brief initWidget 初始化输入框类型
      */
     void initWidget();
+
+    /**
+     * @brief initLoadRecipe 初始化加载工单
+     */
     void initLoadRecipe();
+
+    /**
+     * @brief initSocket 初始化socket通讯
+     */
     void initSocket();
+
+    /**
+     * @brief initConnect 初始化connect
+     */
     void initConnect();
-    void SendDataToSignal();//系统初始化时，先发送一遍数据，不用再手动发送
-    // 将当前的m_root写入到json文件中
+
+    /**
+     * @brief SendDataToSignal 系统初始化时，先发送一遍数据，不用再手动发送
+     */
+    void SendDataToSignal();
+
+    /**
+     * @brief writeCurrentRooterToJson 将当前的m_root写入到json文件中
+     */
     void writeCurrentRooterToJson();
-    // 新建一个初始化文件app.ini
+
+    /**
+     * @brief writeEmptyAppIni 新建一个初始化文件app.ini
+     * @param filePath 文件路径
+     * @param recipeName 配置文件名
+     */
     void writeEmptyAppIni(QString filePath, QString recipeName);
-    // 将输入框中数据全部读取下来
+
+    /**
+     * @brief getUiContentIntoStruct 将输入框中数据全部读取下来
+     */
     void getUiContentIntoStruct();
-    // 将内存中数据写入输入框
+
+    /**
+     * @brief setUiContentFromStruct 将内存中数据写入输入框
+     */
     void setUiContentFromStruct();
-    // 实时获取帧信号
+
+    /**
+     * @brief getFrameSignal 实时获取帧信号
+     */
     void getFrameSignal();
+
 private slots:
+    /**
+     * @brief slotAllSet 全部设置下去
+     */
     void slotAllSet();
+
+    /**
+     * @brief slotAllGet 全部获取
+     */
     void slotAllGet();
+
+    /**
+     * @brief slotAllSave 全部保存
+     */
     void slotAllSave();
+
+    /**
+     * @brief slotCreateRecipe 创建工单
+     */
     void slotCreateRecipe();
+
+    /**
+     * @brief slotTestConnect 测试链接
+     */
     void slotTestConnect();
+
+    /**
+     * @brief slotTrigger 触发
+     */
     void slotTrigger();
+
+    /**
+     * @brief slotChangeRecipe 切换工单
+     * @param index 工单下标
+     */
     void slotChangeRecipe(int index);
 
 private:
     Ui::LightControl* ui;
-    QTimer* timer;
-    std::shared_ptr<QTimer> timer1;
     SignalControl m_signalctrl;
     QTimer* m_timer; //实时获取帧信号
 };

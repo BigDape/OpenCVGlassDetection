@@ -1,10 +1,24 @@
-﻿#include "MainForm.h"
+﻿/********************************************************************************
+ *  Puspose:
+ *      MainForm.h 主界面开始加载定义文件
+ *
+ * Author:
+ *      zhang shuanggui
+ *
+ * create time:
+ *      2025/12/27
+ *
+ *******************************************************************************/
+
+///////////////////////////////////////////////////////////////////////////////////
+/// @brief 引用头文件
+///
+#include "MainForm.h"
 #include "ui_MainForm.h"
 #include <QLabel>
 
-#pragma execution_character_set("utf-8")
+#define TITLEBAR_HEIGHT 40   /* 标题栏的高度 */
 
-#define TITLEBAR_HEIGHT 40
 
 MainForm::MainForm(QWidget* parent)
     : QWidget(parent)
@@ -43,8 +57,10 @@ void MainForm::showWindows()
     int width = screenSize.width();
     int height = screenSize.height();
     qDebug() << "当前屏幕分辨率：" << width << "x" << height;
-    // 主界面
+    //
+    // new主界面对象
+    //
     main_window = new MainWindow(this);
     main_window->move(0,56);
-    QWidget::showFullScreen();
+    QWidget::showFullScreen(); //铺满整个屏幕
 }

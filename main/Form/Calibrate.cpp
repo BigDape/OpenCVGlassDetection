@@ -1,3 +1,14 @@
+/********************************************************************************
+ *  Puspose:
+ *      Calibrate.cpp 标定界面源文件
+ *
+ * Author:
+ *      zhang shuanggui
+ *
+ * create time:
+ *      2025/11/25
+ *
+ *******************************************************************************/
 #include "Calibrate.h"
 #include "ui_Calibrate.h"
 #include <windows.h>

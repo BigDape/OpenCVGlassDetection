@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 message("当前路径为：${CMAKE_CURRENT_SOURCE_DIR}")
 
+#添加各个模块子目录
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/main)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/tool)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp)

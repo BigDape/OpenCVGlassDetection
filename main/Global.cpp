@@ -32,8 +32,6 @@ QString GlobalParamter::GetParamterFromIniFile(QString fullpath, QString key)
             }
         }
     } catch (...) {
-        qDebug() << "GlobalParamter::GetParamterFromIniFile => An unknown error occurred.";
-        // 获取当前的异常信息
         std::exception_ptr eptr = std::current_exception();
         if (eptr) {
             try {

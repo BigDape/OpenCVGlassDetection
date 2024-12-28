@@ -1563,12 +1563,13 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
                 bool pixcontinue =  false;
                 int startloc = 0;
                 for (int i = 0; i < verticalProjection.cols; ++i) {
+                    //qDebug()<<"verticalProjection.at<int>(0, i) ="<<verticalProjection.at<int>(0, i)<<", meanValue[0] + rangeValue ="<<meanValue[0] + rangeValue;
                     if (verticalProjection.at<int>(0, i) >= meanValue[0] + rangeValue) {
                         pixcontinue = true;
                     } else {
                         if (pixcontinue == true) {
                             pixcontinue = false;
-                            if (i-startloc > 20) {//连续间隔大于6
+                            if (i-startloc > 10) {//连续间隔大于6
                                 cv::Rect rect(startloc,0,i-startloc,EDGETHICKNESS);
                                 cv::Mat defect0 = edge.region0(rect);
                                 cv::Mat defect1 = edge.region1(rect);
@@ -1587,6 +1588,8 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
                                 data.pixY = rect.y;        // 像元Y
                                 data.pixArea = rect.height*rect.width;     // 面积
                                 data.region0 = defect0;
+
+
                                 data.region1 = defect1;
                                 data.region2 = defect2;
                                 data.imagePath0 = SyncSaveImage(defect0);;
@@ -1618,7 +1621,7 @@ void OpenCVAlgorithm::edgePartDefect(std::vector<EdgeInfo> edges, std::vector<Gl
                     } else {
                         if (pixcontinue == true) {
                             pixcontinue = false;
-                            if (i-startloc > 20) {//连续间隔大于6
+                            if (i-startloc > 10) {//连续间隔大于6
                                 cv::Rect rect(0,startloc,EDGETHICKNESS,i-startloc);
                                 cv::Mat defect0 = edge.region0(rect);
                                 cv::Mat defect1 = edge.region1(rect);
